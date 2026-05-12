@@ -223,6 +223,7 @@ export default function ReviewMarks() {
       {/* Paper Info */}
       <div style={styles.paperInfo}>
         <h2>{paper.subject}</h2>
+        <p>Academic Year: {paper.academic_year}</p>
         <p>Year: {paper.year}</p>
         <p>Semester: {paper.semester}</p>
         <p>Exam Type: {paper.exam_type}</p>
@@ -360,85 +361,97 @@ export default function ReviewMarks() {
 const styles = {
   container: {
     minHeight: "100vh",
-    background:
-      "linear-gradient(135deg,#e0f2fe,#f8fafc)",
+    background: "linear-gradient(135deg,#eef6ff,#f8fbff)",
     padding: "30px",
-    fontFamily: "Arial"
+    fontFamily: "'Poppins', sans-serif"
   },
 
   header: {
     display: "flex",
-    justifyContent:
-      "space-between",
+    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "20px"
+    marginBottom: "25px",
+    background: "#ffffff",
+    padding: "18px 22px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 20px rgba(37,99,235,0.08)",
+    border: "1px solid #e5e7eb"
   },
 
   subText: {
-    color: "gray"
+    color: "#6b7280",
+    fontSize: "13px",
+    marginTop: "4px"
   },
 
   backBtn: {
-    background: "#1e293b",
+    background: "linear-gradient(135deg,#1e3a8a,#2563eb)",
     color: "white",
     border: "none",
-    padding: "12px 20px",
-    borderRadius: "8px",
+    padding: "10px 18px",
+    borderRadius: "10px",
     cursor: "pointer",
     display: "flex",
     gap: "8px",
-    alignItems: "center"
+    alignItems: "center",
+    fontWeight: "600",
+    boxShadow: "0 6px 15px rgba(37,99,235,0.25)"
   },
 
   paperInfo: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "12px",
+    background: "#ffffff",
+    padding: "22px",
+    borderRadius: "14px",
     marginBottom: "20px",
-    boxShadow:
-      "0px 4px 10px rgba(0,0,0,0.1)"
+    border: "1px solid #e5e7eb",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+    color: "#111827"
   },
 
   tableContainer: {
-    background: "white",
-    borderRadius: "12px",
+    background: "#ffffff",
+    borderRadius: "14px",
     overflowX: "auto",
-    boxShadow:
-      "0px 4px 10px rgba(0,0,0,0.1)"
+    border: "1px solid #e5e7eb",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.06)"
   },
 
   table: {
     width: "100%",
-    borderCollapse:
-      "collapse",
+    borderCollapse: "collapse",
     tableLayout: "fixed"
   },
 
   tableHeader: {
-    background: "#0284c7",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
     color: "white"
   },
 
   th: {
-    padding: "15px",
-    textAlign: "center"
+    padding: "14px",
+    textAlign: "center",
+    fontWeight: "600",
+    fontSize: "14px"
   },
 
   td: {
     padding: "12px",
     textAlign: "center",
-    borderBottom:
-      "1px solid #ddd"
+    borderBottom: "1px solid #f1f5f9",
+    color: "#111827",
+    fontSize: "14px"
   },
 
   input: {
-    width: "100%",
+    width: "95%",
     padding: "10px",
-    border:
-      "1px solid #ccc",
-    borderRadius: "6px",
-    boxSizing:
-      "border-box"
+    border: "1px solid #d1d5db",
+    borderRadius: "8px",
+    outline: "none",
+    fontSize: "14px",
+    background: "#f9fafb",
+    transition: "0.2s",
+    boxSizing: "border-box"
   },
 
   saveBtn: {
@@ -447,16 +460,15 @@ const styles = {
     color: "white",
     border: "none",
     padding: "12px 18px",
-    borderRadius: "12px",
+    borderRadius: "10px",
     cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "15px",
+    fontWeight: "700",
+    fontSize: "14px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     gap: "8px",
-    boxShadow: "0px 4px 12px rgba(34,197,94,0.35)",
-    transition: "0.3s"
+    boxShadow: "0 6px 15px rgba(34,197,94,0.25)"
   },
 
   editBtn: {
@@ -465,34 +477,32 @@ const styles = {
     color: "white",
     border: "none",
     padding: "12px 18px",
-    borderRadius: "12px",
+    borderRadius: "10px",
     cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "15px",
+    fontWeight: "700",
+    fontSize: "14px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     gap: "8px",
-    boxShadow: "0px 4px 12px rgba(245,158,11,0.35)",
-    transition: "0.3s"
+    boxShadow: "0 6px 15px rgba(245,158,11,0.25)"
   },
 
   submitBtn: {
     width: "100%",
     marginTop: "25px",
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    background: "linear-gradient(135deg,#1d4ed8,#3b82f6)",
     color: "white",
     border: "none",
     padding: "16px",
     borderRadius: "14px",
     cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "17px",
+    fontWeight: "800",
+    fontSize: "16px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     gap: "10px",
-    boxShadow: "0px 6px 18px rgba(37,99,235,0.35)",
-    transition: "0.3s ease"
-  },
+    boxShadow: "0 8px 20px rgba(37,99,235,0.3)"
+  }
 };

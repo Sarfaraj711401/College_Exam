@@ -19,13 +19,14 @@ export default function ProfessorPage() {
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [professors, setProfessors] = useState([]);
   const [editId, setEditId] = useState(null);
-
-  // ADD THIS LINE
   const [selectedProfessor, setSelectedProfessor] = useState(null);
+  const [designations, setDesignations] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
 
   const [formData, setFormData] = useState({
-    name: "",
+    first_name: "",
+    last_name: "",
     designation: "",
     subject: "",
     email: "",
@@ -38,11 +39,13 @@ export default function ProfessorPage() {
     branch_name: "",
     ifsc_code: "",
     account_number: "",
-    account_holder_name: ""
+    account_holder_name: "",
+    bank_address: ""
   });
 
   useEffect(() => {
     fetchProfessors();
+    fetchDropdownData();
   }, []);
 
   const fetchProfessors = async () => {
@@ -57,12 +60,14 @@ export default function ProfessorPage() {
     const { name, value } = e.target;
 
     if (
-      name === "name" ||
+      name === "first_name" ||
+      name === "last_name" ||
       name === "designation" ||
       name === "subject" ||
       name === "bank_name" ||
       name === "branch_name" ||
-      name === "account_holder_name"
+      name === "account_holder_name" ||
+      name === "bank_address"
     ) {
       if (!onlyCharacters(value)) return;
     }
@@ -118,16 +123,26 @@ export default function ProfessorPage() {
   const handleSubmit = async () => {
     try {
       if (editId) {
+        const finalData = {
+          ...formData,
+          name: `${formData.first_name} ${formData.last_name}`
+        };
+
         await axios.put(
           `http://localhost:5000/admin/update-professor/${editId}`,
-          formData
+          finalData
         );
         alert("Professor Updated Successfully ✅");
         setEditId(null);
       } else {
+        const finalData = {
+          ...formData,
+          name: `${formData.first_name} ${formData.last_name}`
+        };
+
         await axios.post(
           "http://localhost:5000/admin/add-professor",
-          formData
+          finalData
         );
         alert("Professor Added Successfully ✅");
       }
@@ -148,7 +163,8 @@ export default function ProfessorPage() {
         branch_name: "",
         ifsc_code: "",
         account_number: "",
-        account_holder_name: ""
+        account_holder_name: "",
+        bank_address: ""
       });
 
       fetchProfessors();
@@ -158,8 +174,12 @@ export default function ProfessorPage() {
   };
 
   const handleEdit = (p) => {
+    const fullName = p.name.split(" ");
+
     setFormData({
       ...p,
+      first_name: fullName[0] || "",
+      last_name: fullName.slice(1).join(" ") || "",
       confirmPassword: p.password
     });
 
@@ -181,19 +201,26 @@ export default function ProfessorPage() {
     fetchProfessors();
   };
 
+  const fetchDropdownData = async () => {
+    try {
+      const designationRes = await axios.get("http://localhost:5000/dropdown/designations");
+      const subjectRes = await axios.get("http://localhost:5000/dropdown/subjects");
+
+      console.log(designationRes.data, subjectRes.data); // 🔥 debug
+
+      setDesignations(designationRes.data);
+      setSubjects(subjectRes.data);
+    } catch (error) {
+      console.log("Dropdown error:", error);
+    }
+  };
+
   return (
     <div style={styles.wrapper}>
       <Sidebar />
 
       <div style={styles.container}>
         <div style={styles.mainCard}>
-
-          <button
-            onClick={() => navigate("/admin")}
-            style={styles.backBtn}
-          >
-            <FaArrowLeft /> Back
-          </button>
 
           <div style={styles.header}>
             <FaUserTie size={40} color="#2563eb" />
@@ -266,7 +293,7 @@ export default function ProfessorPage() {
                       </button>
                     </div>
 
-                    {/* hidden input শুধু change এর জন্য */}
+                    {/* hidden input  */}
                     <input
                       id="photoInput"
                       type="file"
@@ -278,13 +305,62 @@ export default function ProfessorPage() {
               </div>
               <h2 style={styles.sectionTitle}>Personal Details</h2>
 
-              <div style={styles.grid}>
-                <input name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} style={styles.input} />
-                <input name="designation" placeholder="Designation" value={formData.designation} onChange={handleChange} style={styles.input} />
-                <input name="subject" placeholder="Subject" value={formData.subject} onChange={handleChange} style={styles.input} />
-                <input name="mobile" placeholder="Mobile" value={formData.mobile} onChange={handleChange} style={styles.input} />
-                <input name="experience" placeholder="Experience" value={formData.experience} onChange={handleChange} style={styles.input} />
+              {/* ROW 1 */}
+              <div style={styles.grid2}>
+                <input
+                  name="first_name"
+                  placeholder="First Name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
 
+                <input
+                  name="last_name"
+                  placeholder="Last Name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+              </div>
+
+              {/* ROW 2 */}
+              <div style={styles.grid3}>
+                <select
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">Select Designation</option>
+                  {designations.map((d) => (
+                    <option key={d.id} value={d.designation_name}>
+                      {d.designation_name}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">Select Subject</option>
+                  {subjects.map((s) => (
+                    <option key={s.id} value={s.subject_name}>
+                      {s.subject_name}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  name="experience"
+                  placeholder="Experience"
+                  value={formData.experience}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
               </div>
             </div>
 
@@ -292,25 +368,70 @@ export default function ProfessorPage() {
               <h2 style={styles.sectionTitle}>Bank Details</h2>
 
               <div style={styles.grid}>
+                <input name="account_holder_name" placeholder="Account Holder Name" value={formData.account_holder_name} onChange={handleChange} style={styles.input} />
                 <input name="bank_name" placeholder="Bank Name" value={formData.bank_name} onChange={handleChange} style={styles.input} />
+                <input name="account_number" placeholder="Account Number" value={formData.account_number} onChange={handleChange} style={styles.input} />
                 <input name="branch_name" placeholder="Branch Name" value={formData.branch_name} onChange={handleChange} style={styles.input} />
                 <input name="ifsc_code" placeholder="IFSC Code" value={formData.ifsc_code} onChange={handleChange} style={styles.input} />
-                <input name="account_number" placeholder="Account Number" value={formData.account_number} onChange={handleChange} style={styles.input} />
-                <input name="account_holder_name" placeholder="Account Holder Name" value={formData.account_holder_name} onChange={handleChange} style={styles.input} />
+                <input name="bank_address" placeholder="Bank Address" value={formData.bank_address} onChange={handleChange} style={styles.input} />
+
+
               </div>
             </div>
 
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>Login Details</h2>
 
-              <div style={styles.grid}>
-                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} style={styles.input} />
-                <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} style={styles.input} />
-                <input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} style={styles.input} />
+              <div style={styles.loginGrid}>
+                <input name="mobile" placeholder="Mobile" value={formData.mobile} onChange={handleChange} style={styles.input} />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
               </div>
             </div>
 
             <div style={styles.formButtonBox}>
+
+              {/* Submit Button */}
+              <button
+                type="button"
+                style={styles.submitFormBtn}
+                onClick={handleSubmit}
+              >
+                <FaCheckCircle /> Submit
+              </button>
+
+              {/* Cancel Button */}
+              <button
+                type="button"
+                style={styles.cancelFormBtn}
+                onClick={() => navigate("/admin")}
+              >
+                Cancel
+              </button>
 
               {/* Reset Button */}
               <button
@@ -319,6 +440,8 @@ export default function ProfessorPage() {
                 onClick={() =>
                   setFormData({
                     name: "",
+                    first_name: "",
+                    last_name: "",
                     designation: "",
                     subject: "",
                     email: "",
@@ -331,29 +454,12 @@ export default function ProfessorPage() {
                     branch_name: "",
                     ifsc_code: "",
                     account_number: "",
-                    account_holder_name: ""
+                    account_holder_name: "",
+                    bank_address: ""
                   })
                 }
               >
                 Reset
-              </button>
-
-              {/* Cancel Button */}
-              <button
-                type="button"
-                style={styles.cancelFormBtn}
-                onClick={() => navigate("/admin")}
-              >
-                Cancel
-              </button>
-
-              {/* Submit Button */}
-              <button
-                type="button"
-                style={styles.submitFormBtn}
-                onClick={handleSubmit}
-              >
-                <FaCheckCircle /> Submit
               </button>
 
             </div>
@@ -378,7 +484,9 @@ export default function ProfessorPage() {
               <tbody>
                 {professors.map((p) => (
                   <tr key={p.id} style={styles.tableRow}>
-                    <td style={styles.td}>{p.id}</td>
+                    <td style={styles.td}>
+                      {`Prof${String(p.id).padStart(4, "0")}`}
+                    </td>
 
                     <td style={styles.td}>
                       <img
@@ -454,6 +562,13 @@ export default function ProfessorPage() {
               </div>
 
               <div style={styles.previewRow}>
+                <span style={styles.label}>Professor ID</span>
+                <span style={styles.value}>
+                  {`Prof${String(selectedProfessor.id).padStart(4, "0")}`}
+                </span>
+              </div>
+
+              <div style={styles.previewRow}>
                 <span style={styles.label}>Subject</span>
                 <span style={styles.value}>{selectedProfessor.subject}</span>
               </div>
@@ -471,6 +586,11 @@ export default function ProfessorPage() {
               <div style={styles.previewRow}>
                 <span style={styles.label}>Experience</span>
                 <span style={styles.value}>{selectedProfessor.experience}</span>
+              </div>
+
+              <div style={styles.previewRow}>
+                <span style={styles.label}>Account Holder Name</span>
+                <span style={styles.value}>{selectedProfessor.account_holder_name}</span>
               </div>
 
               <div style={styles.previewRow}>
@@ -494,8 +614,8 @@ export default function ProfessorPage() {
               </div>
 
               <div style={styles.previewRow}>
-                <span style={styles.label}>Account Holder Name</span>
-                <span style={styles.value}>{selectedProfessor.account_holder_name}</span>
+                <span style={styles.label}>Bank Address </span>
+                <span style={styles.value}>{selectedProfessor.bank_address}</span>
               </div>
             </div>
 
@@ -525,7 +645,7 @@ const styles = {
     minHeight: "100vh",
     background:
       "linear-gradient(135deg,#0f172a,#1e293b,#334155)",
-    padding: "20px"
+    padding: "0px"
   },
 
   mainCard: {
@@ -943,45 +1063,70 @@ const styles = {
 
   formButtonBox: {
     display: "flex",
-    gap: "15px",
-    marginTop: "20px"
+    justifyContent: "center",   // center align
+    alignItems: "center",
+    gap: "12px",
+    marginTop: "20px",
+    flexWrap: "wrap"
   },
 
   resetBtn: {
-    flex: 1,
     background: "#f59e0b",
     color: "white",
     border: "none",
-    padding: "14px",
-    borderRadius: "10px",
+    padding: "10px 22px",
+    borderRadius: "8px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "600",
+    fontSize: "14px",
+    minWidth: "110px"
   },
 
   cancelFormBtn: {
-    flex: 1,
     background: "#ef4444",
     color: "white",
     border: "none",
-    padding: "14px",
-    borderRadius: "10px",
+    padding: "10px 22px",
+    borderRadius: "8px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "600",
+    fontSize: "14px",
+    minWidth: "110px"
   },
 
   submitFormBtn: {
-    flex: 1,
     background: "#2563eb",
     color: "white",
     border: "none",
-    padding: "14px",
-    borderRadius: "10px",
+    padding: "10px 22px",
+    borderRadius: "8px",
     cursor: "pointer",
-    fontWeight: "bold",
+    fontWeight: "600",
+    fontSize: "14px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    gap: "8px"
+    gap: "6px",
+    minWidth: "110px"
+  },
+
+  loginGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    gap: "15px"
+  },
+
+  grid2: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "15px",
+    marginBottom: "15px"
+  },
+
+  grid3: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: "15px"
   },
 
 };

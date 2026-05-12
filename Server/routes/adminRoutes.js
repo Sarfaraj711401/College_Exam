@@ -37,9 +37,10 @@ router.post("/add-professor", (req, res) => {
       branch_name,
       ifsc_code,
       account_number,
-      account_holder_name
+      account_holder_name,
+      bank_address
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   db.query(sql, [
@@ -55,11 +56,11 @@ router.post("/add-professor", (req, res) => {
     data.branch_name,
     data.ifsc_code,
     data.account_number,
-    data.account_holder_name
+    data.account_holder_name,
+    data.bank_address
   ], (err, result) => {
-
     if (err) {
-      console.log(err);
+      console.log("INSERT ERROR:", err);
       return res.status(500).send(err);
     }
 
@@ -106,7 +107,8 @@ router.put("/update-professor/:id", (req, res) => {
       branch_name=?,
       ifsc_code=?,
       account_number=?,
-      account_holder_name=?
+      account_holder_name=?,
+      bank_address=?
     WHERE id=?
   `;
 
@@ -123,10 +125,11 @@ router.put("/update-professor/:id", (req, res) => {
     data.ifsc_code,
     data.account_number,
     data.account_holder_name,
+    data.bank_address,   // ✅ FIXED (IMPORTANT)
     id
   ], (err, result) => {
     if (err) {
-      console.log(err);
+      console.log("UPDATE ERROR:", err);
       return res.status(500).send(err);
     }
 

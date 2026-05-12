@@ -313,8 +313,8 @@ const styles = {
     minHeight: "100vh",
     padding: "35px",
     fontFamily: "'Poppins', sans-serif",
-    background: "#f1f5f9",
-    color: "#111827"
+    background: "#f8fafc",
+    color: "#0f172a"
   },
 
   /* TOP BAR */
@@ -326,7 +326,7 @@ const styles = {
   },
 
   logoutBtn: {
-    background: "linear-gradient(135deg,#ef4444,#dc2626)",
+    background: "linear-gradient(135deg,#1d4ed8,#2563eb)",
     border: "none",
     color: "white",
     padding: "13px 22px",
@@ -337,7 +337,7 @@ const styles = {
     gap: "10px",
     fontSize: "14px",
     fontWeight: "600",
-    boxShadow: "0 6px 18px rgba(239,68,68,0.3)"
+    boxShadow: "0 6px 18px rgba(37,99,235,0.25)"
   },
 
   /* HERO */
@@ -349,37 +349,39 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.06)"
+    boxShadow: "0 10px 25px rgba(15,23,42,0.06)"
   },
 
   welcomeText: {
     fontSize: "15px",
-    color: "#6b7280",
+    color: "#64748b",
     marginBottom: "10px"
   },
 
   mainTitle: {
     fontSize: "36px",
     fontWeight: "700",
-    marginBottom: "14px"
+    marginBottom: "14px",
+    color: "#0f172a"
   },
 
   subText: {
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#64748b",
     maxWidth: "600px",
     lineHeight: "24px"
   },
 
   heroBadge: {
-    background: "linear-gradient(135deg,#22c55e,#16a34a)",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
     padding: "14px 22px",
     borderRadius: "14px",
     display: "flex",
     alignItems: "center",
     gap: "10px",
     fontWeight: "600",
-    color: "white"
+    color: "white",
+    boxShadow: "0 8px 20px rgba(37,99,235,0.25)"
   },
 
   statsGrid: {
@@ -397,7 +399,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "20px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.05)"
+    boxShadow: "0 6px 18px rgba(15,23,42,0.05)"
   },
 
   iconBox: {
@@ -413,19 +415,20 @@ const styles = {
 
   cardTitle: {
     fontSize: "14px",
-    color: "#6b7280",
+    color: "#64748b",
     marginBottom: "6px"
   },
 
   cardValue: {
     fontSize: "32px",
     fontWeight: "700",
-    marginBottom: "4px"
+    marginBottom: "4px",
+    color: "#0f172a"
   },
 
   cardBottom: {
     fontSize: "12px",
-    color: "#9ca3af"
+    color: "#94a3b8"
   },
 
   recentSection: {
@@ -434,7 +437,7 @@ const styles = {
     border: "1px solid #e5e7eb",
     borderRadius: "20px",
     padding: "25px",
-    boxShadow: "0 6px 25px rgba(0,0,0,0.05)"
+    boxShadow: "0 6px 20px rgba(15,23,42,0.05)"
   },
 
   sectionHeader: {
@@ -452,11 +455,12 @@ const styles = {
 
   sectionTitle: {
     fontSize: "22px",
-    fontWeight: "700"
+    fontWeight: "700",
+    color: "#0f172a"
   },
 
   liveBadge: {
-    background: "#ef4444",
+    background: "#2563eb",
     padding: "6px 14px",
     borderRadius: "20px",
     fontSize: "12px",
@@ -471,12 +475,12 @@ const styles = {
   },
 
   paperCard: {
-    background: "#f9fafb",
+    background: "#ffffff",
     border: "1px solid #e5e7eb",
     borderRadius: "18px",
     padding: "20px",
     transition: "0.3s",
-    boxShadow: "0 4px 15px rgba(0,0,0,0.05)"
+    boxShadow: "0 4px 14px rgba(15,23,42,0.06)"
   },
 
   paperTop: {
@@ -490,7 +494,7 @@ const styles = {
     width: "50px",
     height: "50px",
     borderRadius: "14px",
-    background: "linear-gradient(135deg,#3b82f6,#2563eb)",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -500,12 +504,13 @@ const styles = {
 
   subjectName: {
     fontSize: "18px",
-    fontWeight: "700"
+    fontWeight: "700",
+    color: "#0f172a"
   },
 
   professorName: {
     fontSize: "13px",
-    color: "#6b7280"
+    color: "#64748b"
   },
 
   paperBody: {
@@ -518,11 +523,12 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    background: "#ffffff",
+    background: "#f8fafc",
     padding: "10px 12px",
     borderRadius: "10px",
     fontSize: "13px",
-    border: "1px solid #e5e7eb"
+    border: "1px solid #e5e7eb",
+    color: "#0f172a"
   },
 
   examBadge: {
@@ -540,7 +546,7 @@ const styles = {
     alignItems: "center",
     gap: "6px",
     fontSize: "12px",
-    color: "#9ca3af"
+    color: "#94a3b8"
   },
 
   emptyCard: {
@@ -550,6 +556,6 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     gap: "10px",
-    color: "#6b7280"
+    color: "#64748b"
   }
 };

@@ -18,6 +18,10 @@ export default function AdminPanel() {
   const [selectedProf, setSelectedProf] = useState(null);
   const [assignedPapers, setAssignedPapers] = useState([]);
   const [editingPaperId, setEditingPaperId] = useState(null);
+  const [academicYears, setAcademicYears] = useState([]);
+  const [years, setYears] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [examTypes, setExamTypes] = useState([]);
 
   const [formData, setFormData] = useState({
     professor_id: "",
@@ -105,14 +109,15 @@ export default function AdminPanel() {
   const handleProfessorChange = (e) => {
     const id = e.target.value;
 
-    setFormData({
-      ...formData,
-      professor_id: id,
-    });
-
     const prof = professors.find(
       (p) => p.id == id
     );
+
+    setFormData({
+      ...formData,
+      professor_id: id,
+      subject: prof ? prof.subject : "", // ✅ AUTO SUBJECT
+    });
 
     setSelectedProf(prof);
   };
@@ -192,19 +197,34 @@ export default function AdminPanel() {
     }
   };
 
+  useEffect(() => {
+    fetchProfessors();
+    fetchAssignedPapers();
+    fetchDropdowns();
+  }, []);
+
+  const fetchDropdowns = async () => {
+    try {
+      const [yearRes, semRes, examRes, academicRes] = await Promise.all([
+        axios.get("http://localhost:5000/dropdown/years"),
+        axios.get("http://localhost:5000/dropdown/semesters"),
+        axios.get("http://localhost:5000/dropdown/exam-types"),
+        axios.get("http://localhost:5000/dropdown/academic-years"),
+      ]);
+
+      setYears(yearRes.data);
+      setSemesters(semRes.data);
+      setExamTypes(examRes.data);
+      setAcademicYears(academicRes.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <Sidebar />
       <div style={styles.mainCard}>
-
-        {/* Back Button */}
-        <button
-          onClick={() => navigate("/admin")}
-          style={styles.backBtn}
-        >
-          <FaArrowLeft />
-          Back Dashboard
-        </button>
 
         {/* Title */}
         <h1 style={styles.title}>
@@ -251,13 +271,19 @@ export default function AdminPanel() {
           <form onSubmit={handleSubmit}>
             <div style={styles.grid}>
 
-              <input
+              <select
                 name="academic_year"
-                placeholder="Academic Year (e.g. 2025-2026)"
                 value={formData.academic_year}
                 onChange={handleChange}
                 style={styles.input}
-              />
+              >
+                <option value="">Select Academic Year</option>
+                {academicYears.map((y) => (
+                  <option key={y.id} value={y.year_label}>
+                    {y.year_label}
+                  </option>
+                ))}
+              </select>
 
               <select
                 name="year"
@@ -266,10 +292,12 @@ export default function AdminPanel() {
                 style={styles.input}
               >
                 <option value="">Select Year</option>
-                <option>1st Year</option>
-                <option>2nd Year</option>
-                <option>3rd Year</option>
-                <option>4th Year</option>
+
+                {years.map((y) => (
+                  <option key={y.id} value={y.year_name}>
+                    {y.year_name}
+                  </option>
+                ))}
               </select>
 
               <select
@@ -279,16 +307,25 @@ export default function AdminPanel() {
                 style={styles.input}
               >
                 <option value="">Select Semester</option>
-                <option>1st Sem</option>
-                <option>2nd Sem</option>
+                {semesters.map((s) => (
+                  <option key={s.id} value={s.semester_name}>
+                    {s.semester_name}
+                  </option>
+                ))}
               </select>
 
               <input
                 name="subject"
-                placeholder="Enter Subject"
+                placeholder="Professor Subject"
                 value={formData.subject}
-                onChange={handleChange}
-                style={styles.input}
+                readOnly
+                style={{
+                  ...styles.input,
+                  background: "#f3f4f6",
+                  cursor: "not-allowed",
+                  fontWeight: "600",
+                  color: "#374151"
+                }}
               />
 
               <select
@@ -298,8 +335,11 @@ export default function AdminPanel() {
                 style={styles.input}
               >
                 <option value="">Select Exam Type</option>
-                <option>Major</option>
-                <option>Minor</option>
+                {examTypes.map((e) => (
+                  <option key={e.id} value={e.exam_type_name}>
+                    {e.exam_type_name}
+                  </option>
+                ))}
               </select>
 
               <input
@@ -355,84 +395,59 @@ export default function AdminPanel() {
           </h2>
 
           {assignedPapers.length === 0 ? (
-            <div style={styles.emptyState}>
-              No papers assigned yet
-            </div>
+            <div style={styles.emptyState}>No papers assigned yet</div>
           ) : (
-            <div style={styles.paperGrid}>
+            <div style={styles.paperTable}>
+
               {assignedPapers.map((paper) => (
-                <div
-                  key={paper.id}
-                  style={styles.paperCard}
-                >
-                  <div style={styles.paperHeader}>
-                    <FaBookOpen size={24} />
-                    <h3 style={styles.paperTitle}>
-                      {paper.subject}
-                    </h3>
+                <div key={paper.id} style={styles.paperRow}>
+
+                  {/* ALL IN ONE LINE */}
+                  <div style={styles.colSubject}>
+                    <FaBookOpen style={{ marginRight: "6px" }} />
+                    {paper.subject}
                   </div>
 
-                  <div style={styles.paperDetails}>
-                    <div style={styles.detailRow}>
-                      <span>Professor</span>
-                      <strong>
-                        {paper.professor_name}
-                      </strong>
-                    </div>
-
-                    <div style={styles.detailRow}>
-                      <span>Academic Year</span>
-                      <strong>{paper.academic_year}</strong>
-                    </div>
-
-                    <div style={styles.detailRow}>
-                      <span>Year</span>
-                      <strong>{paper.year}</strong>
-                    </div>
-
-                    <div style={styles.detailRow}>
-                      <span>Semester</span>
-                      <strong>
-                        {paper.semester}
-                      </strong>
-                    </div>
-
-                    <div style={styles.detailRow}>
-                      <span>Roll Range</span>
-                      <strong>
-                        {paper.start_roll} - {paper.end_roll}
-                      </strong>
-                    </div>
+                  <div style={styles.col}>
+                    {paper.professor_name}
                   </div>
 
-                  <div style={styles.examBadge}>
+                  <div style={styles.col}>
+                    {paper.academic_year}
+                  </div>
+
+                  <div style={styles.col}>
+                    {paper.year} • {paper.semester}
+                  </div>
+
+                  <div style={styles.col}>
                     {paper.exam_type}
                   </div>
 
-                  {/* UPDATE BUTTON */}
-                  <button
-                    type="button"
-                    style={styles.updateBtn}
-                    onClick={() =>
-                      handleEditPaper(paper)
-                    }
-                  >
-                    <FaEdit />
-                    Update
-                  </button>
+                  <div style={styles.col}>
+                    {paper.start_roll} - {paper.end_roll}
+                  </div>
 
-                  {/* REMOVE BUTTON SAME */}
-                  <button
-                    style={styles.deleteBtn}
-                    onClick={() =>
-                      handleDeletePaper(paper.id)
-                    }
-                  >
-                    <FaTrash />
-                    Remove Paper
-                  </button>
+                  {/* ACTION BUTTONS */}
+                  <div style={styles.colActions}>
+                    <button
+                      style={styles.updateBtn}
+                      onClick={() => handleEditPaper(paper)}
+                    >
+                      <FaEdit />
+                    </button>
+
+                    <button
+                      style={styles.deleteBtn}
+                      onClick={() => handleDeletePaper(paper.id)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+
                 </div>
               ))}
+
             </div>
           )}
         </div>
@@ -448,7 +463,7 @@ const styles = {
     marginLeft: "270px",
     width: "calc(100% - 270px)",
     minHeight: "100vh",
-    padding: "40px",
+    padding: "0px",
     fontFamily: "'Poppins', sans-serif",
     background: "#f1f5f9",
     boxSizing: "border-box"
@@ -647,5 +662,43 @@ const styles = {
     textAlign: "center",
     padding: "30px",
     color: "#6b7280"
-  }
+  },
+  paperTable: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px"
+  },
+
+  paperRow: {
+    display: "grid",
+    gridTemplateColumns: "2fr 2fr 1.5fr 1.5fr 1fr 2fr 1fr",
+    alignItems: "center",
+    background: "#ffffff",
+    padding: "14px 16px",
+    borderRadius: "12px",
+    border: "1px solid #e5e7eb",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.04)",
+    transition: "0.2s",
+    fontSize: "13px",
+    color: "#1f2937"
+  },
+
+  colSubject: {
+    display: "flex",
+    alignItems: "center",
+    fontWeight: "700",
+    color: "#1e3a8a"
+  },
+
+  col: {
+    textAlign: "center",
+    fontWeight: "500",
+    color: "#374151"
+  },
+
+  colActions: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "6px"
+  },
 };

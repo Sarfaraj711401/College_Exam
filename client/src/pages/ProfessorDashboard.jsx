@@ -16,22 +16,34 @@ import {
 export default function ProfessorDashboard() {
   const navigate = useNavigate();
 
-  const prof = JSON.parse(
-    localStorage.getItem("professor")
-  );
+  // Safely parse local storage
+  const profStr = localStorage.getItem("professor");
+  const prof = profStr ? JSON.parse(profStr) : null;
 
   const [papers, setPapers] = useState([]);
 
   useEffect(() => {
+    // If no professor is logged in, redirect to login page instantly
+    if (!prof || !prof.id) {
+      navigate("/professor-login");
+      return;
+    }
+
     axios
-  .get(`http://localhost:5000/professor/assigned/${prof.id}`)
-      .then((res) => setPapers(res.data));
-  }, [prof.id]);
+      .get(`http://localhost:5000/professor/assigned/${prof.id}`)
+      .then((res) => setPapers(res.data))
+      .catch((err) => console.log("Error fetching papers:", err));
+  }, [navigate, prof]);
 
   const handleLogout = () => {
     localStorage.removeItem("professor");
     navigate("/professor-login");
   };
+
+  // Prevent rendering the page and crashing if prof is null
+  if (!prof) {
+    return null;
+  }
 
   return (
     <div style={styles.container}>
@@ -188,10 +200,9 @@ export default function ProfessorDashboard() {
 const styles = {
   container: {
     minHeight: "100vh",
-    padding: "25px",
-    background:
-      "linear-gradient(135deg,#0b1120,#1e293b,#334155)",
-    color: "white",
+    padding: "28px",
+    background: "#f5f8ff",
+    color: "#0f172a",
     fontFamily: "'Poppins', sans-serif"
   },
 
@@ -199,151 +210,153 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "20px 30px",
-    background: "rgba(255,255,255,0.08)",
-    backdropFilter: "blur(18px)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: "20px",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.2)"
+    padding: "18px 26px",
+    background: "#ffffff",
+    border: "1px solid #e6eaf5",
+    borderRadius: "16px",
+    boxShadow: "0 8px 24px rgba(37,99,235,0.08)"
   },
 
   subText: {
-    color: "#cbd5e1",
-    fontSize: "14px"
+    color: "#64748b",
+    fontSize: "13px",
+    marginTop: "2px"
   },
 
   logoutBtn: {
     background: "linear-gradient(135deg,#ef4444,#dc2626)",
-    color: "white",
+    color: "#fff",
     border: "none",
-    padding: "12px 22px",
-    borderRadius: "12px",
+    padding: "10px 16px",
+    borderRadius: "10px",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    fontWeight: "bold",
-    boxShadow: "0 5px 20px rgba(239,68,68,0.3)"
+    fontWeight: "600",
+    boxShadow: "0 6px 18px rgba(239,68,68,0.25)"
   },
 
   hero: {
-    marginTop: "25px",
-    padding: "40px",
-    borderRadius: "25px",
-    background:
-      "linear-gradient(135deg,#4f46e5,#7c3aed,#9333ea)",
+    marginTop: "24px",
+    padding: "38px",
+    borderRadius: "20px",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa)",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    boxShadow: "0 10px 40px rgba(124,58,237,0.3)"
+    boxShadow: "0 12px 30px rgba(37,99,235,0.25)",
+    color: "#fff"
   },
 
   heroCard: {
-    background: "rgba(255,255,255,0.15)",
-    padding: "25px",
-    borderRadius: "20px",
+    background: "rgba(255,255,255,0.18)",
+    padding: "22px",
+    borderRadius: "16px",
     textAlign: "center",
-    minWidth: "180px",
-    backdropFilter: "blur(10px)"
+    minWidth: "170px",
+    backdropFilter: "blur(12px)",
+    border: "1px solid rgba(255,255,255,0.25)"
   },
 
   mainGrid: {
     display: "grid",
     gridTemplateColumns: "340px 1fr",
-    gap: "25px",
+    gap: "26px",
     marginTop: "30px"
   },
 
   profileCard: {
-    background: "rgba(255,255,255,0.08)",
-    backdropFilter: "blur(18px)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    padding: "30px",
-    borderRadius: "25px",
+    background: "#ffffff",
+    border: "1px solid #e6eaf5",
+    padding: "26px",
+    borderRadius: "18px",
     textAlign: "center",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+    boxShadow: "0 10px 25px rgba(37,99,235,0.08)"
   },
 
   profileImage: {
-    width: "160px",
-    height: "160px",
+    width: "150px",
+    height: "150px",
     borderRadius: "50%",
     objectFit: "cover",
-    border: "5px solid rgba(255,255,255,0.8)",
-    marginBottom: "20px",
-    boxShadow: "0 8px 25px rgba(0,0,0,0.3)"
+    border: "4px solid #2563eb",
+    marginBottom: "16px",
+    boxShadow: "0 10px 25px rgba(37,99,235,0.25)"
   },
 
   detailsList: {
-    marginTop: "25px",
+    marginTop: "18px",
     textAlign: "left",
     lineHeight: "2.2",
-    background: "rgba(255,255,255,0.05)",
-    padding: "20px",
-    borderRadius: "15px"
+    background: "#f8fbff",
+    padding: "18px",
+    borderRadius: "14px",
+    border: "1px solid #e6eaf5",
+    color: "#0f172a"
   },
 
   paperSection: {
-    background: "rgba(255,255,255,0.08)",
-    backdropFilter: "blur(18px)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    padding: "30px",
-    borderRadius: "25px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+    background: "#ffffff",
+    border: "1px solid #e6eaf5",
+    padding: "26px",
+    borderRadius: "18px",
+    boxShadow: "0 10px 25px rgba(37,99,235,0.08)"
   },
 
   paperGrid: {
     display: "grid",
-    gridTemplateColumns:
-      "repeat(auto-fit,minmax(280px,1fr))",
-    gap: "20px",
-    marginTop: "25px"
+    gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))",
+    gap: "18px",
+    marginTop: "20px"
   },
 
   paperCard: {
-    background:
-      "linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.04))",
-    padding: "22px",
-    borderRadius: "20px",
-    border: "1px solid rgba(255,255,255,0.08)",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.15)"
+    background: "#f9fbff",
+    padding: "20px",
+    borderRadius: "16px",
+    border: "1px solid #dbeafe",
+    boxShadow: "0 6px 18px rgba(37,99,235,0.08)",
+    transition: "0.25s ease"
   },
 
   paperHeader: {
     display: "flex",
     alignItems: "center",
     gap: "10px",
-    marginBottom: "15px",
-    fontSize: "18px",
-    fontWeight: "bold"
+    marginBottom: "10px",
+    fontSize: "17px",
+    fontWeight: "700",
+    color: "#1e3a8a"
   },
 
   paperInfo: {
     lineHeight: "2",
-    color: "#e2e8f0",
+    color: "#334155",
     fontSize: "14px"
   },
 
   reviewBtn: {
     width: "100%",
-    marginTop: "20px",
-    padding: "13px",
+    marginTop: "16px",
+    padding: "12px",
     border: "none",
-    borderRadius: "12px",
-    background:
-      "linear-gradient(135deg,#10b981,#059669)",
+    borderRadius: "10px",
+    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
     color: "white",
-    fontWeight: "bold",
+    fontWeight: "600",
     cursor: "pointer",
-    boxShadow: "0 5px 20px rgba(16,185,129,0.3)"
+    boxShadow: "0 8px 20px rgba(37,99,235,0.25)",
+    transition: "0.2s"
   },
 
   emptyCard: {
     marginTop: "20px",
     textAlign: "center",
-    padding: "50px",
-    background: "rgba(255,255,255,0.05)",
-    borderRadius: "20px",
-    border: "1px solid rgba(255,255,255,0.08)"
+    padding: "40px",
+    background: "#f8fafc",
+    borderRadius: "16px",
+    border: "1px solid #e6eaf5",
+    color: "#64748b"
   }
 };

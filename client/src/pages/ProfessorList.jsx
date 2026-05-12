@@ -108,9 +108,6 @@ export default function ProfessorList() {
       <Sidebar />
 
       <div style={styles.mainCard}>
-        <button onClick={() => navigate("/admin")} style={styles.backBtn}>
-          ⬅ Back
-        </button>
 
         <h1 style={styles.title}>Professor Management Panel</h1>
 
@@ -121,6 +118,69 @@ export default function ProfessorList() {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={styles.searchInput}
         />
+
+        {/* VIEW PANEL */}
+        {selectedProfessor && (
+          <div style={styles.profileLayout}>
+
+            {/* LEFT SIDE */}
+            <div style={styles.leftProfile}>
+              <img
+                src={selectedProfessor.photo}
+                alt=""
+                style={styles.bigPhoto}
+              />
+
+              <h2 style={styles.name}>{selectedProfessor.name}</h2>
+              <p style={styles.designation}>{selectedProfessor.designation}</p>
+
+
+            </div>
+
+            {/* RIGHT SIDE */}
+            <div style={styles.rightProfile}>
+
+              {/* PERSONAL */}
+              <div style={styles.card}>
+                <h3 style={styles.cardTitle}>Personal Details</h3>
+
+                <div style={styles.grid}>
+                  <InfoRow label="Name:-   " value={selectedProfessor.name} />
+                  <InfoRow label="Designation:-   " value={selectedProfessor.designation} />
+                  <InfoRow label="Subject:-   " value={selectedProfessor.subject} />
+                  <InfoRow label="Email:-   " value={selectedProfessor.email} />
+                  <InfoRow label="Mobile:-   " value={selectedProfessor.mobile} />
+                  <InfoRow label="Experience:-   " value={selectedProfessor.experience} />
+                </div>
+              </div>
+
+              {/* BANK */}
+              <div style={styles.card}>
+                <h3 style={styles.cardTitle}>Banking Details</h3>
+
+                <div style={styles.grid}>
+                  <InfoRow label="Bank:-   " value={selectedProfessor.bank_name} />
+                  <InfoRow label="Branch:-   " value={selectedProfessor.branch_name} />
+                  <InfoRow label="IFSC Code:-   " value={selectedProfessor.ifsc_code} />
+                  <InfoRow label="Account Number:-   " value={selectedProfessor.account_number} />
+                  <InfoRow label="Account Holder Name:-   " value={selectedProfessor.account_holder_name} />
+                  <InfoRow label="Bank Address:-   " value={selectedProfessor.bank_address} />
+                </div>
+              </div>
+
+            </div>
+
+            <div style={styles.closeViewWrapper}>
+              <button
+                style={styles.closeViewBtn}
+                onClick={() => setSelectedProfessor(null)}
+              >
+                Close Profile
+              </button>
+            </div>
+
+          </div>
+        )}
 
         {/* TABLE */}
         <div style={styles.leftSection}>
@@ -177,57 +237,7 @@ export default function ProfessorList() {
           </table>
         </div>
 
-        {/* VIEW PANEL */}
-        {selectedProfessor && (
-          <div style={styles.profileLayout}>
 
-            {/* LEFT SIDE */}
-            <div style={styles.leftProfile}>
-              <img
-                src={selectedProfessor.photo}
-                alt=""
-                style={styles.bigPhoto}
-              />
-
-              <h2 style={styles.name}>{selectedProfessor.name}</h2>
-              <p style={styles.designation}>{selectedProfessor.designation}</p>
-
-              
-            </div>
-
-            {/* RIGHT SIDE */}
-            <div style={styles.rightProfile}>
-
-              {/* PERSONAL */}
-              <div style={styles.card}>
-                <h3 style={styles.cardTitle}>Personal Details</h3>
-
-                <div style={styles.grid}>
-                  <InfoRow label="Name:-   " value={selectedProfessor.name} />
-                  <InfoRow label="Designation:-   " value={selectedProfessor.designation} />
-                  <InfoRow label="Subject:-   " value={selectedProfessor.subject} />
-                  <InfoRow label="Email:-   " value={selectedProfessor.email} />
-                  <InfoRow label="Mobile:-   " value={selectedProfessor.mobile} />
-                  <InfoRow label="Experience:-   " value={selectedProfessor.experience} />
-                </div>
-              </div>
-
-              {/* BANK */}
-              <div style={styles.card}>
-                <h3 style={styles.cardTitle}>Banking Details</h3>
-
-                <div style={styles.grid}>
-                  <InfoRow label="Bank:-   " value={selectedProfessor.bank_name} />
-                  <InfoRow label="Branch:-   " value={selectedProfessor.branch_name} />
-                  <InfoRow label="IFSC Code:-   " value={selectedProfessor.ifsc_code} />
-                  <InfoRow label="Account Number:-   " value={selectedProfessor.account_number} />
-                  <InfoRow label="Account Holder Name:-   " value={selectedProfessor.account_holder_name} />
-                </div>
-              </div>
-
-            </div>
-          </div>
-        )}
 
         {/* MODAL */}
         {editingProfessor && (
@@ -235,16 +245,58 @@ export default function ProfessorList() {
             <div style={styles.editModal}>
               <h2>Update Professor</h2>
 
-              {Object.keys(editForm).map((field) => (
-                <input
-                  key={field}
-                  name={field}
-                  value={editForm[field]}
-                  onChange={handleEditChange}
-                  placeholder={field}
-                  style={styles.input}
-                />
-              ))}
+              {editingProfessor && (
+                <div style={styles.editOverlay}>
+                  <div style={styles.editModal}>
+
+                    <h2 style={styles.modalTitle}>Update Professor Profile</h2>
+
+                    {/* PERSONAL INFO */}
+                    <div style={styles.sectionCard}>
+                      <h3 style={styles.sectionTitle}>Personal Information</h3>
+
+                      <div style={styles.formGrid}>
+                        <input name="name" value={editForm.name} onChange={handleEditChange} placeholder="Full Name" style={styles.input} />
+                        <input name="designation" value={editForm.designation} onChange={handleEditChange} placeholder="Designation" style={styles.input} />
+                        <input name="subject" value={editForm.subject} onChange={handleEditChange} placeholder="Subject" style={styles.input} />
+                        <input name="email" value={editForm.email} onChange={handleEditChange} placeholder="Email" style={styles.input} />
+                        <input name="mobile" value={editForm.mobile} onChange={handleEditChange} placeholder="Mobile" style={styles.input} />
+                        <input name="experience" value={editForm.experience} onChange={handleEditChange} placeholder="Experience" style={styles.input} />
+                      </div>
+                    </div>
+
+                    {/* BANK INFO */}
+                    <div style={styles.sectionCard}>
+                      <h3 style={styles.sectionTitle}>Bank Details</h3>
+
+                      <div style={styles.formGrid}>
+                        <input name="bank_name" value={editForm.bank_name} onChange={handleEditChange} placeholder="Bank Name" style={styles.input} />
+                        <input name="branch_name" value={editForm.branch_name} onChange={handleEditChange} placeholder="Branch Name" style={styles.input} />
+                        <input name="ifsc_code" value={editForm.ifsc_code} onChange={handleEditChange} placeholder="IFSC Code" style={styles.input} />
+                        <input name="account_number" value={editForm.account_number} onChange={handleEditChange} placeholder="Account Number" style={styles.input} />
+                        <input name="account_holder_name" value={editForm.account_holder_name} onChange={handleEditChange} placeholder="Account Holder Name" style={styles.input} />
+                        <input name="photo" value={editForm.photo} onChange={handleEditChange} placeholder="Photo URL" style={styles.input} />
+                      </div>
+                    </div>
+
+                    {/* BUTTONS */}
+                    <button
+                      onClick={() => handleFinalUpdate(editingProfessor)}
+                      style={styles.saveBtn}
+                    >
+                      Save Changes
+                    </button>
+
+                    <button
+                      onClick={() => setEditingProfessor(null)}
+                      style={styles.closeBtn}
+                    >
+                      Cancel
+                    </button>
+
+                  </div>
+                </div>
+              )}
 
               <button
                 onClick={() => handleFinalUpdate(editingProfessor)}
@@ -280,198 +332,219 @@ function InfoRow({ label, value }) {
 const styles = {
   container: {
     marginLeft: "270px",
-    padding: "30px",
-    background: "#f1f5f9",
+    padding: "20px",
+    background: "#eef4ff",
     minHeight: "100vh"
   },
 
   mainCard: {
-    background: "#fff",
+    background: "#ffffff",
     padding: "30px",
-    borderRadius: "16px",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.08)"
-  },
-
-  backBtn: {
-    background: "#111827",
-    color: "#fff",
-    padding: "10px 15px",
-    borderRadius: "8px",
-    border: "none",
-    cursor: "pointer"
+    borderRadius: "24px",
+    boxShadow: "0 12px 40px rgba(37,99,235,0.08)"
   },
 
   title: {
     textAlign: "center",
-    marginBottom: "20px",
-    fontWeight: "600"
+    marginBottom: "25px",
+    fontWeight: "700",
+    fontSize: "28px",
+    color: "#1e3a8a",
+    letterSpacing: "0.5px"
   },
 
   searchInput: {
     width: "100%",
-    padding: "12px",
-    marginBottom: "20px",
-    borderRadius: "8px",
-    border: "1px solid #d1d5db"
+    padding: "13px 16px",
+    marginBottom: "30px",
+    borderRadius: "12px",
+    border: "1px solid #bfdbfe",
+    outline: "none",
+    fontSize: "14px",
+    background: "#f8fbff",
+    color: "#1e293b",
+    boxSizing: "border-box"
   },
 
   leftSection: {
-    marginBottom: "30px"
+    marginTop: "30px",
+    overflowX: "auto"
   },
 
   table: {
     width: "100%",
-    borderCollapse: "collapse"
+    borderCollapse: "collapse",
+    background: "#ffffff",
+    borderRadius: "18px",
+    overflow: "hidden"
   },
 
   th: {
-    background: "#2563eb",
-    color: "#fff",
-    padding: "12px"
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#ffffff",
+    padding: "14px",
+    fontSize: "14px",
+    fontWeight: "600",
+    textAlign: "center"
   },
 
   tr: {
     textAlign: "center",
-    borderBottom: "1px solid #e5e7eb"
+    borderBottom: "1px solid #e2e8f0"
   },
 
   photo: {
-    width: "50px",
-    height: "50px",
+    width: "52px",
+    height: "52px",
     borderRadius: "50%",
-    objectFit: "cover"
+    objectFit: "cover",
+    border: "2px solid #3b82f6",
+    margin: "8px 0"
   },
 
   actionButtons: {
     display: "flex",
-    gap: "6px",
-    justifyContent: "center"
+    gap: "8px",
+    justifyContent: "center",
+    alignItems: "center"
   },
 
   viewBtn: {
     background: "#22c55e",
     color: "#fff",
     border: "none",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    cursor: "pointer"
+    padding: "7px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: "600"
   },
 
   updateBtn: {
     background: "#2563eb",
     color: "#fff",
     border: "none",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    cursor: "pointer"
+    padding: "7px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: "600"
   },
 
   deleteBtn: {
     background: "#ef4444",
     color: "#fff",
     border: "none",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    cursor: "pointer"
+    padding: "7px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: "600"
   },
 
-  /* 🔥 PROFILE LAYOUT */
+  /* PROFILE SECTION */
   profileLayout: {
-    display: "grid",
-    gridTemplateColumns: "300px 1fr",
-    gap: "25px",
-    marginTop: "25px"
+    background: "#ffffff",
+    borderRadius: "28px",
+    overflow: "hidden",
+    marginBottom: "40px",
+    boxShadow: "0 12px 40px rgba(37,99,235,0.10)",
+    border: "1px solid #dbeafe"
   },
 
-  /* LEFT PROFILE CARD */
+  /* TOP BLUE SECTION */
   leftProfile: {
-    background: "linear-gradient(145deg,#ffffff,#f8fafc)",
-    padding: "25px",
-    borderRadius: "16px",
-    textAlign: "center",
-    border: "1px solid #e5e7eb",
-
-    /* 🔥 CENTER EVERYTHING */
+    width: "100%",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa)",
+    padding: "35px 20px 28px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "flex-start"
+    justifyContent: "center",
+    textAlign: "center"
   },
 
   bigPhoto: {
-    width: "130px",
-    height: "130px",
+    width: "120px",
+    height: "120px",
     borderRadius: "50%",
     objectFit: "cover",
-
-    /* 🔥 IMAGE POSITION FIX */
-    marginTop: "100px",
-    marginBottom: "15px",
-
-    border: "4px solid #2563eb",
-    boxShadow: "0 8px 25px rgba(37,99,235,0.25)"
+    border: "5px solid white",
+    boxShadow: "0 12px 30px rgba(0,0,0,0.18)",
+    marginBottom: "16px"
   },
 
   name: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "#111827"
+    fontSize: "22px",
+    fontWeight: "700",
+    color: "#ffffff",
+    marginBottom: "6px",
+    letterSpacing: "0.3px"
   },
 
   designation: {
     fontSize: "13px",
-    color: "#6b7280",
-    marginBottom: "15px"
+    color: "rgba(255,255,255,0.92)",
+    fontWeight: "500"
   },
 
-  /* RIGHT SIDE */
+  /* DETAILS AREA */
   rightProfile: {
+    padding: "28px",
     display: "flex",
     flexDirection: "column",
-    gap: "20px"
+    gap: "22px",
+    background: "#f8fbff"
   },
 
   card: {
     background: "#ffffff",
-    padding: "20px",
-    borderRadius: "14px",
-    border: "1px solid #e5e7eb",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.05)"
+    borderRadius: "20px",
+    padding: "22px",
+    border: "1px solid #dbeafe",
+    boxShadow: "0 4px 20px rgba(37,99,235,0.05)"
   },
 
   cardTitle: {
-    fontSize: "15px",
-    fontWeight: "600",
-    marginBottom: "15px",
-    color: "#1f2937"
+    fontSize: "17px",
+    fontWeight: "700",
+    marginBottom: "18px",
+    color: "#1e3a8a",
+    borderBottom: "2px solid #dbeafe",
+    paddingBottom: "10px"
   },
 
   grid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: "12px"
+    gap: "14px"
   },
 
-  /* INFO ROW */
   infoRow: {
-    background: "#f9fafb",
-    padding: "12px",
-    borderRadius: "10px",
-    border: "1px solid #f1f5f9",
+    background: "#f8fbff",
+    padding: "12px 14px",
+    borderRadius: "14px",
+    border: "1px solid #dbeafe",
+    display: "flex",
+    flexDirection: "column",
     transition: "0.2s"
   },
 
   label: {
-    fontSize: "11px",
-    color: "#6b7280",
+    fontSize: "10px",
+    color: "#64748b",
+    fontWeight: "700",
+    marginBottom: "5px",
+    letterSpacing: "0.7px",
     textTransform: "uppercase"
   },
 
   value: {
-    fontSize: "14px",
+    fontSize: "13px",
     fontWeight: "600",
-    color: "#111827",
-    marginTop: "3px"
+    color: "#0f172a",
+    lineHeight: "1.5",
+    wordBreak: "break-word"
   },
 
   /* MODAL */
@@ -481,45 +554,165 @@ const styles = {
     left: 0,
     width: "100%",
     height: "100%",
-    background: "rgba(0,0,0,0.5)",
+    background: "rgba(15,23,42,0.55)",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    zIndex: 999
   },
 
   editModal: {
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "12px",
-    width: "400px"
+    background: "#ffffff",
+    padding: "30px",
+    borderRadius: "22px",
+    width: "420px",
+    boxShadow: "0 20px 50px rgba(0,0,0,0.15)"
   },
 
   input: {
     width: "100%",
-    padding: "10px",
-    marginBottom: "10px",
-    borderRadius: "6px",
-    border: "1px solid #ccc"
+    padding: "12px",
+    marginBottom: "12px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
+    outline: "none",
+    fontSize: "13px",
+    color: "#0f172a",
+    background: "#f8fafc",
+    boxSizing: "border-box"
   },
 
   saveBtn: {
-    background: "#22c55e",
-    color: "#fff",
-    padding: "10px",
+    background: "linear-gradient(135deg,#22c55e,#16a34a)",
+    color: "#ffffff",
+    padding: "12px",
     width: "100%",
     border: "none",
     marginBottom: "10px",
-    borderRadius: "6px",
-    cursor: "pointer"
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "700",
+    fontSize: "14px"
   },
 
   closeBtn: {
-    background: "#ef4444",
-    color: "#fff",
-    padding: "10px",
+    background: "linear-gradient(135deg,#ef4444,#dc2626)",
+    color: "#ffffff",
+    padding: "12px",
     width: "100%",
     border: "none",
-    borderRadius: "6px",
-    cursor: "pointer"
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "700",
+    fontSize: "14px"
+  },
+  closeViewWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "0 0 28px 0",
+    background: "#f8fbff"
+  },
+
+  closeViewBtn: {
+    background: "linear-gradient(135deg,#ef4444,#dc2626)",
+    color: "#ffffff",
+    border: "none",
+    padding: "12px 28px",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "700",
+    boxShadow: "0 8px 20px rgba(239,68,68,0.25)",
+    transition: "0.3s"
+  },
+
+  editOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(15,23,42,0.65)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backdropFilter: "blur(6px)",
+    zIndex: 999
+  },
+
+  editModal: {
+    background: "#ffffff",
+    width: "850px",
+    maxHeight: "90vh",
+    overflowY: "auto",
+    borderRadius: "22px",
+    padding: "30px",
+    boxShadow: "0 25px 80px rgba(0,0,0,0.25)"
+  },
+
+  modalTitle: {
+    fontSize: "22px",
+    fontWeight: "800",
+    color: "#1e3a8a",
+    marginBottom: "20px",
+    textAlign: "center"
+  },
+
+  sectionCard: {
+    background: "#f8fbff",
+    border: "1px solid #dbeafe",
+    padding: "18px",
+    borderRadius: "16px",
+    marginBottom: "18px"
+  },
+
+  sectionTitle: {
+    fontSize: "15px",
+    fontWeight: "700",
+    color: "#2563eb",
+    marginBottom: "12px"
+  },
+
+  formGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "12px"
+  },
+
+  input: {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "12px",
+    border: "1px solid #cfe3ff",
+    outline: "none",
+    fontSize: "13px",
+    background: "#ffffff",
+    transition: "0.2s"
+  },
+
+  saveBtn: {
+    width: "100%",
+    padding: "14px",
+    borderRadius: "14px",
+    border: "none",
+    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
+    color: "#fff",
+    fontWeight: "700",
+    cursor: "pointer",
+    marginTop: "10px",
+    boxShadow: "0 10px 25px rgba(37,99,235,0.25)"
+  },
+
+  closeBtn: {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "14px",
+    border: "none",
+    background: "#ef4444",
+    color: "#fff",
+    fontWeight: "700",
+    cursor: "pointer",
+    marginTop: "10px"
   }
+
 };
