@@ -10,6 +10,7 @@ import ProfessorLogin from "./pages/ProfessorLogin";
 import ProfessorDashboard from "./pages/ProfessorDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import ReviewMarks from "./pages/ReviewMarks";
+import ExaminerHeadPage from "./pages/ExaminerHeadPage";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
         {/* Examination Planning Section */}
         <Route path="/examination-module" element={<AdminPanel />} />
         <Route path="/controller-exams" element={<AdminDashboard />} />
-        <Route path="/head-examiner" element={<ProfessorList />} />
+        <Route path="/head-examiner" element={<ExaminerHeadPage />} />
 
         {/* Evaluation Section */}
         <Route path="/examiner-module" element={<ProfessorDashboard />} />

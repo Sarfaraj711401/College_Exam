@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";   // ADD THIS
+
 import {
   FaBookOpen,
   FaUserTie,
@@ -16,14 +18,12 @@ import {
 export default function ProfessorDashboard() {
   const navigate = useNavigate();
 
-  // Safely parse local storage
   const profStr = localStorage.getItem("professor");
   const prof = profStr ? JSON.parse(profStr) : null;
 
   const [papers, setPapers] = useState([]);
 
   useEffect(() => {
-    // If no professor is logged in, redirect to login page instantly
     if (!prof || !prof.id) {
       navigate("/professor-login");
       return;
@@ -40,164 +40,156 @@ export default function ProfessorDashboard() {
     navigate("/professor-login");
   };
 
-  // Prevent rendering the page and crashing if prof is null
   if (!prof) {
     return null;
   }
 
   return (
-    <div style={styles.container}>
+    <div style={styles.layoutContainer}>
 
-      {/* Navbar */}
-      <div style={styles.navbar}>
-        <div>
-          <h2>Professor Dashboard</h2>
-          <p style={styles.subText}>
-            Manage assigned papers easily
-          </p>
-        </div>
+      {/* Sidebar */}
+      <Sidebar />
 
-        <button
-          onClick={handleLogout}
-          style={styles.logoutBtn}
-        >
-          <FaSignOutAlt />
-          Logout
-        </button>
-      </div>
+      {/* Main Content */}
+      <div style={styles.contentArea}>
+        <div style={styles.container}>
 
-      {/* Hero Section */}
-      <div style={styles.hero}>
-        <div>
-          <h1>Welcome Back, {prof.name} 👋</h1>
-          <p>
-            Track your evaluation work efficiently
-          </p>
-        </div>
-
-        <div style={styles.heroCard}>
-          <FaClipboardCheck size={35} />
-          <h2>{papers.length}</h2>
-          <p>Total Assigned Papers</p>
-        </div>
-      </div>
-
-      {/* Main Section */}
-      <div style={styles.mainGrid}>
-
-        {/* LEFT SIDE → Professor Profile */}
-        <div style={styles.profileCard}>
-          <img
-            src={prof.photo}
-            alt="profile"
-            style={styles.profileImage}
-          />
-
-          <h2>{prof.name}</h2>
-
-          <div style={styles.detailsList}>
-            <p>
-              <FaUserTie /> <strong>Designation:</strong>{" "}
-              {prof.designation}
-            </p>
-
-            <p>
-              <FaGraduationCap /> <strong>Subject:</strong>{" "}
-              {prof.subject}
-            </p>
-
-            <p>
-              <FaEnvelope /> <strong>Email:</strong>{" "}
-              {prof.email}
-            </p>
-
-            <p>
-              <FaPhone /> <strong>Mobile:</strong>{" "}
-              {prof.mobile}
-            </p>
-
-            <p>
-              <FaBriefcase /> <strong>Experience:</strong>{" "}
-              {prof.experience}
-            </p>
-          </div>
-        </div>
-
-        {/* RIGHT SIDE → Assigned Papers */}
-        <div style={styles.paperSection}>
-          <h2>Assigned Papers</h2>
-
-          {papers.length === 0 ? (
-            <div style={styles.emptyCard}>
-              <FaBookOpen size={50} />
-              <h3>No Papers Assigned Yet</h3>
-              <p>
-                Admin has not assigned any papers
+          {/* Navbar */}
+          <div style={styles.navbar}>
+            <div>
+              <h2>Professor Dashboard</h2>
+              <p style={styles.subText}>
+                Manage assigned papers easily
               </p>
             </div>
-          ) : (
-            <div style={styles.paperGrid}>
-              {papers.map((paper) => (
-                <div
-                  key={paper.id}
-                  style={styles.paperCard}
-                >
-                  <div style={styles.paperHeader}>
-                    <FaBookOpen />
-                    <h3>{paper.subject}</h3>
-                  </div>
 
-                  <div style={styles.paperInfo}>
-                    <p>
-                      Academic Year: {paper.academic_year}
-                    </p>
-                    <p>
-                      <FaCalendarAlt /> Year:{" "}
-                      {paper.year}
-                    </p>
+            <button onClick={handleLogout} style={styles.logoutBtn}>
+              <FaSignOutAlt />
+              Logout
+            </button>
+          </div>
 
-                    <p>
-                      Subject: {paper.subject}
-                    </p>
-
-                    <p>
-                      Semester: {paper.semester}
-                    </p>
-
-                    <p>
-                      Exam Type: {paper.exam_type}
-                    </p>
-
-                    <p>
-                      Roll Range:{" "}
-                      {paper.start_roll} -{" "}
-                      {paper.end_roll}
-                    </p>
-                  </div>
-
-                  <button
-                    style={styles.reviewBtn}
-                    onClick={() =>
-                      navigate("/review-marks", {
-                        state: { paper }
-                      })
-                    }
-                  >
-                    Start Review
-                  </button>
-                </div>
-              ))}
+          {/* Hero Section */}
+          <div style={styles.hero}>
+            <div>
+              <h1>Welcome Back, {prof.name} 👋</h1>
+              <p>Track your evaluation work efficiently</p>
             </div>
-          )}
+
+            <div style={styles.heroCard}>
+              <FaClipboardCheck size={35} />
+              <h2>{papers.length}</h2>
+              <p>Total Assigned Papers</p>
+            </div>
+          </div>
+
+          {/* Main Section */}
+          <div style={styles.mainGrid}>
+
+            {/* Profile */}
+            <div style={styles.profileCard}>
+              <img
+                src={prof.photo}
+                alt="profile"
+                style={styles.profileImage}
+              />
+
+              <h2>{prof.name}</h2>
+
+              <div style={styles.detailsList}>
+                <p>
+                  <FaUserTie /> <strong>Designation:</strong>{" "}
+                  {prof.designation}
+                </p>
+
+                <p>
+                  <FaGraduationCap /> <strong>Subject:</strong>{" "}
+                  {prof.subject}
+                </p>
+
+                <p>
+                  <FaEnvelope /> <strong>Email:</strong>{" "}
+                  {prof.email}
+                </p>
+
+                <p>
+                  <FaPhone /> <strong>Mobile:</strong>{" "}
+                  {prof.mobile}
+                </p>
+
+                <p>
+                  <FaBriefcase /> <strong>Experience:</strong>{" "}
+                  {prof.experience}
+                </p>
+              </div>
+            </div>
+
+            {/* Assigned Papers */}
+            <div style={styles.paperSection}>
+              <h2>Assigned Papers</h2>
+
+              {papers.length === 0 ? (
+                <div style={styles.emptyCard}>
+                  <FaBookOpen size={50} />
+                  <h3>No Papers Assigned Yet</h3>
+                  <p>Admin has not assigned any papers</p>
+                </div>
+              ) : (
+                <div style={styles.paperList}>
+                  {papers.map((paper) => (
+                    <div key={paper.id} style={styles.paperListItem}>
+
+                      <div style={styles.leftInfo}>
+                        <div style={styles.titleRow}>
+                          <FaBookOpen style={{ color: "#2563eb" }} />
+                          <h3 style={styles.paperTitle}>{paper.subject}</h3>
+                        </div>
+
+                        <div style={styles.metaRow}>
+                          <span>{paper.academic_year}</span>
+                          <span>• Sem {paper.semester}</span>
+                          <span>• {paper.exam_type}</span>
+                        </div>
+
+                        <div style={styles.extraRow}>
+                          Year: {paper.year} | Roll: {paper.start_roll} - {paper.end_roll}
+                        </div>
+                      </div>
+
+                      <button
+                        style={styles.reviewBtn}
+                        onClick={() =>
+                          navigate("/review-marks", { state: { paper } })
+                        }
+                      >
+                        Start Review
+                      </button>
+
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-/* ================= STYLES ================= */
-
 const styles = {
+  layoutContainer: {
+    display: "flex",
+    background: "#f5f8ff"
+  },
+
+  contentArea: {
+    marginLeft: "280px", // sidebar width same as Sidebar component
+    width: "100%",
+    minHeight: "100vh"
+  },
+
   container: {
     minHeight: "100vh",
     padding: "28px",
@@ -212,15 +204,13 @@ const styles = {
     alignItems: "center",
     padding: "18px 26px",
     background: "#ffffff",
-    border: "1px solid #e6eaf5",
     borderRadius: "16px",
     boxShadow: "0 8px 24px rgba(37,99,235,0.08)"
   },
 
   subText: {
     color: "#64748b",
-    fontSize: "13px",
-    marginTop: "2px"
+    fontSize: "13px"
   },
 
   logoutBtn: {
@@ -232,9 +222,7 @@ const styles = {
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
-    gap: "8px",
-    fontWeight: "600",
-    boxShadow: "0 6px 18px rgba(239,68,68,0.25)"
+    gap: "8px"
   },
 
   hero: {
@@ -245,7 +233,6 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    boxShadow: "0 12px 30px rgba(37,99,235,0.25)",
     color: "#fff"
   },
 
@@ -253,10 +240,7 @@ const styles = {
     background: "rgba(255,255,255,0.18)",
     padding: "22px",
     borderRadius: "16px",
-    textAlign: "center",
-    minWidth: "170px",
-    backdropFilter: "blur(12px)",
-    border: "1px solid rgba(255,255,255,0.25)"
+    textAlign: "center"
   },
 
   mainGrid: {
@@ -268,11 +252,9 @@ const styles = {
 
   profileCard: {
     background: "#ffffff",
-    border: "1px solid #e6eaf5",
     padding: "26px",
     borderRadius: "18px",
-    textAlign: "center",
-    boxShadow: "0 10px 25px rgba(37,99,235,0.08)"
+    textAlign: "center"
   },
 
   profileImage: {
@@ -280,28 +262,19 @@ const styles = {
     height: "150px",
     borderRadius: "50%",
     objectFit: "cover",
-    border: "4px solid #2563eb",
-    marginBottom: "16px",
-    boxShadow: "0 10px 25px rgba(37,99,235,0.25)"
+    border: "4px solid #2563eb"
   },
 
   detailsList: {
     marginTop: "18px",
     textAlign: "left",
-    lineHeight: "2.2",
-    background: "#f8fbff",
-    padding: "18px",
-    borderRadius: "14px",
-    border: "1px solid #e6eaf5",
-    color: "#0f172a"
+    lineHeight: "2.2"
   },
 
   paperSection: {
     background: "#ffffff",
-    border: "1px solid #e6eaf5",
     padding: "26px",
-    borderRadius: "18px",
-    boxShadow: "0 10px 25px rgba(37,99,235,0.08)"
+    borderRadius: "18px"
   },
 
   paperGrid: {
@@ -314,25 +287,17 @@ const styles = {
   paperCard: {
     background: "#f9fbff",
     padding: "20px",
-    borderRadius: "16px",
-    border: "1px solid #dbeafe",
-    boxShadow: "0 6px 18px rgba(37,99,235,0.08)",
-    transition: "0.25s ease"
+    borderRadius: "16px"
   },
 
   paperHeader: {
     display: "flex",
     alignItems: "center",
-    gap: "10px",
-    marginBottom: "10px",
-    fontSize: "17px",
-    fontWeight: "700",
-    color: "#1e3a8a"
+    gap: "10px"
   },
 
   paperInfo: {
     lineHeight: "2",
-    color: "#334155",
     fontSize: "14px"
   },
 
@@ -342,21 +307,74 @@ const styles = {
     padding: "12px",
     border: "none",
     borderRadius: "10px",
-    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
+    background: "#2563eb",
     color: "white",
-    fontWeight: "600",
-    cursor: "pointer",
-    boxShadow: "0 8px 20px rgba(37,99,235,0.25)",
-    transition: "0.2s"
+    cursor: "pointer"
   },
 
   emptyCard: {
-    marginTop: "20px",
     textAlign: "center",
-    padding: "40px",
-    background: "#f8fafc",
-    borderRadius: "16px",
-    border: "1px solid #e6eaf5",
+    padding: "40px"
+  },
+
+  paperList: {
+    marginTop: "20px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "14px"
+  },
+
+  paperListItem: {
+    background: "linear-gradient(135deg, #ffffff, #f8fbff)",
+    padding: "18px 20px",
+    borderRadius: "14px",
+    border: "1px solid #e6efff",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    boxShadow: "0 4px 14px rgba(37,99,235,0.06)",
+    transition: "0.2s ease"
+  },
+
+  leftInfo: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "6px"
+  },
+
+  titleRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px"
+  },
+
+  paperTitle: {
+    margin: 0,
+    fontSize: "18px",
+    color: "#0f172a"
+  },
+
+  metaRow: {
+    fontSize: "13px",
+    color: "#2563eb",
+    display: "flex",
+    gap: "10px",
+    fontWeight: "500"
+  },
+
+  extraRow: {
+    fontSize: "13px",
     color: "#64748b"
+  },
+
+  reviewBtn: {
+    padding: "10px 16px",
+    border: "none",
+    borderRadius: "10px",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "white",
+    cursor: "pointer",
+    fontWeight: "500",
+    boxShadow: "0 4px 10px rgba(37,99,235,0.25)"
   }
 };
