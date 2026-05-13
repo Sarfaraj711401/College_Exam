@@ -50,4 +50,20 @@ router.get("/exam-types", (req, res) => {
   });
 });
 
+/* EXAM TYPE RULES */
+router.get("/exam-type-rules", (req, res) => {
+  db.query("SELECT * FROM exam_type_rules", (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
+/* SUBJECT CREDIT POINTS */
+router.get("/credit-points", (req, res) => {
+  db.query("SELECT * FROM credit_points", (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
 module.exports = router;

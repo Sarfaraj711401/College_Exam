@@ -35,45 +35,66 @@ export default function ReviewMarks() {
 
       let arr = [];
 
-      for (
-        let i = paper.start_roll;
-        i <= paper.end_roll;
-        i++
-      ) {
-        const existingStudent =
-          savedMarks.find(
-            (item) => item.roll_no === i
-          );
+      for (let i = paper.start_roll; i <= paper.end_roll; i++) {
+
+        const existingStudent = savedMarks.find(
+          (item) => Number(item.roll_no) === i
+        );
 
         arr.push({
           roll_no: i,
-          marks: existingStudent
-            ? existingStudent.marks
-            : 0,
-
-          remarks: existingStudent
-            ? existingStudent.remarks
-            : "Good",
-          saved: existingStudent
-            ? true
-            : false
+          marks: existingStudent ? String(existingStudent.marks) : "",
+          remarks: existingStudent ? existingStudent.remarks : "",
+          grade: existingStudent ? existingStudent.grade : "",
+          saved: Boolean(existingStudent)
         });
       }
 
       setStudents(arr);
+
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleChange = (
+  const handleChange = async (
     index,
     field,
     value
   ) => {
+
     const updated = [...students];
+
     updated[index][field] = value;
+
+    /* AUTO GRADE FETCH */
+    if (field === "marks") {
+
+      try {
+
+        if (value === "") {
+
+          updated[index].grade = "";
+
+        } else {
+
+          const res = await axios.get(
+            `http://localhost:5000/marks/grade/${value}`
+          );
+
+          updated[index].grade =
+            res.data.grade;
+
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+
+    }
+
     setStudents(updated);
+
   };
 
   const handleSave = async (
@@ -248,6 +269,9 @@ export default function ReviewMarks() {
               <th style={styles.th}>
                 Remarks
               </th>
+              <th style={styles.th}>
+                Grade
+              </th>
             </tr>
           </thead>
 
@@ -308,6 +332,11 @@ export default function ReviewMarks() {
                         styles.input
                       }
                     />
+                  </td>
+                  <td style={styles.td}>
+                    <div style={styles.gradeBox}>
+                      {student.grade || "-"}
+                    </div>
                   </td>
                 </tr>
               )
@@ -504,5 +533,13 @@ const styles = {
     justifyContent: "center",
     gap: "10px",
     boxShadow: "0 8px 20px rgba(37,99,235,0.3)"
+  },
+  gradeBox: {
+    background: "#eff6ff",
+    color: "#1d4ed8",
+    padding: "10px",
+    borderRadius: "8px",
+    fontWeight: "700",
+    border: "1px solid #bfdbfe"
   }
 };

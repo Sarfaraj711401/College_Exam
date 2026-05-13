@@ -13,69 +13,97 @@ router.post("/save", (req, res) => {
     remarks
   } = req.body;
 
-  const checkSql = `
-    SELECT * FROM marks_entry
-    WHERE assignment_id=? AND roll_no=?
+  /* FIND GRADE */
+  const gradeSql = `
+    SELECT grade
+    FROM grade_rules
+    WHERE ? BETWEEN min_marks AND max_marks
   `;
 
   db.query(
-    checkSql,
-    [assignment_id, roll_no],
-    (err, result) => {
+    gradeSql,
+    [marks],
+    (gradeErr, gradeResult) => {
 
-      if (err) return res.send(err);
+      if (gradeErr) return res.send(gradeErr);
 
-      if (result.length > 0) {
+      const grade =
+        gradeResult.length > 0
+          ? gradeResult[0].grade
+          : "Fail";
 
-        const updateSql = `
-          UPDATE marks_entry
-          SET marks=?, remarks=?
-          WHERE assignment_id=? AND roll_no=?
-        `;
+      const checkSql = `
+        SELECT * FROM marks_entry
+        WHERE assignment_id=? AND roll_no=?
+      `;
 
-        db.query(
-          updateSql,
-          [
-            marks,
-            remarks,
-            assignment_id,
-            roll_no
-          ],
-          (err) => {
+      db.query(
+        checkSql,
+        [assignment_id, roll_no],
+        (err, result) => {
 
-            if (err) return res.send(err);
+          if (err) return res.send(err);
 
-            res.send("Marks Updated");
+          /* UPDATE */
+          if (result.length > 0) {
 
-          }
-        );
+            const updateSql = `
+              UPDATE marks_entry
+              SET marks=?, remarks=?, grade=?
+              WHERE assignment_id=? AND roll_no=?
+            `;
 
-      } else {
+            db.query(
+              updateSql,
+              [
+                marks,
+                remarks,
+                grade,
+                assignment_id,
+                roll_no
+              ],
+              (err) => {
 
-        const insertSql = `
-          INSERT INTO marks_entry
-          (assignment_id, roll_no, marks, remarks)
-          VALUES (?,?,?,?)
-        `;
+                if (err) return res.send(err);
 
-        db.query(
-          insertSql,
-          [
-            assignment_id,
-            roll_no,
-            marks,
-            remarks
-          ],
-          (err) => {
+                res.send("Marks Updated");
 
-            if (err) return res.send(err);
-
-            res.send("Marks Saved");
+              }
+            );
 
           }
-        );
 
-      }
+          /* INSERT */
+          else {
+
+            const insertSql = `
+              INSERT INTO marks_entry
+              (assignment_id, roll_no, marks, remarks, grade)
+              VALUES (?,?,?,?,?)
+            `;
+
+            db.query(
+              insertSql,
+              [
+                assignment_id,
+                roll_no,
+                marks,
+                remarks,
+                grade
+              ],
+              (err) => {
+
+                if (err) return res.send(err);
+
+                res.send("Marks Saved");
+
+              }
+            );
+
+          }
+
+        }
+      );
 
     }
   );
@@ -92,26 +120,51 @@ router.put(
 
     const { marks, remarks } = req.body;
 
-    const sql = `
-      UPDATE marks_entry
-      SET marks=?, remarks=?
-      WHERE assignment_id=? AND roll_no=?
+    /* FIND GRADE */
+    const gradeSql = `
+      SELECT grade
+      FROM grade_rules
+      WHERE ? BETWEEN min_marks AND max_marks
     `;
 
     db.query(
-      sql,
-      [
-        marks,
-        remarks,
-        assignmentId,
-        rollNo
-      ],
-      (err, result) => {
+      gradeSql,
+      [marks],
+      (gradeErr, gradeResult) => {
 
-        if (err) return res.send(err);
+        if (gradeErr)
+          return res.send(gradeErr);
 
-        res.send(
-          "Marks Updated Successfully"
+        const grade =
+          gradeResult.length > 0
+            ? gradeResult[0].grade
+            : "Fail";
+
+        const sql = `
+          UPDATE marks_entry
+          SET marks=?, remarks=?, grade=?
+          WHERE assignment_id=? AND roll_no=?
+        `;
+
+        db.query(
+          sql,
+          [
+            marks,
+            remarks,
+            grade,
+            assignmentId,
+            rollNo
+          ],
+          (err, result) => {
+
+            if (err)
+              return res.send(err);
+
+            res.send(
+              "Marks Updated Successfully"
+            );
+
+          }
         );
 
       }
@@ -141,6 +194,39 @@ router.get("/:assignmentId", (req, res) => {
 
     }
   );
+
+});
+
+/* GET GRADE BY MARKS */
+router.get("/grade/:marks", (req, res) => {
+
+  const marks = Number(req.params.marks);
+
+  const sql = `
+    SELECT grade
+    FROM grade_rules
+    WHERE ? BETWEEN min_marks AND max_marks
+  `;
+
+  db.query(sql, [marks], (err, result) => {
+
+    if (err) return res.send(err);
+
+    if (result.length > 0) {
+
+      res.json({
+        grade: result[0].grade
+      });
+
+    } else {
+
+      res.json({
+        grade: "Fail"
+      });
+
+    }
+
+  });
 
 });
 

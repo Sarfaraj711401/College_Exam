@@ -22,6 +22,9 @@ export default function AdminPanel() {
   const [years, setYears] = useState([]);
   const [semesters, setSemesters] = useState([]);
   const [examTypes, setExamTypes] = useState([]);
+  const [examRules, setExamRules] = useState([]);
+  const [selectedRule, setSelectedRule] = useState(null);
+  const [creditPoints, setCreditPoints] = useState([]);
 
   const [formData, setFormData] = useState({
     professor_id: "",
@@ -124,10 +127,22 @@ export default function AdminPanel() {
 
   /* Input Change */
   const handleChange = (e) => {
-    setFormData({
+    const { name, value } = e.target;
+
+    let updated = {
       ...formData,
-      [e.target.name]: e.target.value,
-    });
+      [name]: value,
+    };
+
+    if (name === "exam_type") {
+      const rule = examRules.find(
+        (r) => r.exam_type_name === value
+      );
+
+      setSelectedRule(rule || null);
+    }
+
+    setFormData(updated);
   };
 
   /* Assign / Update Paper */
@@ -152,6 +167,7 @@ export default function AdminPanel() {
       !semester ||
       !subject ||
       !exam_type ||
+      !formData.credit_point ||
       !start_roll ||
       !end_roll
     ) {
@@ -185,6 +201,7 @@ export default function AdminPanel() {
         semester: "",
         subject: "",
         exam_type: "",
+        credit_point: "",
         start_roll: "",
         end_roll: "",
       });
@@ -205,17 +222,22 @@ export default function AdminPanel() {
 
   const fetchDropdowns = async () => {
     try {
-      const [yearRes, semRes, examRes, academicRes] = await Promise.all([
-        axios.get("http://localhost:5000/dropdown/years"),
-        axios.get("http://localhost:5000/dropdown/semesters"),
-        axios.get("http://localhost:5000/dropdown/exam-types"),
-        axios.get("http://localhost:5000/dropdown/academic-years"),
-      ]);
+      const [yearRes, semRes, examRes, academicRes, ruleRes, creditRes] =
+        await Promise.all([
+          axios.get("http://localhost:5000/dropdown/years"),
+          axios.get("http://localhost:5000/dropdown/semesters"),
+          axios.get("http://localhost:5000/dropdown/exam-types"),
+          axios.get("http://localhost:5000/dropdown/academic-years"),
+          axios.get("http://localhost:5000/dropdown/exam-type-rules"),
+          axios.get("http://localhost:5000/dropdown/credit-points")
+        ]);
 
       setYears(yearRes.data);
       setSemesters(semRes.data);
       setExamTypes(examRes.data);
       setAcademicYears(academicRes.data);
+      setExamRules(ruleRes.data);
+      setCreditPoints(creditRes.data);
     } catch (err) {
       console.log(err);
     }
@@ -342,6 +364,23 @@ export default function AdminPanel() {
                 ))}
               </select>
 
+      
+
+              <select
+                name="credit_point"
+                value={formData.credit_point}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select Credit Point</option>
+
+                {creditPoints.map((c) => (
+                  <option key={c.id} value={c.credit_value}>
+                    {c.credit_value}
+                  </option>
+                ))}
+              </select>
+
               <input
                 name="start_roll"
                 placeholder="Start Roll"
@@ -359,7 +398,28 @@ export default function AdminPanel() {
               />
             </div>
 
-            {/* Roll Range */}
+
+              {selectedRule && (
+                <div style={{
+                  ...styles.rollBox,
+                  maxWidth: "650px",
+                  marginTop: "15px"
+                }}>
+                  <p>Theory: <strong>{selectedRule.theory}</strong></p>
+                  <p>Practical: <strong>{selectedRule.practical}</strong></p>
+                  <p>Attendance: <strong>{selectedRule.attendance}</strong></p>
+                  <p>
+                    Total:{" "}
+                    <strong>
+                      {selectedRule.theory +
+                        selectedRule.practical +
+                        selectedRule.attendance}
+                    </strong>
+                  </p>
+                </div>
+              )}
+
+              {/* Roll Range */}
             {formData.start_roll &&
               formData.end_roll && (
                 <div style={styles.rollBox}>
@@ -545,7 +605,12 @@ const styles = {
     justifyContent: "space-between",
     flexWrap: "wrap",
     border: "1px solid #e5e7eb",
-    fontSize: "14px"
+    fontSize: "14px",
+
+    /* 👇 FIX */
+    minHeight: "90px",
+    maxHeight: "90px",
+    overflow: "hidden",
   },
 
   assignBtn: {
