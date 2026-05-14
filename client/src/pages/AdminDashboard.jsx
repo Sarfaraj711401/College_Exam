@@ -18,6 +18,7 @@ export default function AdminDashboard() {
 
   const [totalProfessors, setTotalProfessors] = useState(0);
   const [assignedPapers, setAssignedPapers] = useState([]);
+  const [selectedPaper, setSelectedPaper] = useState(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -180,6 +181,7 @@ export default function AdminDashboard() {
 
         </div>
 
+        
         {/* RECENT PAPERS */}
         <div style={styles.recentSection}>
 
@@ -199,102 +201,146 @@ export default function AdminDashboard() {
 
           {recentPapers.length === 0 ? (
             <div style={styles.emptyCard}>
-
-              <FaBookOpen
-                size={45}
-                color="#64748b"
-              />
+              <FaBookOpen size={45} color="#64748b" />
 
               <h3>No Assigned Papers Yet</h3>
 
-              <p>
-                Assigned papers will appear here.
-              </p>
-
+              <p>Assigned papers will appear here.</p>
             </div>
           ) : (
-            <div style={styles.paperGrid}>
+            <div style={{ overflowX: "auto" }}>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Subject</th>
+                    <th style={styles.th}>Professor</th>
+                    <th style={styles.th}>Academic Year</th>
+                    <th style={styles.th}>Semester</th>
+                    <th style={styles.th}>Exam Type</th>
+                    <th style={styles.th}>Action</th>
+                  </tr>
+                </thead>
 
-              {recentPapers.map((paper) => (
-                <div
-                  key={paper.id}
-                  style={styles.paperCard}
-                >
+                <tbody>
+                  {recentPapers.map((paper) => (
+                    <tr key={paper.id}>
 
-                  <div style={styles.paperTop}>
-
-                    <div style={styles.subjectIcon}>
-                      <FaBookOpen />
-                    </div>
-
-                    <div>
-                      <h3 style={styles.subjectName}>
+                      <td style={styles.td}>
                         {paper.subject}
-                      </h3>
+                      </td>
 
-                      <p style={styles.professorName}>
+                      <td style={styles.td}>
                         {paper.professor_name}
-                      </p>
-                    </div>
+                      </td>
 
-                  </div>
-
-                  <div style={styles.paperBody}>
-
-                    <div style={styles.infoRow}>
-                      <span>Academic Year</span>
-
-                      <strong>
+                      <td style={styles.td}>
                         {paper.academic_year}
-                      </strong>
-                    </div>
+                      </td>
 
-                    <div style={styles.infoRow}>
-                      <span>Year</span>
-
-                      <strong>
-                        {paper.year}
-                      </strong>
-                    </div>
-
-                    <div style={styles.infoRow}>
-                      <span>Semester</span>
-
-                      <strong>
+                      <td style={styles.td}>
                         {paper.semester}
-                      </strong>
-                    </div>
+                      </td>
 
-                    <div style={styles.infoRow}>
-                      <span>Exam Type</span>
+                      <td style={styles.td}>
+                        <span style={styles.examBadge}>
+                          {paper.exam_type}
+                        </span>
+                      </td>
 
-                      <div style={styles.examBadge}>
-                        {paper.exam_type}
-                      </div>
-                    </div>
+                      <td style={styles.td}>
+                        <button
+                          style={styles.viewBtn}
+                          onClick={() => setSelectedPaper(paper)}
+                        >
+                          View
+                        </button>
+                      </td>
 
-                    <div style={styles.infoRow}>
-                      <span>Roll Range</span>
-
-                      <strong>
-                        {paper.start_roll} - {paper.end_roll}
-                      </strong>
-                    </div>
-
-                  </div>
-
-                  <div style={styles.cardFooter}>
-                    <FaCalendarAlt />
-                    Recently Assigned
-                  </div>
-
-                </div>
-              ))}
-
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
-
         </div>
+
+        {/* VIEW MODAL */}
+        {/* VIEW MODAL */}
+        {selectedPaper && (
+          <div style={styles.modalOverlay}>
+            <div style={styles.modalBox}>
+
+              {/* Header */}
+              <div style={styles.modalHeader}>
+                <h2 style={styles.modalTitle}>
+                  Assigned Paper Details
+                </h2>
+
+                <button
+                  style={styles.modalCloseIcon}
+                  onClick={() => setSelectedPaper(null)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Body */}
+              <div style={styles.modalContent}>
+
+                <div style={styles.detailRow}>
+                  <span>Subject</span>
+                  <strong>{selectedPaper.subject}</strong>
+                </div>
+
+                <div style={styles.detailRow}>
+                  <span>Professor</span>
+                  <strong>{selectedPaper.professor_name}</strong>
+                </div>
+
+                <div style={styles.detailRow}>
+                  <span>Academic Year</span>
+                  <strong>{selectedPaper.academic_year}</strong>
+                </div>
+
+                <div style={styles.detailRow}>
+                  <span>Year</span>
+                  <strong>{selectedPaper.year}</strong>
+                </div>
+
+                <div style={styles.detailRow}>
+                  <span>Semester</span>
+                  <strong>{selectedPaper.semester}</strong>
+                </div>
+
+                <div style={styles.detailRow}>
+                  <span>Exam Type</span>
+                  <strong style={styles.modalExamBadge}>
+                    {selectedPaper.exam_type}
+                  </strong>
+                </div>
+
+                <div style={styles.detailRow}>
+                  <span>Roll Range</span>
+                  <strong>
+                    {selectedPaper.start_roll} - {selectedPaper.end_roll}
+                  </strong>
+                </div>
+
+              </div>
+
+              {/* Footer */}
+              <div style={styles.modalFooter}>
+                <button
+                  style={styles.closeBtn}
+                  onClick={() => setSelectedPaper(null)}
+                >
+                  Close
+                </button>
+              </div>
+
+            </div>
+          </div>
+        )}
 
       </div>
     </div>
@@ -557,5 +603,118 @@ const styles = {
     alignItems: "center",
     gap: "10px",
     color: "#64748b"
+  },
+
+  table: {
+    width: "100%",
+    borderCollapse: "collapse"
+  },
+
+  th: {
+    background: "#2563eb",
+    color: "white",
+    padding: "14px",
+    textAlign: "left"
+  },
+
+  td: {
+    padding: "14px",
+    borderBottom: "1px solid #e5e7eb"
+  },
+
+  viewBtn: {
+    background: "#16a34a",
+    color: "white",
+    border: "none",
+    padding: "8px 14px",
+    borderRadius: "8px",
+    cursor: "pointer"
+  },
+
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(15, 23, 42, 0.45)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000
+  },
+
+  modalBox: {
+    width: "600px",
+    maxWidth: "90%",
+    background: "#ffffff",
+    borderRadius: "20px",
+    overflow: "hidden",
+    boxShadow: "0 20px 50px rgba(37,99,235,0.25)"
+  },
+
+  modalHeader: {
+    background: "linear-gradient(135deg,#1d4ed8,#2563eb)",
+    color: "white",
+    padding: "20px 25px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+
+  modalTitle: {
+    margin: 0,
+    fontSize: "22px",
+    fontWeight: "700"
+  },
+
+  modalCloseIcon: {
+    background: "rgba(255,255,255,0.2)",
+    border: "none",
+    color: "white",
+    width: "35px",
+    height: "35px",
+    borderRadius: "50%",
+    cursor: "pointer",
+    fontSize: "16px"
+  },
+
+  modalContent: {
+    padding: "25px"
+  },
+
+  detailRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "14px 18px",
+    marginBottom: "12px",
+    background: "#f8fafc",
+    borderRadius: "12px",
+    border: "1px solid #dbeafe"
+  },
+
+  modalExamBadge: {
+    background: "#2563eb",
+    color: "white",
+    padding: "6px 12px",
+    borderRadius: "20px",
+    fontSize: "12px"
+  },
+
+  modalFooter: {
+    padding: "20px",
+    textAlign: "right",
+    borderTop: "1px solid #e5e7eb"
+  },
+
+  closeBtn: {
+    background: "#2563eb",
+    color: "white",
+    border: "none",
+    padding: "10px 22px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "600"
   }
 };

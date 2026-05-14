@@ -17,56 +17,59 @@ router.post("/login", (req, res) => {
   }
 });
 
+const multer = require("multer");
+const path = require("path");
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
+});
+
+const upload = multer({ storage });
 
 // ADD PROFESSOR
-router.post("/add-professor", (req, res) => {
-  const data = req.body;
+router.post(
+  "/add-professor",
+  upload.single("photo"),
+  (req, res) => {
+    const data = req.body;
+    const photoFile = req.file ? req.file.filename : "";
 
-  const sql = `
-    INSERT INTO professors (
-      name,
-      designation,
-      subject,
-      email,
-      password,
-      mobile,
-      experience,
-      photo,
-      bank_name,
-      branch_name,
-      ifsc_code,
-      account_number,
-      account_holder_name,
-      bank_address
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+    const sql = `
+      INSERT INTO professors (
+        name, designation, subject, email, password,
+        mobile, experience, photo,
+        bank_name, branch_name, ifsc_code,
+        account_number, account_holder_name, bank_address
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
-  db.query(sql, [
-    data.name,
-    data.designation,
-    data.subject,
-    data.email,
-    data.password,
-    data.mobile,
-    data.experience,
-    data.photo,
-    data.bank_name,
-    data.branch_name,
-    data.ifsc_code,
-    data.account_number,
-    data.account_holder_name,
-    data.bank_address
-  ], (err, result) => {
-    if (err) {
-      console.log("INSERT ERROR:", err);
-      return res.status(500).send(err);
-    }
-
-    res.send("Professor Added Successfully");
-  });
-});
+    db.query(sql, [
+      data.name,
+      data.designation,
+      data.subject,
+      data.email,
+      data.password,
+      data.mobile,
+      data.experience,
+      photoFile,   
+      data.bank_name,
+      data.branch_name,
+      data.ifsc_code,
+      data.account_number,
+      data.account_holder_name,
+      data.bank_address
+    ], (err, result) => {
+      if (err) return res.status(500).send(err);
+      res.send("Professor Added Successfully");
+    });
+  }
+);
 
 
 
@@ -90,52 +93,56 @@ router.get("/professors", (req, res) => {
 
 
 // UPDATE PROFESSOR
-router.put("/update-professor/:id", (req, res) => {
-  const id = req.params.id;
-  const data = req.body;
+router.put(
+  "/update-professor/:id",
+  upload.single("photo"),
+  (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
 
-  const sql = `
-    UPDATE professors SET
-      name=?,
-      designation=?,
-      subject=?,
-      email=?,
-      mobile=?,
-      experience=?,
-      photo=?,
-      bank_name=?,
-      branch_name=?,
-      ifsc_code=?,
-      account_number=?,
-      account_holder_name=?,
-      bank_address=?
-    WHERE id=?
-  `;
+    const photoFile = req.file
+      ? req.file.filename
+      : data.photo; // fallback old
 
-  db.query(sql, [
-    data.name,
-    data.designation,
-    data.subject,
-    data.email,
-    data.mobile,
-    data.experience,
-    data.photo,
-    data.bank_name,
-    data.branch_name,
-    data.ifsc_code,
-    data.account_number,
-    data.account_holder_name,
-    data.bank_address,   // ✅ FIXED (IMPORTANT)
-    id
-  ], (err, result) => {
-    if (err) {
-      console.log("UPDATE ERROR:", err);
-      return res.status(500).send(err);
-    }
+    const sql = `
+      UPDATE professors SET
+        name=?,
+        designation=?,
+        subject=?,
+        email=?,
+        mobile=?,
+        experience=?,
+        photo=?,
+        bank_name=?,
+        branch_name=?,
+        ifsc_code=?,
+        account_number=?,
+        account_holder_name=?,
+        bank_address=?
+      WHERE id=?
+    `;
 
-    res.send("Professor Updated Successfully");
-  });
-});
+    db.query(sql, [
+      data.name,
+      data.designation,
+      data.subject,
+      data.email,
+      data.mobile,
+      data.experience,
+      photoFile,
+      data.bank_name,
+      data.branch_name,
+      data.ifsc_code,
+      data.account_number,
+      data.account_holder_name,
+      data.bank_address,
+      id
+    ], (err, result) => {
+      if (err) return res.status(500).send(err);
+      res.send("Updated");
+    });
+  }
+);
 
 
 
@@ -156,6 +163,15 @@ router.delete("/delete-professor/:id", (req, res) => {
       res.send("Professor Deleted Successfully");
     }
   );
+});
+
+router.post("/add-professor", upload.single("photo"), (req, res) => {
+  console.log(req.body);
+  console.log(req.file);
+
+  const photo = req.file ? req.file.filename : null;
+
+ 
 });
 
 module.exports = router;

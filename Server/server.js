@@ -1,10 +1,15 @@
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: "50mb" }));
+// 👉 JSON middleware
+app.use(express.json());
+
+// 👉 uploads folder public করা (IMPORTANT)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* ROUTES */
 const adminRoutes = require("./routes/adminRoutes");

@@ -119,66 +119,104 @@ export default function ProfessorList() {
           style={styles.searchInput}
         />
 
-        {/* VIEW PANEL */}
+        
+        {/* VIEW MODAL */}
         {selectedProfessor && (
-          <div style={styles.profileLayout}>
+          <div style={styles.viewOverlay}>
+            <div style={styles.viewModal}>
 
-            {/* LEFT SIDE */}
-            <div style={styles.leftProfile}>
-              <img
-                src={selectedProfessor.photo}
-                alt=""
-                style={styles.bigPhoto}
-              />
+              {/* Header */}
+              <div style={styles.viewTopSection}>
+                <button
+                  style={styles.viewCloseBtn}
+                  onClick={() => setSelectedProfessor(null)}
+                >
+                  ✕
+                </button>
 
-              <h2 style={styles.name}>{selectedProfessor.name}</h2>
-              <p style={styles.designation}>{selectedProfessor.designation}</p>
+                <img
+                  src={`http://localhost:5000/uploads/${selectedProfessor.photo}`}
+                  alt="Professor"
+                  style={styles.viewPhoto}
+                />
 
+                <h2 style={styles.viewName}>
+                  {selectedProfessor.name}
+                </h2>
 
-            </div>
+                <p style={styles.viewDesignation}>
+                  {selectedProfessor.designation}
+                </p>
 
-            {/* RIGHT SIDE */}
-            <div style={styles.rightProfile}>
-
-              {/* PERSONAL */}
-              <div style={styles.card}>
-                <h3 style={styles.cardTitle}>Personal Details</h3>
-
-                <div style={styles.grid}>
-                  <InfoRow label="Name:-   " value={selectedProfessor.name} />
-                  <InfoRow label="Designation:-   " value={selectedProfessor.designation} />
-                  <InfoRow label="Subject:-   " value={selectedProfessor.subject} />
-                  <InfoRow label="Email:-   " value={selectedProfessor.email} />
-                  <InfoRow label="Mobile:-   " value={selectedProfessor.mobile} />
-                  <InfoRow label="Experience:-   " value={selectedProfessor.experience} />
+                <div style={styles.profIdBadge}>
+                  Prof{String(selectedProfessor.id).padStart(4, "0")}
                 </div>
               </div>
 
-              {/* BANK */}
-              <div style={styles.card}>
-                <h3 style={styles.cardTitle}>Banking Details</h3>
+              {/* Details */}
+              <div style={styles.viewDetailsGrid}>
+                <div style={styles.viewInfoCard}>
+                  <span>Subject</span>
+                  <strong>{selectedProfessor.subject}</strong>
+                </div>
 
-                <div style={styles.grid}>
-                  <InfoRow label="Bank:-   " value={selectedProfessor.bank_name} />
-                  <InfoRow label="Branch:-   " value={selectedProfessor.branch_name} />
-                  <InfoRow label="IFSC Code:-   " value={selectedProfessor.ifsc_code} />
-                  <InfoRow label="Account Number:-   " value={selectedProfessor.account_number} />
-                  <InfoRow label="Account Holder Name:-   " value={selectedProfessor.account_holder_name} />
-                  <InfoRow label="Bank Address:-   " value={selectedProfessor.bank_address} />
+                <div style={styles.viewInfoCard}>
+                  <span>Email</span>
+                  <strong>{selectedProfessor.email}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Mobile</span>
+                  <strong>{selectedProfessor.mobile}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Experience</span>
+                  <strong>{selectedProfessor.experience}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Bank Name</span>
+                  <strong>{selectedProfessor.bank_name}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Branch</span>
+                  <strong>{selectedProfessor.branch_name}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>IFSC Code</span>
+                  <strong>{selectedProfessor.ifsc_code}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Account No</span>
+                  <strong>{selectedProfessor.account_number}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Account Holder</span>
+                  <strong>{selectedProfessor.account_holder_name}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Bank Address</span>
+                  <strong>{selectedProfessor.bank_address}</strong>
                 </div>
               </div>
 
-            </div>
+              {/* Footer */}
+              <div style={styles.viewFooter}>
+                <button
+                  style={styles.closeProfileBtn}
+                  onClick={() => setSelectedProfessor(null)}
+                >
+                  Close Profile
+                </button>
+              </div>
 
-            <div style={styles.closeViewWrapper}>
-              <button
-                style={styles.closeViewBtn}
-                onClick={() => setSelectedProfessor(null)}
-              >
-                Close Profile
-              </button>
             </div>
-
           </div>
         )}
 
@@ -200,7 +238,13 @@ export default function ProfessorList() {
               {filteredProfessors.map((p) => (
                 <tr key={p.id} style={styles.tr}>
                   <td>
-                    <img src={p.photo} alt="" style={styles.photo} />
+                    <td>
+                      <img
+                        src={`http://localhost:5000/uploads/${p.photo}`}
+                        alt=""
+                        style={styles.photo}
+                      />
+                    </td>
                   </td>
                   <td>{p.name}</td>
                   <td>{p.designation}</td>
@@ -330,6 +374,7 @@ function InfoRow({ label, value }) {
 
 /* 🔥 STYLES */
 const styles = {
+
   container: {
     marginLeft: "270px",
     padding: "20px",
@@ -339,380 +384,295 @@ const styles = {
 
   mainCard: {
     background: "#ffffff",
-    padding: "30px",
-    borderRadius: "24px",
-    boxShadow: "0 12px 40px rgba(37,99,235,0.08)"
+    padding: "25px",
+    borderRadius: "18px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.06)"
   },
 
   title: {
     textAlign: "center",
-    marginBottom: "25px",
-    fontWeight: "700",
-    fontSize: "28px",
+    fontSize: "26px",
+    fontWeight: "800",
     color: "#1e3a8a",
-    letterSpacing: "0.5px"
+    marginBottom: "20px"
   },
 
   searchInput: {
     width: "100%",
-    padding: "13px 16px",
-    marginBottom: "30px",
-    borderRadius: "12px",
-    border: "1px solid #bfdbfe",
+    padding: "12px 15px",
+    borderRadius: "10px",
+    border: "1px solid #cfe3ff",
     outline: "none",
-    fontSize: "14px",
     background: "#f8fbff",
-    color: "#1e293b",
-    boxSizing: "border-box"
+    marginBottom: "20px",
+    fontSize: "14px"
   },
 
+  /* TABLE */
   leftSection: {
-    marginTop: "30px",
+    marginTop: "20px",
     overflowX: "auto"
   },
 
   table: {
     width: "100%",
     borderCollapse: "collapse",
-    background: "#ffffff",
-    borderRadius: "18px",
+    background: "#fff",
+    borderRadius: "12px",
     overflow: "hidden"
   },
 
   th: {
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-    color: "#ffffff",
-    padding: "14px",
-    fontSize: "14px",
-    fontWeight: "600",
+    background: "#2563eb",
+    color: "#fff",
+    padding: "12px",
+    fontSize: "13px",
+    fontWeight: "700",
     textAlign: "center"
   },
 
   tr: {
     textAlign: "center",
-    borderBottom: "1px solid #e2e8f0"
+    borderBottom: "1px solid #e5e7eb"
   },
 
   photo: {
-    width: "52px",
-    height: "52px",
+    width: "45px",
+    height: "45px",
     borderRadius: "50%",
     objectFit: "cover",
-    border: "2px solid #3b82f6",
-    margin: "8px 0"
+    border: "2px solid #2563eb"
   },
 
   actionButtons: {
     display: "flex",
-    gap: "8px",
-    justifyContent: "center",
-    alignItems: "center"
+    gap: "6px",
+    justifyContent: "center"
   },
 
   viewBtn: {
     background: "#22c55e",
     color: "#fff",
     border: "none",
-    padding: "7px 12px",
-    borderRadius: "8px",
-    cursor: "pointer",
+    padding: "6px 10px",
+    borderRadius: "6px",
     fontSize: "12px",
-    fontWeight: "600"
+    cursor: "pointer"
   },
 
   updateBtn: {
     background: "#2563eb",
     color: "#fff",
     border: "none",
-    padding: "7px 12px",
-    borderRadius: "8px",
-    cursor: "pointer",
+    padding: "6px 10px",
+    borderRadius: "6px",
     fontSize: "12px",
-    fontWeight: "600"
+    cursor: "pointer"
   },
 
   deleteBtn: {
     background: "#ef4444",
     color: "#fff",
     border: "none",
-    padding: "7px 12px",
-    borderRadius: "8px",
-    cursor: "pointer",
+    padding: "6px 10px",
+    borderRadius: "6px",
     fontSize: "12px",
-    fontWeight: "600"
+    cursor: "pointer"
   },
 
-  /* PROFILE SECTION */
-  profileLayout: {
-    background: "#ffffff",
-    borderRadius: "28px",
-    overflow: "hidden",
-    marginBottom: "40px",
-    boxShadow: "0 12px 40px rgba(37,99,235,0.10)",
-    border: "1px solid #dbeafe"
-  },
+  /* ================= VIEW MODAL ================= */
 
-  /* TOP BLUE SECTION */
-  leftProfile: {
-    width: "100%",
-    background: "linear-gradient(135deg,#2563eb,#3b82f6,#60a5fa)",
-    padding: "35px 20px 28px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center"
-  },
-
-  bigPhoto: {
-    width: "120px",
-    height: "120px",
-    borderRadius: "50%",
-    objectFit: "cover",
-    border: "5px solid white",
-    boxShadow: "0 12px 30px rgba(0,0,0,0.18)",
-    marginBottom: "16px"
-  },
-
-  name: {
-    fontSize: "22px",
-    fontWeight: "700",
-    color: "#ffffff",
-    marginBottom: "6px",
-    letterSpacing: "0.3px"
-  },
-
-  designation: {
-    fontSize: "13px",
-    color: "rgba(255,255,255,0.92)",
-    fontWeight: "500"
-  },
-
-  /* DETAILS AREA */
-  rightProfile: {
-    padding: "28px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "22px",
-    background: "#f8fbff"
-  },
-
-  card: {
-    background: "#ffffff",
-    borderRadius: "20px",
-    padding: "22px",
-    border: "1px solid #dbeafe",
-    boxShadow: "0 4px 20px rgba(37,99,235,0.05)"
-  },
-
-  cardTitle: {
-    fontSize: "17px",
-    fontWeight: "700",
-    marginBottom: "18px",
-    color: "#1e3a8a",
-    borderBottom: "2px solid #dbeafe",
-    paddingBottom: "10px"
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "14px"
-  },
-
-  infoRow: {
-    background: "#f8fbff",
-    padding: "12px 14px",
-    borderRadius: "14px",
-    border: "1px solid #dbeafe",
-    display: "flex",
-    flexDirection: "column",
-    transition: "0.2s"
-  },
-
-  label: {
-    fontSize: "10px",
-    color: "#64748b",
-    fontWeight: "700",
-    marginBottom: "5px",
-    letterSpacing: "0.7px",
-    textTransform: "uppercase"
-  },
-
-  value: {
-    fontSize: "13px",
-    fontWeight: "600",
-    color: "#0f172a",
-    lineHeight: "1.5",
-    wordBreak: "break-word"
-  },
-
-  /* MODAL */
-  editOverlay: {
+  viewOverlay: {
     position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(15,23,42,0.55)",
+    inset: 0,
+    background: "rgba(15,23,42,0.65)",
+    backdropFilter: "blur(6px)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     zIndex: 999
   },
 
-  editModal: {
-    background: "#ffffff",
-    padding: "30px",
-    borderRadius: "22px",
-    width: "420px",
-    boxShadow: "0 20px 50px rgba(0,0,0,0.15)"
+  viewModal: {
+    width: "520px",
+    maxWidth: "95%",
+    background: "#fff",
+    borderRadius: "16px",
+    overflow: "hidden",
+    boxShadow: "0 20px 50px rgba(0,0,0,0.2)"
   },
 
-  input: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "12px",
-    borderRadius: "10px",
-    border: "1px solid #cbd5e1",
-    outline: "none",
-    fontSize: "13px",
-    color: "#0f172a",
-    background: "#f8fafc",
-    boxSizing: "border-box"
+  viewTopSection: {
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    padding: "18px",
+    textAlign: "center",
+    color: "#fff",
+    position: "relative"
   },
 
-  saveBtn: {
-    background: "linear-gradient(135deg,#22c55e,#16a34a)",
-    color: "#ffffff",
-    padding: "12px",
-    width: "100%",
+  viewCloseBtn: {
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    background: "rgba(255,255,255,0.2)",
     border: "none",
-    marginBottom: "10px",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontWeight: "700",
-    fontSize: "14px"
+    color: "#fff",
+    width: "30px",
+    height: "30px",
+    borderRadius: "50%",
+    cursor: "pointer"
   },
 
-  closeBtn: {
-    background: "linear-gradient(135deg,#ef4444,#dc2626)",
-    color: "#ffffff",
-    padding: "12px",
-    width: "100%",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontWeight: "700",
-    fontSize: "14px"
+  viewPhoto: {
+    width: "70px",
+    height: "70px",
+    borderRadius: "50%",
+    border: "3px solid #fff",
+    objectFit: "cover"
   },
-  closeViewWrapper: {
+
+  viewName: {
+    fontSize: "18px",
+    fontWeight: "800",
+    marginTop: "8px"
+  },
+
+  viewDesignation: {
+    fontSize: "12px",
+    opacity: "0.9"
+  },
+
+  profIdBadge: {
+    marginTop: "8px",
+    background: "#fff",
+    color: "#2563eb",
+    padding: "4px 12px",
+    borderRadius: "20px",
+    fontSize: "12px",
+    fontWeight: "700",
+    display: "inline-block"
+  },
+
+  viewDetailsGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "10px",
+    padding: "15px"
+  },
+
+  viewInfoCard: {
+    background: "#f8fbff",
+    border: "1px solid #dbeafe",
+    padding: "10px",
+    borderRadius: "10px",
     display: "flex",
-    justifyContent: "center",
-    padding: "0 0 28px 0",
-    background: "#f8fbff"
+    flexDirection: "column",
+    gap: "4px"
   },
 
-  closeViewBtn: {
-    background: "linear-gradient(135deg,#ef4444,#dc2626)",
-    color: "#ffffff",
-    border: "none",
-    padding: "12px 28px",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: "700",
-    boxShadow: "0 8px 20px rgba(239,68,68,0.25)",
-    transition: "0.3s"
+  viewInfoCardSpan: {
+    fontSize: "10px",
+    color: "#64748b"
   },
+
+  viewFooter: {
+    padding: "12px",
+    textAlign: "center",
+    borderTop: "1px solid #e5e7eb"
+  },
+
+  closeProfileBtn: {
+    background: "#2563eb",
+    color: "#fff",
+    border: "none",
+    padding: "8px 18px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontWeight: "600",
+    fontSize: "13px"
+  },
+
+  /* ================= EDIT MODAL ================= */
 
   editOverlay: {
     position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
+    inset: 0,
     background: "rgba(15,23,42,0.65)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backdropFilter: "blur(6px)",
     zIndex: 999
   },
 
   editModal: {
-    background: "#ffffff",
-    width: "850px",
+    width: "700px",
+    maxWidth: "95%",
+    background: "#fff",
+    borderRadius: "16px",
+    padding: "20px",
     maxHeight: "90vh",
-    overflowY: "auto",
-    borderRadius: "22px",
-    padding: "30px",
-    boxShadow: "0 25px 80px rgba(0,0,0,0.25)"
+    overflowY: "auto"
   },
 
   modalTitle: {
-    fontSize: "22px",
+    textAlign: "center",
+    fontSize: "18px",
     fontWeight: "800",
     color: "#1e3a8a",
-    marginBottom: "20px",
-    textAlign: "center"
+    marginBottom: "15px"
   },
 
   sectionCard: {
     background: "#f8fbff",
     border: "1px solid #dbeafe",
-    padding: "18px",
-    borderRadius: "16px",
-    marginBottom: "18px"
+    padding: "12px",
+    borderRadius: "10px",
+    marginBottom: "12px"
   },
 
   sectionTitle: {
-    fontSize: "15px",
+    fontSize: "14px",
     fontWeight: "700",
     color: "#2563eb",
-    marginBottom: "12px"
+    marginBottom: "10px"
   },
 
   formGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: "12px"
+    gap: "10px"
   },
 
   input: {
-    width: "100%",
-    padding: "12px",
-    borderRadius: "12px",
+    padding: "10px",
+    borderRadius: "8px",
     border: "1px solid #cfe3ff",
-    outline: "none",
     fontSize: "13px",
-    background: "#ffffff",
-    transition: "0.2s"
+    outline: "none"
   },
 
   saveBtn: {
     width: "100%",
-    padding: "14px",
-    borderRadius: "14px",
-    border: "none",
-    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
+    background: "#2563eb",
     color: "#fff",
-    fontWeight: "700",
-    cursor: "pointer",
+    padding: "10px",
+    border: "none",
+    borderRadius: "8px",
     marginTop: "10px",
-    boxShadow: "0 10px 25px rgba(37,99,235,0.25)"
+    cursor: "pointer",
+    fontWeight: "700"
   },
 
   closeBtn: {
     width: "100%",
-    padding: "12px",
-    borderRadius: "14px",
-    border: "none",
     background: "#ef4444",
     color: "#fff",
-    fontWeight: "700",
+    padding: "10px",
+    border: "none",
+    borderRadius: "8px",
+    marginTop: "8px",
     cursor: "pointer",
-    marginTop: "10px"
+    fontWeight: "700"
   }
 
 };

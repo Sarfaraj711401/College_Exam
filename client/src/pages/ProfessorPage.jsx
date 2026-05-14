@@ -49,8 +49,16 @@ export default function ProfessorPage() {
   }, []);
 
   const fetchProfessors = async () => {
-    const res = await axios.get("http://localhost:5000/admin/professors");
-    setProfessors(res.data);
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/admin/professors"
+      );
+
+      setProfessors(res.data);
+
+    } catch (error) {
+      console.log("Fetch Error:", error);
+    }
   };
 
   const onlyCharacters = (value) => /^[A-Za-z\s]*$/.test(value);
@@ -87,19 +95,10 @@ export default function ProfessorPage() {
   };
 
   const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setFormData({
-        ...formData,
-        photo: reader.result
-      });
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+    setFormData({
+      ...formData,
+      photo: e.target.files[0]
+    });
   };
 
   const handlePreview = (e) => {
@@ -122,35 +121,55 @@ export default function ProfessorPage() {
 
   const handleSubmit = async () => {
     try {
-      if (editId) {
-        const finalData = {
-          ...formData,
-          name: `${formData.first_name} ${formData.last_name}`
-        };
+      const form = new FormData();
 
+      form.append("name", `${formData.first_name} ${formData.last_name}`);
+      form.append("designation", formData.designation);
+      form.append("subject", formData.subject);
+      form.append("email", formData.email);
+      form.append("password", formData.password);
+      form.append("mobile", formData.mobile);
+      form.append("experience", formData.experience);
+
+      form.append("bank_name", formData.bank_name);
+      form.append("branch_name", formData.branch_name);
+      form.append("ifsc_code", formData.ifsc_code);
+      form.append("account_number", formData.account_number);
+      form.append("account_holder_name", formData.account_holder_name);
+      form.append("bank_address", formData.bank_address);
+
+      // 👉 PHOTO (IMPORTANT)
+      if (formData.photo) {
+        form.append("photo", formData.photo);
+      }
+
+      // 👉 EDIT MODE
+      if (editId) {
         await axios.put(
           `http://localhost:5000/admin/update-professor/${editId}`,
-          finalData
+          form
         );
-        alert("Professor Updated Successfully ✅");
-        setEditId(null);
-      } else {
-        const finalData = {
-          ...formData,
-          name: `${formData.first_name} ${formData.last_name}`
-        };
 
+        alert("Professor Updated Successfully ✅");
+      }
+
+      // 👉 ADD MODE
+      else {
         await axios.post(
           "http://localhost:5000/admin/add-professor",
-          finalData
+          form
         );
+
         alert("Professor Added Successfully ✅");
       }
 
-      setShowPreview(false);
+      // 👉 Refresh list
+      fetchProfessors();
 
+      // 👉 Reset form
       setFormData({
-        name: "",
+        first_name: "",
+        last_name: "",
         designation: "",
         subject: "",
         email: "",
@@ -167,9 +186,11 @@ export default function ProfessorPage() {
         bank_address: ""
       });
 
-      fetchProfessors();
-    } catch (error) {
-      console.log(error);
+      setEditId(null);
+
+    } catch (err) {
+      console.log("Submit Error:", err);
+      alert("Something went wrong ❌");
     }
   };
 
@@ -192,13 +213,21 @@ export default function ProfessorPage() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this professor?")) return;
+    try {
+      if (!window.confirm("Delete this professor?")) return;
 
-    await axios.delete(
-      `http://localhost:5000/admin/delete-professor/${id}`
-    );
+      await axios.delete(
+        `http://localhost:5000/admin/delete-professor/${id}`
+      );
 
-    fetchProfessors();
+      alert("Professor Deleted Successfully ✅");
+
+      fetchProfessors();
+
+    } catch (error) {
+      console.log(error);
+      alert("Delete Failed ❌");
+    }
   };
 
   const fetchDropdownData = async () => {
@@ -292,14 +321,6 @@ export default function ProfessorPage() {
                         <FaTrash /> Remove
                       </button>
                     </div>
-
-                    {/* hidden input  */}
-                    <input
-                      id="photoInput"
-                      type="file"
-                      onChange={handlePhotoUpload}
-                      style={{ display: "none" }}
-                    />
                   </div>
                 )}
               </div>
@@ -489,11 +510,13 @@ export default function ProfessorPage() {
                     </td>
 
                     <td style={styles.td}>
-                      <img
-                        src={p.photo}
-                        alt=""
-                        style={styles.photo}
-                      />
+                      <td>
+                        <img
+                          src={`http://localhost:5000/uploads/${p.photo}`}
+                          alt=""
+                          style={styles.photo}
+                        />
+                      </td>
                     </td>
 
                     <td style={styles.td}>{p.name}</td>
@@ -538,95 +561,90 @@ export default function ProfessorPage() {
       {selectedProfessor && (
         <div style={styles.modalOverlay}>
           <div style={styles.previewModal}>
-            <h2 style={styles.previewTitle}>
-              Professor Profile Preview
-            </h2>
 
-            <div style={styles.previewPhotoBox}>
+            {/* Top Header */}
+            <div style={styles.previewTopSection}>
+              <button
+                style={styles.previewCloseBtn}
+                onClick={() => setSelectedProfessor(null)}
+              >
+                <FaTimes />
+              </button>
+
               <img
-                src={selectedProfessor.photo}
+                src={`http://localhost:5000/uploads/${selectedProfessor.photo}`}
                 alt="Professor"
                 style={styles.previewPhoto}
               />
-            </div>
 
-            <div style={styles.previewDetails}>
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Name</span>
-                <span style={styles.value}>{selectedProfessor.name}</span>
-              </div>
+              <h2 style={styles.previewName}>
+                {selectedProfessor.name}
+              </h2>
 
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Designation</span>
-                <span style={styles.value}>{selectedProfessor.designation}</span>
-              </div>
+              <p style={styles.previewDesignation}>
+                {selectedProfessor.designation}
+              </p>
 
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Professor ID</span>
-                <span style={styles.value}>
-                  {`Prof${String(selectedProfessor.id).padStart(4, "0")}`}
-                </span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Subject</span>
-                <span style={styles.value}>{selectedProfessor.subject}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Email</span>
-                <span style={styles.value}>{selectedProfessor.email}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Mobile</span>
-                <span style={styles.value}>{selectedProfessor.mobile}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Experience</span>
-                <span style={styles.value}>{selectedProfessor.experience}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Account Holder Name</span>
-                <span style={styles.value}>{selectedProfessor.account_holder_name}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Bank Name</span>
-                <span style={styles.value}>{selectedProfessor.bank_name}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Branch Name</span>
-                <span style={styles.value}>{selectedProfessor.branch_name}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>IFSC Code</span>
-                <span style={styles.value}>{selectedProfessor.ifsc_code}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Account Number </span>
-                <span style={styles.value}>{selectedProfessor.account_number}</span>
-              </div>
-
-              <div style={styles.previewRow}>
-                <span style={styles.label}>Bank Address </span>
-                <span style={styles.value}>{selectedProfessor.bank_address}</span>
+              <div style={styles.profIdBadge}>
+                {`Prof${String(selectedProfessor.id).padStart(4, "0")}`}
               </div>
             </div>
 
-            <div style={styles.previewButtonBox}>
+            {/* Details Section */}
+            <div style={styles.previewDetailsGrid}>
+
+              <div style={styles.infoCard}>
+                <span>Subject</span>
+                <strong>{selectedProfessor.subject}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>Email</span>
+                <strong>{selectedProfessor.email}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>Mobile</span>
+                <strong>{selectedProfessor.mobile}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>Experience</span>
+                <strong>{selectedProfessor.experience}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>Bank Name</span>
+                <strong>{selectedProfessor.bank_name}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>Account Number</span>
+                <strong>{selectedProfessor.account_number}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>IFSC Code</span>
+                <strong>{selectedProfessor.ifsc_code}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>Branch</span>
+                <strong>{selectedProfessor.branch_name}</strong>
+              </div>
+
+            </div>
+
+            {/* Footer */}
+            <div style={styles.previewFooter}>
               <button
-                style={styles.cancelBtn}
+                style={styles.closeProfileBtn}
                 onClick={() => setSelectedProfessor(null)}
               >
-                Close
+                Close Profile
               </button>
             </div>
+
           </div>
         </div>
       )}
@@ -1128,5 +1146,136 @@ const styles = {
     gridTemplateColumns: "1fr 1fr 1fr",
     gap: "15px"
   },
+
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(15,23,42,0.75)",
+    backdropFilter: "blur(8px)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999
+  },
+
+  previewModal: {
+    width: "620px",
+    maxWidth: "90%",
+    background: "#ffffff",
+    borderRadius: "20px",
+    boxShadow: "0 20px 50px rgba(37,99,235,0.25)",
+    overflow: "hidden"
+  },
+
+  /* top blue section */
+  previewTopSection: {
+    background: "linear-gradient(135deg,#1d4ed8,#2563eb,#3b82f6)",
+    padding: "20px",
+    textAlign: "center",
+    position: "relative",
+    color: "white"
+  },
+
+  previewCloseBtn: {
+    position: "absolute",
+    top: "15px",
+    right: "15px",
+    width: "35px",
+    height: "35px",
+    borderRadius: "50%",
+    border: "none",
+    background: "rgba(255,255,255,0.2)",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "14px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  previewPhoto: {
+    width: "90px",
+    height: "90px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    border: "4px solid white",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.2)"
+  },
+
+  previewName: {
+    marginTop: "10px",
+    fontSize: "22px",
+    fontWeight: "700"
+  },
+
+  previewDesignation: {
+    fontSize: "14px",
+    opacity: "0.9",
+    marginTop: "4px"
+  },
+
+  profIdBadge: {
+    margin: "12px auto 0",
+    background: "white",
+    color: "#2563eb",
+    width: "fit-content",
+    padding: "6px 16px",
+    borderRadius: "20px",
+    fontWeight: "700",
+    fontSize: "13px"
+  },
+
+  /* details section */
+  previewDetailsGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "12px",
+    padding: "20px"
+  },
+
+  infoCard: {
+    background: "#f8fafc",
+    padding: "12px",
+    borderRadius: "12px",
+    border: "1px solid #dbeafe",
+    display: "flex",
+    flexDirection: "column",
+    gap: "5px"
+  },
+
+  /* label inside card */
+  infoLabel: {
+    fontSize: "12px",
+    color: "#64748b",
+    fontWeight: "600"
+  },
+
+  /* value inside card */
+  infoValue: {
+    fontSize: "14px",
+    fontWeight: "700",
+    color: "#0f172a"
+  },
+
+  /* footer */
+  previewFooter: {
+    padding: "15px",
+    textAlign: "center",
+    borderTop: "1px solid #e5e7eb"
+  },
+
+  closeProfileBtn: {
+    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
+    color: "white",
+    border: "none",
+    padding: "10px 25px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontWeight: "600",
+    fontSize: "14px"
+  }
 
 };

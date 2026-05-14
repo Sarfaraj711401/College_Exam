@@ -24,10 +24,7 @@ export default function Home() {
     useState(0);
 
   const rotatingTexts = [
-    "Smart Exam Workflow",
-    "Digital Evaluation System",
-    "Modern College Management",
-    "AI Powered Exam Portal"
+    "Calcutta Instute Of Technology"
   ];
 
   useEffect(() => {
@@ -75,7 +72,7 @@ export default function Home() {
 
   return (
     <div style={styles.container}>
-      
+
       {/* BACKGROUND */}
       <div style={styles.bg1}></div>
       <div style={styles.bg2}></div>
@@ -83,7 +80,7 @@ export default function Home() {
 
       {/* NAVBAR */}
       <nav style={styles.navbar}>
-        
+
         <div style={styles.logo}>
           <div style={styles.logoIcon}>
             <FaGraduationCap />
@@ -91,17 +88,17 @@ export default function Home() {
 
           <div>
             <h2 style={styles.logoText}>
-              ExamFlow
+              Smart Examination Evalution System
             </h2>
 
             <p style={styles.logoSub}>
-              Smart Examination System
+              Digital & Smart ExamFlow
             </p>
           </div>
         </div>
 
         <div style={styles.navButtons}>
-          
+
           <Link
             to="/admin-login"
             style={styles.adminBtn}
@@ -138,15 +135,11 @@ export default function Home() {
           </h1>
 
           <p style={styles.heroText}>
-            A premium digital examination
-            management platform for colleges.
-            Manage professors, assign papers,
-            evaluate answer sheets and track
-            workflow seamlessly.
+            Welcome to Calcutta Institute of Technology (CIT) – where innovation meets excellence, shaping future engineers and leaders through world-class education, cutting-edge research, and a dynamic learning environment.
           </p>
 
           <div style={styles.heroButtons}>
-            
+
             <Link
               to="/admin-login"
               style={styles.primaryBtn}
@@ -213,7 +206,7 @@ export default function Home() {
             </div>
 
             <h2 style={styles.cardTitle}>
-              Premium College Dashboard
+              Product Features
             </h2>
 
             <p style={styles.cardText}>

@@ -89,7 +89,7 @@ export default function ProfessorDashboard() {
             {/* Profile */}
             <div style={styles.profileCard}>
               <img
-                src={prof.photo}
+                src={`http://localhost:5000/uploads/${prof.photo}`}
                 alt="profile"
                 style={styles.profileImage}
               />
