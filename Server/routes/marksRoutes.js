@@ -230,4 +230,28 @@ router.get("/grade/:marks", (req, res) => {
 
 });
 
+router.get("/remark/:marks", (req, res) => {
+  const marks = Number(req.params.marks);
+
+  const sql = `
+    SELECT remark
+    FROM remark_rules
+    WHERE ? BETWEEN min_marks AND max_marks
+  `;
+
+  db.query(sql, [marks], (err, result) => {
+    if (err) return res.send(err);
+
+    if (result.length > 0) {
+      res.json({
+        remark: result[0].remark
+      });
+    } else {
+      res.json({
+        remark: "Fail"
+      });
+    }
+  });
+});
+
 module.exports = router;

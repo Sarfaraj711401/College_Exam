@@ -146,7 +146,7 @@ export default function ProfessorPage() {
 
       form.append("name", `${formData.first_name} ${formData.last_name}`);
       form.append("designation", formData.designation);
-      
+
       form.append("email", formData.email);
       form.append("password", formData.password);
       form.append("mobile", formData.mobile);
@@ -204,7 +204,7 @@ export default function ProfessorPage() {
         first_name: "",
         last_name: "",
         designation: "",
-      
+
         email: "",
         password: "",
         confirmPassword: "",
@@ -228,13 +228,45 @@ export default function ProfessorPage() {
   };
 
   const handleEdit = (p) => {
-    const fullName = p.name.split(" ");
+    const fullName = p.name ? p.name.split(" ") : [];
 
     setFormData({
-      ...p,
       first_name: fullName[0] || "",
       last_name: fullName.slice(1).join(" ") || "",
-      confirmPassword: p.password
+
+      designation: p.designation || "",
+
+      email: p.email || "",
+      password: p.password || "",
+      confirmPassword: p.password || "",
+
+      mobile: p.mobile || "",
+      experience: p.experience || "",
+
+      photo: p.photo || "",
+
+      bank_name: p.bank_name || "",
+      branch_name: p.branch_name || "",
+      ifsc_code: p.ifsc_code || "",
+      account_number: p.account_number || "",
+      account_holder_name: p.account_holder_name || "",
+      bank_address: p.bank_address || "",
+
+      stream: p.stream || "",
+      major_subject: p.major_subject || "",
+      minor1: p.minor1 || "",
+      minor2: p.minor2 || "",
+
+      aec1: p.aec1 || "",
+      aec2: p.aec2 || "",
+
+      mdc1: p.mdc1 || "",
+      mdc2: p.mdc2 || "",
+      mdc3: p.mdc3 || "",
+
+      vac1: p.vac1 || "",
+      vac2: p.vac2 || "",
+      vac3: p.vac3 || ""
     });
 
     setEditId(p.id);
@@ -384,7 +416,13 @@ export default function ProfessorPage() {
                 ) : (
                   <div style={styles.photoPreviewWrapper}>
                     <img
-                      src={URL.createObjectURL(formData.photo)}
+                      src={
+                        formData.photo instanceof File
+                          ? URL.createObjectURL(formData.photo)
+                          : formData.photo
+                            ? `http://localhost:5000/uploads/${formData.photo}`
+                            : "https://via.placeholder.com/100"
+                      }
                       alt="Professor"
                       style={styles.uploadPreview}
                     />
@@ -1049,8 +1087,8 @@ export default function ProfessorPage() {
             <div style={styles.previewDetailsGrid}>
 
               <div style={styles.infoCard}>
-                <span>Subject</span>
-                <strong>{selectedProfessor.subject}</strong>
+                <span>Strean</span>
+                <strong>{selectedProfessor.stream}</strong>
               </div>
 
               <div style={styles.infoCard}>

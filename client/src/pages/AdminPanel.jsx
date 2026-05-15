@@ -25,16 +25,42 @@ export default function AdminPanel() {
   const [examRules, setExamRules] = useState([]);
   const [selectedRule, setSelectedRule] = useState(null);
   const [creditPoints, setCreditPoints] = useState([]);
+  const [streams, setStreams] = useState([]);
+  const [majorSubjects, setMajorSubjects] = useState([]);
+  const [minor1Subjects, setMinor1Subjects] = useState([]);
+  const [minor2Subjects, setMinor2Subjects] = useState([]);
+  const [aec1Subjects, setAec1Subjects] = useState([]);
+  const [aec2Subjects, setAec2Subjects] = useState([]);
+  const [mdc1Subjects, setMdc1Subjects] = useState([]);
+  const [mdc2Subjects, setMdc2Subjects] = useState([]);
+  const [mdc3Subjects, setMdc3Subjects] = useState([]);
+  const [vac1Subjects, setVac1Subjects] = useState([]);
+  const [vac2Subjects, setVac2Subjects] = useState([]);
+  const [vac3Subjects, setVac3Subjects] = useState([]);
+
+
 
   const [formData, setFormData] = useState({
     professor_id: "",
-    academic_year: "",   // ✅ NEW
+    academic_year: "",
     year: "",
     semester: "",
-    subject: "",
+    stream: "",
     exam_type: "",
+    credit_point: "",
     start_roll: "",
     end_roll: "",
+    major_subject: "",
+    minor1: "",
+    minor2: "",
+    aec1: "",
+    aec2: "",
+    mdc1: "",
+    mdc2: "",
+    mdc3: "",
+    vac1: "",
+    vac2: "",
+    vac3: "",
   });
 
   useEffect(() => {
@@ -89,16 +115,18 @@ export default function AdminPanel() {
   /* Update Button Click */
   const handleEditPaper = (paper) => {
     setEditingPaperId(paper.id);
+    console.log(paper);
 
     setFormData({
       professor_id: paper.professor_id,
-      academic_year: paper.academic_year || "", // ✅ NEW
-      year: paper.year,
-      semester: paper.semester,
-      subject: paper.subject,
-      exam_type: paper.exam_type,
-      start_roll: paper.start_roll,
-      end_roll: paper.end_roll,
+      academic_year: paper.academic_year || "",
+      year: paper.year || "",
+      semester: paper.semester || "",
+      stream: paper.stream || "",          // ✅ added
+      exam_type: paper.exam_type || "",
+      credit_point: paper.credit_point || "", // ✅ added
+      start_roll: paper.start_roll || "",
+      end_roll: paper.end_roll || "",
     });
 
     const prof = professors.find(
@@ -119,7 +147,7 @@ export default function AdminPanel() {
     setFormData({
       ...formData,
       professor_id: id,
-      subject: prof ? prof.subject : "", // ✅ AUTO SUBJECT
+      stream: prof ? prof.stream : "",   // ✅ fixed
     });
 
     setSelectedProf(prof);
@@ -154,8 +182,9 @@ export default function AdminPanel() {
       academic_year,
       year,
       semester,
-      subject,
+      stream,
       exam_type,
+      credit_point,
       start_roll,
       end_roll,
     } = formData;
@@ -165,9 +194,9 @@ export default function AdminPanel() {
       !academic_year ||
       !year ||
       !semester ||
-      !subject ||
+      !stream ||
       !exam_type ||
-      !formData.credit_point ||
+      !credit_point ||
       !start_roll ||
       !end_roll
     ) {
@@ -199,7 +228,7 @@ export default function AdminPanel() {
         academic_year: "",
         year: "",
         semester: "",
-        subject: "",
+        stream: "",
         exam_type: "",
         credit_point: "",
         start_roll: "",
@@ -229,7 +258,8 @@ export default function AdminPanel() {
           axios.get("http://localhost:5000/dropdown/exam-types"),
           axios.get("http://localhost:5000/dropdown/academic-years"),
           axios.get("http://localhost:5000/dropdown/exam-type-rules"),
-          axios.get("http://localhost:5000/dropdown/credit-points")
+          axios.get("http://localhost:5000/dropdown/credit-points"),
+          axios.get("http://localhost:5000/dropdown/streams")
         ]);
 
       setYears(yearRes.data);
@@ -238,10 +268,48 @@ export default function AdminPanel() {
       setAcademicYears(academicRes.data);
       setExamRules(ruleRes.data);
       setCreditPoints(creditRes.data);
+      setStreams(streamRes.data)
     } catch (err) {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (!formData.stream) return;
+
+    axios.get(`http://localhost:5000/dropdown/major-subjects/${formData.stream}`)
+      .then(res => setMajorSubjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/minor1/${formData.stream}`)
+      .then(res => setMinor1Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/minor2/${formData.stream}`)
+      .then(res => setMinor2Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/aec1/${formData.stream}`)
+      .then(res => setAec1Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/aec2/${formData.stream}`)
+      .then(res => setAec2Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/mdc1/${formData.stream}`)
+      .then(res => setMdc1Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/mdc2/${formData.stream}`)
+      .then(res => setMdc2Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/mdc3/${formData.stream}`)
+      .then(res => setMdc3Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/vac1/${formData.stream}`)
+      .then(res => setVac1Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/vac2/${formData.stream}`)
+      .then(res => setVac2Subjects(res.data));
+
+    axios.get(`http://localhost:5000/dropdown/vac3/${formData.stream}`)
+      .then(res => setVac3Subjects(res.data));
+  }, [formData.stream]);
 
   return (
     <div style={styles.container}>
@@ -281,7 +349,7 @@ export default function AdminPanel() {
             <div>
               <h3>{selectedProf.name}</h3>
               <p>{selectedProf.designation}</p>
-              <p>{selectedProf.subject}</p>
+              <p>{selectedProf.stream}</p>
               <p>{selectedProf.email}</p>
               <p>{selectedProf.mobile}</p>
             </div>
@@ -293,6 +361,7 @@ export default function AdminPanel() {
           <form onSubmit={handleSubmit}>
             <div style={styles.grid}>
 
+              {/* Academic Year */}
               <select
                 name="academic_year"
                 value={formData.academic_year}
@@ -307,6 +376,7 @@ export default function AdminPanel() {
                 ))}
               </select>
 
+              {/* Year */}
               <select
                 name="year"
                 value={formData.year}
@@ -314,7 +384,6 @@ export default function AdminPanel() {
                 style={styles.input}
               >
                 <option value="">Select Year</option>
-
                 {years.map((y) => (
                   <option key={y.id} value={y.year_name}>
                     {y.year_name}
@@ -322,6 +391,7 @@ export default function AdminPanel() {
                 ))}
               </select>
 
+              {/* Semester */}
               <select
                 name="semester"
                 value={formData.semester}
@@ -336,20 +406,175 @@ export default function AdminPanel() {
                 ))}
               </select>
 
-              <input
-                name="subject"
-                placeholder="Professor Subject"
-                value={formData.subject}
-                readOnly
-                style={{
-                  ...styles.input,
-                  background: "#f3f4f6",
-                  cursor: "not-allowed",
-                  fontWeight: "600",
-                  color: "#374151"
-                }}
-              />
+              {/* Stream */}
+              <input name="stream" placeholder="Stream" value={formData.stream} readOnly style={{ ...styles.input, background: "#f3f4f6", cursor: "not-allowed", fontWeight: "600", color: "#374151" }} />
 
+              {/* Major */}
+              <select
+                name="major_subject"
+                value={formData.major_subject}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select Major</option>
+                {majorSubjects.map((m) => (
+                  <option key={m.MajorId} value={m.Major}>
+                    {m.Major}
+                  </option>
+                ))}
+              </select>
+
+              {/* Minor 1 */}
+              <select
+                name="minor1"
+                value={formData.minor1}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select Minor 1</option>
+                {minor1Subjects.map((m) => (
+                  <option key={m.Minor1Id} value={m.Minor1}>
+                    {m.Minor1}
+                  </option>
+                ))}
+              </select>
+
+              {/* Minor 2 */}
+              <select
+                name="minor2"
+                value={formData.minor2}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select Minor 2</option>
+                {minor2Subjects.map((m) => (
+                  <option key={m.Minor2Id} value={m.Minor2}>
+                    {m.Minor2}
+                  </option>
+                ))}
+              </select>
+
+              {/* AEC 1 */}
+              <select
+                name="aec1"
+                value={formData.aec1}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select AEC 1</option>
+                {aec1Subjects.map((a) => (
+                  <option key={a.AEC1Id} value={a.AEC1}>
+                    {a.AEC1}
+                  </option>
+                ))}
+              </select>
+
+              {/* AEC 2 */}
+              <select
+                name="aec2"
+                value={formData.aec2}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select AEC 2</option>
+                {aec2Subjects.map((a) => (
+                  <option key={a.AEC2Id} value={a.AEC2}>
+                    {a.AEC2}
+                  </option>
+                ))}
+              </select>
+
+              {/* MDC 1 */}
+              <select
+                name="mdc1"
+                value={formData.mdc1}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select MDC 1</option>
+                {mdc1Subjects.map((m) => (
+                  <option key={m.MDC1Id} value={m.MDC1}>
+                    {m.MDC1}
+                  </option>
+                ))}
+              </select>
+
+              {/* MDC 2 */}
+              <select
+                name="mdc2"
+                value={formData.mdc2}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select MDC 2</option>
+                {mdc2Subjects.map((m) => (
+                  <option key={m.MDC2Id} value={m.MDC2}>
+                    {m.MDC2}
+                  </option>
+                ))}
+              </select>
+
+              {/* MDC 3 */}
+              <select
+                name="mdc3"
+                value={formData.mdc3}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select MDC 3</option>
+                {mdc3Subjects.map((m) => (
+                  <option key={m.MDC3Id} value={m.MDC3}>
+                    {m.MDC3}
+                  </option>
+                ))}
+              </select>
+
+              {/* VAC 1 */}
+              <select
+                name="vac1"
+                value={formData.vac1}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select VAC 1</option>
+                {vac1Subjects.map((v) => (
+                  <option key={v.VAC1Id} value={v.VAC1}>
+                    {v.VAC1}
+                  </option>
+                ))}
+              </select>
+
+              {/* VAC 2 */}
+              <select
+                name="vac2"
+                value={formData.vac2}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select VAC 2</option>
+                {vac2Subjects.map((v) => (
+                  <option key={v.VAC2Id} value={v.VAC2}>
+                    {v.VAC2}
+                  </option>
+                ))}
+              </select>
+
+              {/* VAC 3 */}
+              <select
+                name="vac3"
+                value={formData.vac3}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="">Select VAC 3</option>
+                {vac3Subjects.map((v) => (
+                  <option key={v.VAC3Id} value={v.VAC3}>
+                    {v.VAC3}
+                  </option>
+                ))}
+              </select>
+
+              {/* Exam Type */}
               <select
                 name="exam_type"
                 value={formData.exam_type}
@@ -364,8 +589,7 @@ export default function AdminPanel() {
                 ))}
               </select>
 
-      
-
+              {/* Credit Point */}
               <select
                 name="credit_point"
                 value={formData.credit_point}
@@ -373,7 +597,6 @@ export default function AdminPanel() {
                 style={styles.input}
               >
                 <option value="">Select Credit Point</option>
-
                 {creditPoints.map((c) => (
                   <option key={c.id} value={c.credit_value}>
                     {c.credit_value}
@@ -381,6 +604,7 @@ export default function AdminPanel() {
                 ))}
               </select>
 
+              {/* Start Roll */}
               <input
                 name="start_roll"
                 placeholder="Start Roll"
@@ -389,6 +613,7 @@ export default function AdminPanel() {
                 style={styles.input}
               />
 
+              {/* End Roll */}
               <input
                 name="end_roll"
                 placeholder="End Roll"
@@ -396,120 +621,99 @@ export default function AdminPanel() {
                 onChange={handleChange}
                 style={styles.input}
               />
+
             </div>
 
+            {/* Rule Box */}
+            {selectedRule && (
+              <div style={{ ...styles.rollBox, maxWidth: "650px", marginTop: "15px" }}>
+                <p>Theory: <strong>{selectedRule.theory}</strong></p>
+                <p>Practical: <strong>{selectedRule.practical}</strong></p>
+                <p>Attendance: <strong>{selectedRule.attendance}</strong></p>
+                <p>
+                  Total:{" "}
+                  <strong>
+                    {selectedRule.theory +
+                      selectedRule.practical +
+                      selectedRule.attendance}
+                  </strong>
+                </p>
+              </div>
+            )}
 
-              {selectedRule && (
-                <div style={{
-                  ...styles.rollBox,
-                  maxWidth: "650px",
-                  marginTop: "15px"
-                }}>
-                  <p>Theory: <strong>{selectedRule.theory}</strong></p>
-                  <p>Practical: <strong>{selectedRule.practical}</strong></p>
-                  <p>Attendance: <strong>{selectedRule.attendance}</strong></p>
-                  <p>
-                    Total:{" "}
-                    <strong>
-                      {selectedRule.theory +
-                        selectedRule.practical +
-                        selectedRule.attendance}
-                    </strong>
-                  </p>
-                </div>
-              )}
+            {/* Roll Preview */}
+            {formData.start_roll && formData.end_roll && (
+              <div style={styles.rollBox}>
+                <p>
+                  Start Roll: <strong>{formData.start_roll}</strong>
+                </p>
+                <p>
+                  End Roll: <strong>{formData.end_roll}</strong>
+                </p>
+              </div>
+            )}
 
-              {/* Roll Range */}
-            {formData.start_roll &&
-              formData.end_roll && (
-                <div style={styles.rollBox}>
-                  <p>
-                    Start Roll:
-                    <strong>
-                      {formData.start_roll}
-                    </strong>
-                  </p>
-
-                  <p>
-                    End Roll:
-                    <strong>
-                      {formData.end_roll}
-                    </strong>
-                  </p>
-                </div>
-              )}
-
+            {/* Submit Button */}
             <button style={styles.assignBtn}>
-              {editingPaperId
-                ? "Update Paper"
-                : "Assign Paper"}
+              {editingPaperId ? "Update Paper" : "Assign Paper"}
             </button>
+
           </form>
         )}
 
         {/* Assigned Papers */}
-        <div style={styles.assignedSection}>
-          <h2 style={styles.assignedTitle}>
-            <FaClipboardList />
-            Assigned Papers
-          </h2>
+        {/* Assigned Papers */}
+        <div style={{ marginTop: "40px" }}>
+          <h2 style={{ marginBottom: "15px" }}>Assigned Papers</h2>
 
-          {assignedPapers.length === 0 ? (
-            <div style={styles.emptyState}>No papers assigned yet</div>
-          ) : (
-            <div style={styles.paperTable}>
+          <div style={styles.tableHeader}>
+            <div>Stream</div>
+            <div>Professor</div>
+            <div>Year</div>
+            <div>Sem</div>
+            <div>Exam</div>
+            <div>Roll</div>
+            <div>Subjects</div>
+            <div>Action</div>
+          </div>
 
-              {assignedPapers.map((paper) => (
-                <div key={paper.id} style={styles.paperRow}>
+          {assignedPapers.map((paper) => (
+            <div key={paper.id} style={styles.tableRow}>
 
-                  {/* ALL IN ONE LINE */}
-                  <div style={styles.colSubject}>
-                    <FaBookOpen style={{ marginRight: "6px" }} />
-                    {paper.subject}
-                  </div>
+              <div>{paper.stream}</div>
+              <div>{paper.professor_name}</div>
+              <div>{paper.year}</div>
+              <div>{paper.semester}</div>
+              <div>{paper.exam_type}</div>
+              <div>{paper.start_roll}-{paper.end_roll}</div>
 
-                  <div style={styles.col}>
-                    {paper.professor_name}
-                  </div>
+              <div style={{ fontSize: "12px", textAlign: "left" }}>
+                M:{paper.major_subject} |
+                m1:{paper.minor1} |
+                m2:{paper.minor2} |
+                A:{paper.aec1},{paper.aec2} |
+                M:{paper.mdc1},{paper.mdc2},{paper.mdc3} |
+                V:{paper.vac1},{paper.vac2},{paper.vac3}
+              </div>
 
-                  <div style={styles.col}>
-                    {paper.academic_year}
-                  </div>
+              <div style={styles.actionCell}>
+                <button
+                  style={styles.smallEditBtn}
+                  onClick={() => handleEditPaper(paper)}
+                >
+                  <FaEdit />
+                </button>
 
-                  <div style={styles.col}>
-                    {paper.year} • {paper.semester}
-                  </div>
-
-                  <div style={styles.col}>
-                    {paper.exam_type}
-                  </div>
-
-                  <div style={styles.col}>
-                    {paper.start_roll} - {paper.end_roll}
-                  </div>
-
-                  {/* ACTION BUTTONS */}
-                  <div style={styles.colActions}>
-                    <button
-                      style={styles.updateBtn}
-                      onClick={() => handleEditPaper(paper)}
-                    >
-                      <FaEdit />
-                    </button>
-
-                    <button
-                      style={styles.deleteBtn}
-                      onClick={() => handleDeletePaper(paper.id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-
-                </div>
-              ))}
+                <button
+                  style={styles.smallDeleteBtn}
+                  onClick={() => handleDeletePaper(paper.id)}
+                >
+                  <FaTrash />
+                </button>
+              </div>
 
             </div>
-          )}
+          ))}
         </div>
 
       </div>
@@ -734,19 +938,7 @@ const styles = {
     gap: "10px"
   },
 
-  paperRow: {
-    display: "grid",
-    gridTemplateColumns: "2fr 2fr 1.5fr 1.5fr 1fr 2fr 1fr",
-    alignItems: "center",
-    background: "#ffffff",
-    padding: "14px 16px",
-    borderRadius: "12px",
-    border: "1px solid #e5e7eb",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.04)",
-    transition: "0.2s",
-    fontSize: "13px",
-    color: "#1f2937"
-  },
+
 
   colSubject: {
     display: "flex",
@@ -765,5 +957,49 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     gap: "6px"
+  },
+  tableHeader: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 0.6fr 0.6fr 1fr 1fr 3fr 0.8fr",
+    background: "#111827",
+    color: "white",
+    padding: "12px",
+    fontSize: "13px",
+    fontWeight: "600",
+    borderRadius: "10px 10px 0 0",
+  },
+
+  tableRow: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 0.6fr 0.6fr 1fr 1fr 3fr 0.8fr",
+    padding: "10px",
+    borderBottom: "1px solid #e5e7eb",
+    fontSize: "13px",
+    alignItems: "center",
+    background: "#fff",
+  },
+
+  actionCell: {
+    display: "flex",
+    gap: "6px",
+    justifyContent: "center",
+  },
+
+  smallEditBtn: {
+    background: "#22c55e",
+    color: "white",
+    border: "none",
+    padding: "6px 8px",
+    borderRadius: "6px",
+    cursor: "pointer",
+  },
+
+  smallDeleteBtn: {
+    background: "#ef4444",
+    color: "white",
+    border: "none",
+    padding: "6px 8px",
+    borderRadius: "6px",
+    cursor: "pointer",
   },
 };

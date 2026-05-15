@@ -95,6 +95,28 @@ export default function ReviewMarks() {
 
     setStudents(updated);
 
+    if (field === "marks") {
+      try {
+        if (value === "") {
+          updated[index].grade = "";
+          updated[index].remarks = "";
+        } else {
+          const gradeRes = await axios.get(
+            `http://localhost:5000/marks/grade/${value}`
+          );
+
+          const remarkRes = await axios.get(
+            `http://localhost:5000/marks/remark/${value}`
+          );
+
+          updated[index].grade = gradeRes.data.grade;
+          updated[index].remarks = remarkRes.data.remark;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
   };
 
   const handleSave = async (

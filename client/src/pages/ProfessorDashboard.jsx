@@ -103,8 +103,8 @@ export default function ProfessorDashboard() {
                 </p>
 
                 <p>
-                  <FaGraduationCap /> <strong>Subject:</strong>{" "}
-                  {prof.subject}
+                  <FaGraduationCap /> <strong>Stream:</strong>{" "}
+                  {prof.stream}
                 </p>
 
                 <p>

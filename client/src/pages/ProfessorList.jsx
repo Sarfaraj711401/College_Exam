@@ -156,8 +156,8 @@ export default function ProfessorList() {
               {/* Details */}
               <div style={styles.viewDetailsGrid}>
                 <div style={styles.viewInfoCard}>
-                  <span>Subject</span>
-                  <strong>{selectedProfessor.subject}</strong>
+                  <span>Stream</span>
+                  <strong>{selectedProfessor.stream}</strong>
                 </div>
 
                 <div style={styles.viewInfoCard}>

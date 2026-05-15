@@ -5,32 +5,54 @@ const db = require("../config/db");
 
 /* ASSIGN PAPER */
 router.post("/assign-paper", (req, res) => {
-
   const {
     professor_id,
     academic_year,
     year,
     semester,
-    subject,
+    stream,
+    major_subject,
+    minor1,
+    minor2,
+    aec1,
+    aec2,
+    mdc1,
+    mdc2,
+    mdc3,
+    vac1,
+    vac2,
+    vac3,
     exam_type,
+    credit_point,
     start_roll,
     end_roll
   } = req.body;
 
   const sql = `
-    INSERT INTO paper_assignments
-    (
-      professor_id,
-      academic_year,
-      year,
-      semester,
-      subject,
-      exam_type,
-      start_roll,
-      end_roll
-    )
-    VALUES (?,?,?,?,?,?,?,?)
-  `;
+INSERT INTO paper_assignments (
+  professor_id,
+  academic_year,
+  year,
+  semester,
+  stream,
+  major_subject,
+  minor1,
+  minor2,
+  aec1,
+  aec2,
+  mdc1,
+  mdc2,
+  mdc3,
+  vac1,
+  vac2,
+  vac3,
+  exam_type,
+  credit_point,
+  start_roll,
+  end_roll
+)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+`;
 
   db.query(
     sql,
@@ -39,8 +61,20 @@ router.post("/assign-paper", (req, res) => {
       academic_year,
       year,
       semester,
-      subject,
+      stream,
+      major_subject,
+      minor1,
+      minor2,
+      aec1,
+      aec2,
+      mdc1,
+      mdc2,
+      mdc3,
+      vac1,
+      vac2,
+      vac3,
       exam_type,
+      credit_point,
       start_roll,
       end_roll
     ],
@@ -88,25 +122,49 @@ router.put("/update/:id", (req, res) => {
     academic_year,
     year,
     semester,
-    subject,
+    stream,
+    major_subject,
+    minor1,
+    minor2,
+    aec1,
+    aec2,
+    mdc1,
+    mdc2,
+    mdc3,
+    vac1,
+    vac2,
+    vac3,
     exam_type,
+    credit_point,
     start_roll,
     end_roll
   } = req.body;
 
   const sql = `
-    UPDATE paper_assignments
-    SET
-      professor_id=?,
-      academic_year=?,
-      year=?,
-      semester=?,
-      subject=?,
-      exam_type=?,
-      start_roll=?,
-      end_roll=?
-    WHERE id=?
-  `;
+UPDATE paper_assignments
+SET
+ professor_id=?,
+ academic_year=?,
+ year=?,
+ semester=?,
+ stream=?,
+ major_subject=?,
+ minor1=?,
+ minor2=?,
+ aec1=?,
+ aec2=?,
+ mdc1=?,
+ mdc2=?,
+ mdc3=?,
+ vac1=?,
+ vac2=?,
+ vac3=?,
+ exam_type=?,
+ credit_point=?,
+ start_roll=?,
+ end_roll=?
+WHERE id=?
+`;
 
   db.query(
     sql,
@@ -115,8 +173,20 @@ router.put("/update/:id", (req, res) => {
       academic_year,
       year,
       semester,
-      subject,
+      stream,
+      major_subject,
+      minor1,
+      minor2,
+      aec1,
+      aec2,
+      mdc1,
+      mdc2,
+      mdc3,
+      vac1,
+      vac2,
+      vac3,
       exam_type,
+      credit_point,
       start_roll,
       end_roll,
       id
