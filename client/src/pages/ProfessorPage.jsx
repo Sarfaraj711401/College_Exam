@@ -21,14 +21,24 @@ export default function ProfessorPage() {
   const [editId, setEditId] = useState(null);
   const [selectedProfessor, setSelectedProfessor] = useState(null);
   const [designations, setDesignations] = useState([]);
-  const [subjects, setSubjects] = useState([]);
+  const [streams, setStreams] = useState([]);
+  const [majorSubjects, setMajorSubjects] = useState([]);
+  const [minor1Subjects, setMinor1Subjects] = useState([]);
+  const [minor2Subjects, setMinor2Subjects] = useState([]);
+  const [aec1Subjects, setAec1Subjects] = useState([]);
+  const [aec2Subjects, setAec2Subjects] = useState([]);
+  const [mdc1Subjects, setMdc1Subjects] = useState([]);
+  const [mdc2Subjects, setMdc2Subjects] = useState([]);
+  const [mdc3Subjects, setMdc3Subjects] = useState([]);
+  const [vac1Subjects, setVac1Subjects] = useState([]);
+  const [vac2Subjects, setVac2Subjects] = useState([]);
+  const [vac3Subjects, setVac3Subjects] = useState([]);
 
 
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     designation: "",
-    subject: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -40,7 +50,19 @@ export default function ProfessorPage() {
     ifsc_code: "",
     account_number: "",
     account_holder_name: "",
-    bank_address: ""
+    bank_address: "",
+    stream: "",
+    major_subject: "",
+    minor1: "",
+    minor2: "",
+    aec1: "",
+    aec2: "",
+    mdc1: "",
+    mdc2: "",
+    mdc3: "",
+    vac1: "",
+    vac2: "",
+    vac3: ""
   });
 
   useEffect(() => {
@@ -71,7 +93,6 @@ export default function ProfessorPage() {
       name === "first_name" ||
       name === "last_name" ||
       name === "designation" ||
-      name === "subject" ||
       name === "bank_name" ||
       name === "branch_name" ||
       name === "account_holder_name" ||
@@ -125,7 +146,7 @@ export default function ProfessorPage() {
 
       form.append("name", `${formData.first_name} ${formData.last_name}`);
       form.append("designation", formData.designation);
-      form.append("subject", formData.subject);
+      
       form.append("email", formData.email);
       form.append("password", formData.password);
       form.append("mobile", formData.mobile);
@@ -137,6 +158,18 @@ export default function ProfessorPage() {
       form.append("account_number", formData.account_number);
       form.append("account_holder_name", formData.account_holder_name);
       form.append("bank_address", formData.bank_address);
+      form.append("stream", formData.stream);
+      form.append("major_subject", formData.major_subject);
+      form.append("minor1", formData.minor1);
+      form.append("minor2", formData.minor2);
+      form.append("aec1", formData.aec1);
+      form.append("aec2", formData.aec2);
+      form.append("mdc1", formData.mdc1);
+      form.append("mdc2", formData.mdc2);
+      form.append("mdc3", formData.mdc3);
+      form.append("vac1", formData.vac1);
+      form.append("vac2", formData.vac2);
+      form.append("vac3", formData.vac3);
 
       // 👉 PHOTO (IMPORTANT)
       if (formData.photo) {
@@ -171,7 +204,7 @@ export default function ProfessorPage() {
         first_name: "",
         last_name: "",
         designation: "",
-        subject: "",
+      
         email: "",
         password: "",
         confirmPassword: "",
@@ -232,17 +265,82 @@ export default function ProfessorPage() {
 
   const fetchDropdownData = async () => {
     try {
-      const designationRes = await axios.get("http://localhost:5000/dropdown/designations");
-      const subjectRes = await axios.get("http://localhost:5000/dropdown/subjects");
 
-      console.log(designationRes.data, subjectRes.data); // 🔥 debug
+      const designationRes = await axios.get(
+        "http://localhost:5000/dropdown/designations"
+      );
+
+      const streamRes = await axios.get(
+        "http://localhost:5000/dropdown/streams"
+      );
 
       setDesignations(designationRes.data);
-      setSubjects(subjectRes.data);
+      setStreams(streamRes.data);
+
+      console.log(designationRes.data);
+
     } catch (error) {
       console.log("Dropdown error:", error);
     }
   };
+
+  useEffect(() => {
+    if (!formData.stream) return;
+
+    fetchSubjectsByStream();
+
+  }, [formData.stream]);
+
+
+  const fetchSubjectsByStream = async () => {
+    try {
+
+      const stream = formData.stream;
+
+      const [
+        majorRes,
+        minor1Res,
+        minor2Res,
+        aec1Res,
+        aec2Res,
+        mdc1Res,
+        mdc2Res,
+        mdc3Res,
+        vac1Res,
+        vac2Res,
+        vac3Res
+      ] = await Promise.all([
+        axios.get(`http://localhost:5000/dropdown/major-subjects/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/minor1/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/minor2/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/aec1/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/aec2/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/mdc1/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/mdc2/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/mdc3/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/vac1/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/vac2/${stream}`),
+        axios.get(`http://localhost:5000/dropdown/vac3/${stream}`)
+      ]);
+
+      setMajorSubjects(majorRes.data);
+      setMinor1Subjects(minor1Res.data);
+      setMinor2Subjects(minor2Res.data);
+      setAec1Subjects(aec1Res.data);
+      setAec2Subjects(aec2Res.data);
+      setMdc1Subjects(mdc1Res.data);
+      setMdc2Subjects(mdc2Res.data);
+      setMdc3Subjects(mdc3Res.data);
+      setVac1Subjects(vac1Res.data);
+      setVac2Subjects(vac2Res.data);
+      setVac3Subjects(vac3Res.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
 
   return (
     <div style={styles.wrapper}>
@@ -260,8 +358,10 @@ export default function ProfessorPage() {
 
           {/* FORM */}
           <form>
+
+            {/* PHOTO + PERSONAL DETAILS */}
             <div style={styles.section}>
-              {/* PHOTO UPLOAD BOX */}
+
               {/* PHOTO UPLOAD BOX */}
               <div style={styles.photoUploadBox}>
                 <h2 style={styles.photoTitle}>
@@ -284,12 +384,13 @@ export default function ProfessorPage() {
                 ) : (
                   <div style={styles.photoPreviewWrapper}>
                     <img
-                      src={formData.photo}
+                      src={URL.createObjectURL(formData.photo)}
                       alt="Professor"
                       style={styles.uploadPreview}
                     />
 
                     <div style={styles.photoActionButtons}>
+
                       <button
                         type="button"
                         style={styles.viewBtn}
@@ -320,14 +421,19 @@ export default function ProfessorPage() {
                       >
                         <FaTrash /> Remove
                       </button>
+
                     </div>
                   </div>
                 )}
               </div>
-              <h2 style={styles.sectionTitle}>Personal Details</h2>
 
-              {/* ROW 1 */}
+              <h2 style={styles.sectionTitle}>
+                Personal Details
+              </h2>
+
+              {/* NAME */}
               <div style={styles.grid2}>
+
                 <input
                   name="first_name"
                   placeholder="First Name"
@@ -343,34 +449,28 @@ export default function ProfessorPage() {
                   onChange={handleChange}
                   style={styles.input}
                 />
+
               </div>
 
-              {/* ROW 2 */}
-              <div style={styles.grid3}>
+              {/* DESIGNATION + EXPERIENCE */}
+              <div style={styles.grid2}>
+
                 <select
                   name="designation"
                   value={formData.designation}
                   onChange={handleChange}
                   style={styles.input}
                 >
-                  <option value="">Select Designation</option>
-                  {designations.map((d) => (
-                    <option key={d.id} value={d.designation_name}>
-                      {d.designation_name}
-                    </option>
-                  ))}
-                </select>
+                  <option value="">
+                    Select Designation
+                  </option>
 
-                <select
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  style={styles.input}
-                >
-                  <option value="">Select Subject</option>
-                  {subjects.map((s) => (
-                    <option key={s.id} value={s.subject_name}>
-                      {s.subject_name}
+                  {designations.map((d) => (
+                    <option
+                      key={d.id}
+                      value={d.designation_name}
+                    >
+                      {d.designation_name}
                     </option>
                   ))}
                 </select>
@@ -382,29 +482,370 @@ export default function ProfessorPage() {
                   onChange={handleChange}
                   style={styles.input}
                 />
+
               </div>
+
             </div>
 
+            {/* SUBJECT + STREAM SECTION */}
             <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Bank Details</h2>
+
+              <h2 style={styles.sectionTitle}>
+                Subject & Stream Details
+              </h2>
+
+              {/* ROW 1 */}
+              <div style={styles.grid3}>
+
+                {/* STREAM */}
+                <select
+                  name="stream"
+                  value={formData.stream}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    Select Stream
+                  </option>
+
+                  {streams.map((s) => (
+                    <option
+                      key={s.StrId}
+                      value={s.StrName}
+                    >
+                      {s.StrName}
+                    </option>
+                  ))}
+                </select>
+
+                {/* MAJOR */}
+                <select
+                  name="major_subject"
+                  value={formData.major_subject}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    Major Subject
+                  </option>
+
+                  {majorSubjects.map((m, i) => (
+                    <option
+                      key={i}
+                      value={m.Major}
+                    >
+                      {m.Major}
+                    </option>
+                  ))}
+                </select>
+
+                {/* MINOR 1 */}
+                <select
+                  name="minor1"
+                  value={formData.minor1}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    Minor 1
+                  </option>
+
+                  {minor1Subjects.map((m, i) => (
+                    <option
+                      key={i}
+                      value={m.Minor1}
+                    >
+                      {m.Minor1}
+                    </option>
+                  ))}
+                </select>
+
+              </div>
+
+              {/* ROW 2 */}
+              <div style={{ ...styles.grid3, marginTop: "15px" }}>
+
+                {/* MINOR 2 */}
+                <select
+                  name="minor2"
+                  value={formData.minor2}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    Minor 2
+                  </option>
+
+                  {minor2Subjects.map((m, i) => (
+                    <option
+                      key={i}
+                      value={m.Minor2}
+                    >
+                      {m.Minor2}
+                    </option>
+                  ))}
+                </select>
+
+                {/* AEC 1 */}
+                <select
+                  name="aec1"
+                  value={formData.aec1}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    AEC 1
+                  </option>
+
+                  {aec1Subjects.map((a, i) => (
+                    <option
+                      key={i}
+                      value={a.AEC1}
+                    >
+                      {a.AEC1}
+                    </option>
+                  ))}
+                </select>
+
+                {/* AEC 2 */}
+                <select
+                  name="aec2"
+                  value={formData.aec2}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    AEC 2
+                  </option>
+
+                  {aec2Subjects.map((a, i) => (
+                    <option
+                      key={i}
+                      value={a.AEC2}
+                    >
+                      {a.AEC2}
+                    </option>
+                  ))}
+                </select>
+
+              </div>
+
+              {/* ROW 3 */}
+              <div style={{ ...styles.grid3, marginTop: "15px" }}>
+
+                {/* MDC 1 */}
+                <select
+                  name="mdc1"
+                  value={formData.mdc1}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    MDC 1
+                  </option>
+
+                  {mdc1Subjects.map((m, i) => (
+                    <option
+                      key={i}
+                      value={m.MDC1}
+                    >
+                      {m.MDC1}
+                    </option>
+                  ))}
+                </select>
+
+                {/* MDC 2 */}
+                <select
+                  name="mdc2"
+                  value={formData.mdc2}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    MDC 2
+                  </option>
+
+                  {mdc2Subjects.map((m, i) => (
+                    <option
+                      key={i}
+                      value={m.MDC2}
+                    >
+                      {m.MDC2}
+                    </option>
+                  ))}
+                </select>
+
+                {/* MDC 3 */}
+                <select
+                  name="mdc3"
+                  value={formData.mdc3}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    MDC 3
+                  </option>
+
+                  {mdc3Subjects.map((m, i) => (
+                    <option
+                      key={i}
+                      value={m.MDC3}
+                    >
+                      {m.MDC3}
+                    </option>
+                  ))}
+                </select>
+
+              </div>
+
+              {/* ROW 4 */}
+              <div style={{ ...styles.grid3, marginTop: "15px" }}>
+
+                {/* VAC 1 */}
+                <select
+                  name="vac1"
+                  value={formData.vac1}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    VAC 1
+                  </option>
+
+                  {vac1Subjects.map((v, i) => (
+                    <option
+                      key={i}
+                      value={v.VAC1}
+                    >
+                      {v.VAC1}
+                    </option>
+                  ))}
+                </select>
+
+                {/* VAC 2 */}
+                <select
+                  name="vac2"
+                  value={formData.vac2}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    VAC 2
+                  </option>
+
+                  {vac2Subjects.map((v, i) => (
+                    <option
+                      key={i}
+                      value={v.VAC2}
+                    >
+                      {v.VAC2}
+                    </option>
+                  ))}
+                </select>
+
+                {/* VAC 3 */}
+                <select
+                  name="vac3"
+                  value={formData.vac3}
+                  onChange={handleChange}
+                  style={styles.input}
+                >
+                  <option value="">
+                    VAC 3
+                  </option>
+
+                  {vac3Subjects.map((v, i) => (
+                    <option
+                      key={i}
+                      value={v.VAC3}
+                    >
+                      {v.VAC3}
+                    </option>
+                  ))}
+                </select>
+
+              </div>
+
+            </div>
+
+            {/* BANK DETAILS */}
+            <div style={styles.section}>
+
+              <h2 style={styles.sectionTitle}>
+                Bank Details
+              </h2>
 
               <div style={styles.grid}>
-                <input name="account_holder_name" placeholder="Account Holder Name" value={formData.account_holder_name} onChange={handleChange} style={styles.input} />
-                <input name="bank_name" placeholder="Bank Name" value={formData.bank_name} onChange={handleChange} style={styles.input} />
-                <input name="account_number" placeholder="Account Number" value={formData.account_number} onChange={handleChange} style={styles.input} />
-                <input name="branch_name" placeholder="Branch Name" value={formData.branch_name} onChange={handleChange} style={styles.input} />
-                <input name="ifsc_code" placeholder="IFSC Code" value={formData.ifsc_code} onChange={handleChange} style={styles.input} />
-                <input name="bank_address" placeholder="Bank Address" value={formData.bank_address} onChange={handleChange} style={styles.input} />
 
+                <input
+                  name="account_holder_name"
+                  placeholder="Account Holder Name"
+                  value={formData.account_holder_name}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+
+                <input
+                  name="bank_name"
+                  placeholder="Bank Name"
+                  value={formData.bank_name}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+
+                <input
+                  name="account_number"
+                  placeholder="Account Number"
+                  value={formData.account_number}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+
+                <input
+                  name="branch_name"
+                  placeholder="Branch Name"
+                  value={formData.branch_name}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+
+                <input
+                  name="ifsc_code"
+                  placeholder="IFSC Code"
+                  value={formData.ifsc_code}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+
+                <input
+                  name="bank_address"
+                  placeholder="Bank Address"
+                  value={formData.bank_address}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
 
               </div>
+
             </div>
 
+            {/* LOGIN DETAILS */}
             <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>Login Details</h2>
+
+              <h2 style={styles.sectionTitle}>
+                Login Details
+              </h2>
 
               <div style={styles.loginGrid}>
-                <input name="mobile" placeholder="Mobile" value={formData.mobile} onChange={handleChange} style={styles.input} />
+
+                <input
+                  name="mobile"
+                  placeholder="Mobile"
+                  value={formData.mobile}
+                  onChange={handleChange}
+                  style={styles.input}
+                />
+
                 <input
                   type="email"
                   name="email"
@@ -431,12 +872,15 @@ export default function ProfessorPage() {
                   onChange={handleChange}
                   style={styles.input}
                 />
+
               </div>
+
             </div>
 
+            {/* BUTTONS */}
             <div style={styles.formButtonBox}>
 
-              {/* Submit Button */}
+              {/* SUBMIT */}
               <button
                 type="button"
                 style={styles.submitFormBtn}
@@ -445,7 +889,7 @@ export default function ProfessorPage() {
                 <FaCheckCircle /> Submit
               </button>
 
-              {/* Cancel Button */}
+              {/* CANCEL */}
               <button
                 type="button"
                 style={styles.cancelFormBtn}
@@ -454,17 +898,27 @@ export default function ProfessorPage() {
                 Cancel
               </button>
 
-              {/* Reset Button */}
+              {/* RESET */}
               <button
                 type="button"
                 style={styles.resetBtn}
                 onClick={() =>
                   setFormData({
-                    name: "",
                     first_name: "",
                     last_name: "",
                     designation: "",
-                    subject: "",
+                    stream: "",
+                    major_subject: "",
+                    minor1: "",
+                    minor2: "",
+                    aec1: "",
+                    aec2: "",
+                    mdc1: "",
+                    mdc2: "",
+                    mdc3: "",
+                    vac1: "",
+                    vac2: "",
+                    vac3: "",
                     email: "",
                     password: "",
                     confirmPassword: "",
@@ -484,6 +938,7 @@ export default function ProfessorPage() {
               </button>
 
             </div>
+
           </form>
 
           {/* PROFESSOR LIST */}

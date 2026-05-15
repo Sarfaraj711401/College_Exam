@@ -41,23 +41,55 @@ router.post(
 
     const sql = `
       INSERT INTO professors (
-        name, designation, subject, email, password,
-        mobile, experience, photo,
-        bank_name, branch_name, ifsc_code,
-        account_number, account_holder_name, bank_address
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  name,
+  designation,
+  stream,
+  major_subject,
+  minor1,
+  minor2,
+  aec1,
+  aec2,
+  mdc1,
+  mdc2,
+  mdc3,
+  vac1,
+  vac2,
+  vac3,
+  email,
+  password,
+  mobile,
+  experience,
+  photo,
+  bank_name,
+  branch_name,
+  ifsc_code,
+  account_number,
+  account_holder_name,
+  bank_address
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     db.query(sql, [
       data.name,
       data.designation,
-      data.subject,
+      data.stream,
+      data.major_subject,
+      data.minor1,
+      data.minor2,
+      data.aec1,
+      data.aec2,
+      data.mdc1,
+      data.mdc2,
+      data.mdc3,
+      data.vac1,
+      data.vac2,
+      data.vac3,
       data.email,
       data.password,
       data.mobile,
       data.experience,
-      photoFile,   
+      photoFile,
       data.bank_name,
       data.branch_name,
       data.ifsc_code,
@@ -171,7 +203,7 @@ router.post("/add-professor", upload.single("photo"), (req, res) => {
 
   const photo = req.file ? req.file.filename : null;
 
- 
+
 });
 
 module.exports = router;
