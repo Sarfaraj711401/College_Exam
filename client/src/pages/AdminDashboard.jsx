@@ -212,7 +212,7 @@ export default function AdminDashboard() {
               <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.th}>Subject</th>
+                    <th style={styles.th}>Stream</th>
                     <th style={styles.th}>Professor</th>
                     <th style={styles.th}>Academic Year</th>
                     <th style={styles.th}>Semester</th>
@@ -226,7 +226,7 @@ export default function AdminDashboard() {
                     <tr key={paper.id}>
 
                       <td style={styles.td}>
-                        {paper.subject}
+                        {paper.stream}
                       </td>
 
                       <td style={styles.td}>

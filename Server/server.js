@@ -8,7 +8,7 @@ app.use(cors());
 // 👉 JSON middleware
 app.use(express.json());
 
-// 👉 uploads folder public করা (IMPORTANT)
+// 👉 uploads folder public (IMPORTANT)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* ROUTES */

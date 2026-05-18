@@ -326,46 +326,36 @@ export default function ProfessorPage() {
 
   const fetchSubjectsByStream = async () => {
     try {
-
       const stream = formData.stream;
 
-      const [
-        majorRes,
-        minor1Res,
-        minor2Res,
-        aec1Res,
-        aec2Res,
-        mdc1Res,
-        mdc2Res,
-        mdc3Res,
-        vac1Res,
-        vac2Res,
-        vac3Res
-      ] = await Promise.all([
-        axios.get(`http://localhost:5000/dropdown/major-subjects/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/minor1/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/minor2/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/aec1/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/aec2/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/mdc1/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/mdc2/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/mdc3/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/vac1/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/vac2/${stream}`),
-        axios.get(`http://localhost:5000/dropdown/vac3/${stream}`)
-      ]);
+      const res = await axios.get(
+        `http://localhost:5000/dropdown/subjects/${stream}`
+      );
 
-      setMajorSubjects(majorRes.data);
-      setMinor1Subjects(minor1Res.data);
-      setMinor2Subjects(minor2Res.data);
-      setAec1Subjects(aec1Res.data);
-      setAec2Subjects(aec2Res.data);
-      setMdc1Subjects(mdc1Res.data);
-      setMdc2Subjects(mdc2Res.data);
-      setMdc3Subjects(mdc3Res.data);
-      setVac1Subjects(vac1Res.data);
-      setVac2Subjects(vac2Res.data);
-      setVac3Subjects(vac3Res.data);
+      const data = res.data;
+
+      const getSubjects = (type) =>
+        data
+          .filter((item) => item.SubType === type)
+          .map((item) => item.Subject);
+
+      // dropdown subjects
+      setMinor1Subjects(getSubjects("Minor1"));
+      setAec2Subjects(getSubjects("AEC2"));
+
+      // auto fixed subjects
+      setFormData((prev) => ({
+        ...prev,
+        major_subject: getSubjects("Major")[0] || "",
+        minor2: getSubjects("Minor2")[0] || "",
+        aec1: getSubjects("AEC1")[0] || "",
+        mdc1: getSubjects("MDC1")[0] || "",
+        mdc2: getSubjects("MDC2")[0] || "",
+        mdc3: getSubjects("MDC3")[0] || "",
+        vac1: getSubjects("VAC1")[0] || "",
+        vac2: getSubjects("VAC2")[0] || "",
+        vac3: getSubjects("VAC3")[0] || ""
+      }));
 
     } catch (error) {
       console.log(error);
@@ -526,8 +516,8 @@ export default function ProfessorPage() {
             </div>
 
             {/* SUBJECT + STREAM SECTION */}
+            {/* SUBJECT + STREAM SECTION */}
             <div style={styles.section}>
-
               <h2 style={styles.sectionTitle}>
                 Subject & Stream Details
               </h2>
@@ -542,9 +532,7 @@ export default function ProfessorPage() {
                   onChange={handleChange}
                   style={styles.input}
                 >
-                  <option value="">
-                    Select Stream
-                  </option>
+                  <option value="">Select Stream</option>
 
                   {streams.map((s) => (
                     <option
@@ -556,254 +544,139 @@ export default function ProfessorPage() {
                   ))}
                 </select>
 
-                {/* MAJOR */}
-                <select
+                {/* MAJOR AUTO */}
+                <input
+                  type="text"
                   name="major_subject"
                   value={formData.major_subject}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="Major Subject Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    Major Subject
-                  </option>
+                />
 
-                  {majorSubjects.map((m, i) => (
-                    <option
-                      key={i}
-                      value={m.Major}
-                    >
-                      {m.Major}
-                    </option>
-                  ))}
-                </select>
-
-                {/* MINOR 1 */}
+                {/* MINOR1 DROPDOWN */}
                 <select
                   name="minor1"
                   value={formData.minor1}
                   onChange={handleChange}
                   style={styles.input}
                 >
-                  <option value="">
-                    Minor 1
-                  </option>
+                  <option value="">Select Minor 1</option>
 
                   {minor1Subjects.map((m, i) => (
-                    <option
-                      key={i}
-                      value={m.Minor1}
-                    >
-                      {m.Minor1}
+                    <option key={i} value={m}>
+                      {m}
                     </option>
                   ))}
                 </select>
-
               </div>
 
               {/* ROW 2 */}
               <div style={{ ...styles.grid3, marginTop: "15px" }}>
 
-                {/* MINOR 2 */}
-                <select
+                {/* MINOR2 AUTO */}
+                <input
+                  type="text"
                   name="minor2"
                   value={formData.minor2}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="Minor 2 Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    Minor 2
-                  </option>
+                />
 
-                  {minor2Subjects.map((m, i) => (
-                    <option
-                      key={i}
-                      value={m.Minor2}
-                    >
-                      {m.Minor2}
-                    </option>
-                  ))}
-                </select>
-
-                {/* AEC 1 */}
-                <select
+                {/* AEC1 AUTO */}
+                <input
+                  type="text"
                   name="aec1"
                   value={formData.aec1}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="AEC1 Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    AEC 1
-                  </option>
+                />
 
-                  {aec1Subjects.map((a, i) => (
-                    <option
-                      key={i}
-                      value={a.AEC1}
-                    >
-                      {a.AEC1}
-                    </option>
-                  ))}
-                </select>
-
-                {/* AEC 2 */}
                 <select
                   name="aec2"
                   value={formData.aec2}
                   onChange={handleChange}
                   style={styles.input}
                 >
-                  <option value="">
-                    AEC 2
-                  </option>
+                  <option value="">Select AEC2</option>
 
                   {aec2Subjects.map((a, i) => (
-                    <option
-                      key={i}
-                      value={a.AEC2}
-                    >
-                      {a.AEC2}
+                    <option key={i} value={a}>
+                      {a}
                     </option>
                   ))}
                 </select>
-
               </div>
 
               {/* ROW 3 */}
               <div style={{ ...styles.grid3, marginTop: "15px" }}>
 
-                {/* MDC 1 */}
-                <select
+                {/* MDC1 AUTO */}
+                <input
+                  type="text"
                   name="mdc1"
                   value={formData.mdc1}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="MDC1 Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    MDC 1
-                  </option>
+                />
 
-                  {mdc1Subjects.map((m, i) => (
-                    <option
-                      key={i}
-                      value={m.MDC1}
-                    >
-                      {m.MDC1}
-                    </option>
-                  ))}
-                </select>
-
-                {/* MDC 2 */}
-                <select
+                {/* MDC2 AUTO */}
+                <input
+                  type="text"
                   name="mdc2"
                   value={formData.mdc2}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="MDC2 Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    MDC 2
-                  </option>
+                />
 
-                  {mdc2Subjects.map((m, i) => (
-                    <option
-                      key={i}
-                      value={m.MDC2}
-                    >
-                      {m.MDC2}
-                    </option>
-                  ))}
-                </select>
-
-                {/* MDC 3 */}
-                <select
+                {/* MDC3 AUTO */}
+                <input
+                  type="text"
                   name="mdc3"
                   value={formData.mdc3}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="MDC3 Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    MDC 3
-                  </option>
-
-                  {mdc3Subjects.map((m, i) => (
-                    <option
-                      key={i}
-                      value={m.MDC3}
-                    >
-                      {m.MDC3}
-                    </option>
-                  ))}
-                </select>
-
+                />
               </div>
 
               {/* ROW 4 */}
               <div style={{ ...styles.grid3, marginTop: "15px" }}>
 
-                {/* VAC 1 */}
-                <select
+                {/* VAC1 AUTO */}
+                <input
+                  type="text"
                   name="vac1"
                   value={formData.vac1}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="VAC1 Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    VAC 1
-                  </option>
+                />
 
-                  {vac1Subjects.map((v, i) => (
-                    <option
-                      key={i}
-                      value={v.VAC1}
-                    >
-                      {v.VAC1}
-                    </option>
-                  ))}
-                </select>
-
-                {/* VAC 2 */}
-                <select
+                {/* VAC2 AUTO */}
+                <input
+                  type="text"
                   name="vac2"
                   value={formData.vac2}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="VAC2 Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    VAC 2
-                  </option>
+                />
 
-                  {vac2Subjects.map((v, i) => (
-                    <option
-                      key={i}
-                      value={v.VAC2}
-                    >
-                      {v.VAC2}
-                    </option>
-                  ))}
-                </select>
-
-                {/* VAC 3 */}
-                <select
+                {/* VAC3 AUTO */}
+                <input
+                  type="text"
                   name="vac3"
                   value={formData.vac3}
-                  onChange={handleChange}
+                  readOnly
+                  placeholder="VAC3 Auto"
                   style={styles.input}
-                >
-                  <option value="">
-                    VAC 3
-                  </option>
-
-                  {vac3Subjects.map((v, i) => (
-                    <option
-                      key={i}
-                      value={v.VAC3}
-                    >
-                      {v.VAC3}
-                    </option>
-                  ))}
-                </select>
-
+                />
               </div>
-
             </div>
 
             {/* BANK DETAILS */}
@@ -1087,7 +960,7 @@ export default function ProfessorPage() {
             <div style={styles.previewDetailsGrid}>
 
               <div style={styles.infoCard}>
-                <span>Strean</span>
+                <span>Stream</span>
                 <strong>{selectedProfessor.stream}</strong>
               </div>
 
