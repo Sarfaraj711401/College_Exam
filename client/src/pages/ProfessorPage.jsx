@@ -15,6 +15,7 @@ import {
 import Sidebar from "../components/Sidebar";
 
 export default function ProfessorPage() {
+  const navigate = useNavigate();
   const [showPreview, setShowPreview] = useState(false);
   const [showImagePreview, setShowImagePreview] = useState(false);
   const [professors, setProfessors] = useState([]);
@@ -379,6 +380,7 @@ export default function ProfessorPage() {
             <div style={styles.section}>
 
               {/* PHOTO UPLOAD BOX */}
+              {/* PHOTO UPLOAD BOX */}
               <div style={styles.photoUploadBox}>
                 <h2 style={styles.photoTitle}>
                   <FaImage /> Upload Professor Photo
@@ -390,12 +392,25 @@ export default function ProfessorPage() {
                       No Photo
                     </div>
 
+                    {/* HIDDEN FILE INPUT */}
                     <input
                       id="photoInput"
                       type="file"
+                      accept="image/*"
                       onChange={handlePhotoUpload}
-                      style={styles.fileInput}
+                      style={{ display: "none" }}
                     />
+
+                    {/* UPLOAD BUTTON */}
+                    <button
+                      type="button"
+                      style={styles.changeBtn}
+                      onClick={() =>
+                        document.getElementById("photoInput").click()
+                      }
+                    >
+                      <FaImage /> Upload Photo
+                    </button>
                   </>
                 ) : (
                   <div style={styles.photoPreviewWrapper}>
@@ -411,8 +426,10 @@ export default function ProfessorPage() {
                       style={styles.uploadPreview}
                     />
 
+                    {/* ACTION BUTTONS */}
                     <div style={styles.photoActionButtons}>
 
+                      {/* VIEW BUTTON */}
                       <button
                         type="button"
                         style={styles.viewBtn}
@@ -421,6 +438,7 @@ export default function ProfessorPage() {
                         <FaEye /> View
                       </button>
 
+                      {/* CHANGE BUTTON */}
                       <button
                         type="button"
                         style={styles.changeBtn}
@@ -431,6 +449,7 @@ export default function ProfessorPage() {
                         <FaEdit /> Change
                       </button>
 
+                      {/* REMOVE BUTTON */}
                       <button
                         type="button"
                         style={styles.removeBtn}
@@ -445,9 +464,47 @@ export default function ProfessorPage() {
                       </button>
 
                     </div>
+
+                    {/* HIDDEN INPUT */}
+                    <input
+                      id="photoInput"
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      style={{ display: "none" }}
+                    />
                   </div>
                 )}
               </div>
+
+              {/* IMAGE PREVIEW MODAL */}
+              {showImagePreview && (
+                <div style={styles.imageModalOverlay}>
+                  <div style={styles.imageModal}>
+
+                    {/* CLOSE BUTTON */}
+                    <button
+                      type="button"
+                      style={styles.closeBtn}
+                      onClick={() => setShowImagePreview(false)}
+                    >
+                      <FaTimes />
+                    </button>
+
+                    {/* FULL IMAGE */}
+                    <img
+                      src={
+                        formData.photo instanceof File
+                          ? URL.createObjectURL(formData.photo)
+                          : `http://localhost:5000/uploads/${formData.photo}`
+                      }
+                      alt="Preview"
+                      style={styles.fullImage}
+                    />
+
+                  </div>
+                </div>
+              )}
 
               <h2 style={styles.sectionTitle}>
                 Personal Details
@@ -1623,6 +1680,52 @@ const styles = {
     fontSize: "15px",
     background: "white",
     boxSizing: "border-box"
+  },
+
+  imageModalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.8)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999
+  },
+
+  imageModal: {
+    position: "relative",
+    background: "#fff",
+    padding: "15px",
+    borderRadius: "15px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+  },
+
+  fullImage: {
+    width: "450px",
+    maxWidth: "90vw",
+    maxHeight: "85vh",
+    objectFit: "cover",
+    borderRadius: "12px"
+  },
+
+  closeBtn: {
+    position: "absolute",
+    top: "-10px",
+    right: "-10px",
+    width: "35px",
+    height: "35px",
+    borderRadius: "50%",
+    border: "none",
+    background: "#ef4444",
+    color: "#fff",
+    cursor: "pointer",
+    fontSize: "15px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   },
 
 };
