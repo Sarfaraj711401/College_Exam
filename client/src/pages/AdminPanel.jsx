@@ -61,6 +61,9 @@ export default function AdminPanel() {
     vac1: "",
     vac2: "",
     vac3: "",
+    subject_type: "",
+    subject_name: "",
+    professor_name: "",
   });
 
   useEffect(() => {
@@ -127,6 +130,9 @@ export default function AdminPanel() {
       credit_point: paper.credit_point || "", // ✅ added
       start_roll: paper.start_roll || "",
       end_roll: paper.end_roll || "",
+      subject_type: paper.subject_type || "",
+      subject_name: paper.subject_name || "",
+      professor_name: paper.professor_name || "",
     });
 
     const prof = professors.find(
@@ -147,7 +153,17 @@ export default function AdminPanel() {
     setFormData({
       ...formData,
       professor_id: id,
-      stream: prof ? prof.stream : "",   // ✅ fixed
+
+      stream: prof ? prof.stream : "",
+
+      // ✅ AUTO SUBJECT TYPE
+      subject_type: prof ? prof.subject_type : "",
+
+      // ✅ AUTO SUBJECT NAME
+      subject_name: prof ? prof.subject_name : "",
+
+      // ✅ AUTO PROFESSOR NAME
+      professor_name: prof ? prof.name : "",
     });
 
     setSelectedProf(prof);
@@ -187,6 +203,9 @@ export default function AdminPanel() {
       credit_point,
       start_roll,
       end_roll,
+      subject_type,
+      subject_name,
+      professor_name,
     } = formData;
 
     if (
@@ -198,7 +217,10 @@ export default function AdminPanel() {
       !exam_type ||
       !credit_point ||
       !start_roll ||
-      !end_roll
+      !end_roll ||
+      !subject_type ||
+      !subject_name ||
+      !professor_name
     ) {
       alert("All fields required ❌");
       return;
@@ -274,42 +296,6 @@ export default function AdminPanel() {
     }
   };
 
-  useEffect(() => {
-    if (!formData.stream) return;
-
-    axios.get(`http://localhost:5000/dropdown/major-subjects/${formData.stream}`)
-      .then(res => setMajorSubjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/minor1/${formData.stream}`)
-      .then(res => setMinor1Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/minor2/${formData.stream}`)
-      .then(res => setMinor2Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/aec1/${formData.stream}`)
-      .then(res => setAec1Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/aec2/${formData.stream}`)
-      .then(res => setAec2Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/mdc1/${formData.stream}`)
-      .then(res => setMdc1Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/mdc2/${formData.stream}`)
-      .then(res => setMdc2Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/mdc3/${formData.stream}`)
-      .then(res => setMdc3Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/vac1/${formData.stream}`)
-      .then(res => setVac1Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/vac2/${formData.stream}`)
-      .then(res => setVac2Subjects(res.data));
-
-    axios.get(`http://localhost:5000/dropdown/vac3/${formData.stream}`)
-      .then(res => setVac3Subjects(res.data));
-  }, [formData.stream]);
 
   return (
     <div style={styles.container}>
@@ -409,170 +395,35 @@ export default function AdminPanel() {
               {/* Stream */}
               <input name="stream" placeholder="Stream" value={formData.stream} readOnly style={{ ...styles.input, background: "#f3f4f6", cursor: "not-allowed", fontWeight: "600", color: "#374151" }} />
 
-              {/* Major */}
-              <select
-                name="major_subject"
-                value={formData.major_subject}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select Major</option>
-                {majorSubjects.map((m) => (
-                  <option key={m.MajorId} value={m.Major}>
-                    {m.Major}
-                  </option>
-                ))}
-              </select>
+              {/* Subject Type */}
+              <input
+                name="subject_type"
+                placeholder="Subject Type"
+                value={formData.subject_type}
+                readOnly
+                style={{
+                  ...styles.input,
+                  background: "#f3f4f6",
+                  cursor: "not-allowed",
+                  fontWeight: "600",
+                  color: "#374151"
+                }}
+              />
 
-              {/* Minor 1 */}
-              <select
-                name="minor1"
-                value={formData.minor1}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select Minor 1</option>
-                {minor1Subjects.map((m) => (
-                  <option key={m.Minor1Id} value={m.Minor1}>
-                    {m.Minor1}
-                  </option>
-                ))}
-              </select>
-
-              {/* Minor 2 */}
-              <select
-                name="minor2"
-                value={formData.minor2}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select Minor 2</option>
-                {minor2Subjects.map((m) => (
-                  <option key={m.Minor2Id} value={m.Minor2}>
-                    {m.Minor2}
-                  </option>
-                ))}
-              </select>
-
-              {/* AEC 1 */}
-              <select
-                name="aec1"
-                value={formData.aec1}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select AEC 1</option>
-                {aec1Subjects.map((a) => (
-                  <option key={a.AEC1Id} value={a.AEC1}>
-                    {a.AEC1}
-                  </option>
-                ))}
-              </select>
-
-              {/* AEC 2 */}
-              <select
-                name="aec2"
-                value={formData.aec2}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select AEC 2</option>
-                {aec2Subjects.map((a) => (
-                  <option key={a.AEC2Id} value={a.AEC2}>
-                    {a.AEC2}
-                  </option>
-                ))}
-              </select>
-
-              {/* MDC 1 */}
-              <select
-                name="mdc1"
-                value={formData.mdc1}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select MDC 1</option>
-                {mdc1Subjects.map((m) => (
-                  <option key={m.MDC1Id} value={m.MDC1}>
-                    {m.MDC1}
-                  </option>
-                ))}
-              </select>
-
-              {/* MDC 2 */}
-              <select
-                name="mdc2"
-                value={formData.mdc2}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select MDC 2</option>
-                {mdc2Subjects.map((m) => (
-                  <option key={m.MDC2Id} value={m.MDC2}>
-                    {m.MDC2}
-                  </option>
-                ))}
-              </select>
-
-              {/* MDC 3 */}
-              <select
-                name="mdc3"
-                value={formData.mdc3}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select MDC 3</option>
-                {mdc3Subjects.map((m) => (
-                  <option key={m.MDC3Id} value={m.MDC3}>
-                    {m.MDC3}
-                  </option>
-                ))}
-              </select>
-
-              {/* VAC 1 */}
-              <select
-                name="vac1"
-                value={formData.vac1}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select VAC 1</option>
-                {vac1Subjects.map((v) => (
-                  <option key={v.VAC1Id} value={v.VAC1}>
-                    {v.VAC1}
-                  </option>
-                ))}
-              </select>
-
-              {/* VAC 2 */}
-              <select
-                name="vac2"
-                value={formData.vac2}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select VAC 2</option>
-                {vac2Subjects.map((v) => (
-                  <option key={v.VAC2Id} value={v.VAC2}>
-                    {v.VAC2}
-                  </option>
-                ))}
-              </select>
-
-              {/* VAC 3 */}
-              <select
-                name="vac3"
-                value={formData.vac3}
-                onChange={handleChange}
-                style={styles.input}
-              >
-                <option value="">Select VAC 3</option>
-                {vac3Subjects.map((v) => (
-                  <option key={v.VAC3Id} value={v.VAC3}>
-                    {v.VAC3}
-                  </option>
-                ))}
-              </select>
+              {/* Subject */}
+              <input
+                name="subject_name"
+                placeholder="Subject Name"
+                value={formData.subject_name}
+                readOnly
+                style={{
+                  ...styles.input,
+                  background: "#f3f4f6",
+                  cursor: "not-allowed",
+                  fontWeight: "600",
+                  color: "#374151"
+                }}
+              />
 
               {/* Exam Type */}
               <select
@@ -607,7 +458,7 @@ export default function AdminPanel() {
               {/* Start Roll */}
               <input
                 name="start_roll"
-                placeholder="Start Roll"
+                placeholder="Starting Serial Number"
                 value={formData.start_roll}
                 onChange={handleChange}
                 style={styles.input}
@@ -616,7 +467,7 @@ export default function AdminPanel() {
               {/* End Roll */}
               <input
                 name="end_roll"
-                placeholder="End Roll"
+                placeholder=" Ending Serial Number "
                 value={formData.end_roll}
                 onChange={handleChange}
                 style={styles.input}

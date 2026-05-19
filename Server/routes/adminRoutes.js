@@ -40,10 +40,12 @@ router.post(
     const photoFile = req.file ? req.file.filename : "";
 
     const sql = `
-      INSERT INTO professors (
+INSERT INTO professors (
   name,
   designation,
   stream,
+  subject_type,
+  subject_name,
   major_subject,
   minor1,
   minor2,
@@ -67,13 +69,17 @@ router.post(
   account_holder_name,
   bank_address
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
 
     db.query(sql, [
       data.name,
       data.designation,
       data.stream,
+
+      data.subject_type,
+      data.subject_name,
+
       data.major_subject,
       data.minor1,
       data.minor2,
@@ -85,6 +91,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
       data.vac1,
       data.vac2,
       data.vac3,
+
       data.email,
       data.password,
       data.mobile,
@@ -129,49 +136,94 @@ router.put(
   "/update-professor/:id",
   upload.single("photo"),
   (req, res) => {
+
     const id = req.params.id;
     const data = req.body;
 
     const photoFile = req.file
       ? req.file.filename
-      : data.photo; // fallback old
+      : data.photo;
 
     const sql = `
       UPDATE professors SET
         name=?,
         designation=?,
-        subject=?,
+        stream=?,
+        subject_type=?,
+        subject_name=?,
+
+        major_subject=?,
+        minor1=?,
+        minor2=?,
+        aec1=?,
+        aec2=?,
+        mdc1=?,
+        mdc2=?,
+        mdc3=?,
+        vac1=?,
+        vac2=?,
+        vac3=?,
+
         email=?,
+        password=?,
         mobile=?,
         experience=?,
         photo=?,
+
         bank_name=?,
         branch_name=?,
         ifsc_code=?,
         account_number=?,
         account_holder_name=?,
         bank_address=?
+
       WHERE id=?
     `;
 
     db.query(sql, [
+
       data.name,
       data.designation,
-      data.subject,
+
+      data.stream,
+      data.subject_type,
+      data.subject_name,
+
+      data.major_subject,
+      data.minor1,
+      data.minor2,
+      data.aec1,
+      data.aec2,
+      data.mdc1,
+      data.mdc2,
+      data.mdc3,
+      data.vac1,
+      data.vac2,
+      data.vac3,
+
       data.email,
+      data.password,
       data.mobile,
       data.experience,
       photoFile,
+
       data.bank_name,
       data.branch_name,
       data.ifsc_code,
       data.account_number,
       data.account_holder_name,
       data.bank_address,
+
       id
+
     ], (err, result) => {
-      if (err) return res.status(500).send(err);
-      res.send("Updated");
+
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+
+      res.send("Professor Updated Successfully");
     });
   }
 );

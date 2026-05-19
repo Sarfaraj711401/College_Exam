@@ -33,6 +33,8 @@ export default function ProfessorPage() {
   const [vac1Subjects, setVac1Subjects] = useState([]);
   const [vac2Subjects, setVac2Subjects] = useState([]);
   const [vac3Subjects, setVac3Subjects] = useState([]);
+  const [subjectsByType, setSubjectsByType] = useState({});
+  const [availableTypes, setAvailableTypes] = useState([]);
 
 
   const [formData, setFormData] = useState({
@@ -62,7 +64,9 @@ export default function ProfessorPage() {
     mdc3: "",
     vac1: "",
     vac2: "",
-    vac3: ""
+    vac3: "",
+    subject_type: "",
+    subject_name: ""
   });
 
   useEffect(() => {
@@ -170,6 +174,8 @@ export default function ProfessorPage() {
       form.append("vac1", formData.vac1);
       form.append("vac2", formData.vac2);
       form.append("vac3", formData.vac3);
+      form.append("subject_type", formData.subject_type);
+      form.append("subject_name", formData.subject_name);
 
       // 👉 PHOTO (IMPORTANT)
       if (formData.photo) {
@@ -216,7 +222,9 @@ export default function ProfessorPage() {
         ifsc_code: "",
         account_number: "",
         account_holder_name: "",
-        bank_address: ""
+        bank_address: "",
+        subject_type: "",
+        subject_name: "",
       });
 
       setEditId(null);
@@ -266,7 +274,9 @@ export default function ProfessorPage() {
 
       vac1: p.vac1 || "",
       vac2: p.vac2 || "",
-      vac3: p.vac3 || ""
+      vac3: p.vac3 || "",
+      subject_type: p.subject_type || "",
+      subject_name: p.subject_name || ""
     });
 
     setEditId(p.id);
@@ -317,48 +327,32 @@ export default function ProfessorPage() {
   };
 
   useEffect(() => {
-    if (!formData.stream) return;
-
-    fetchSubjectsByStream();
-
+    if (formData.stream) {
+      fetchSubjectsByStream();
+    }
   }, [formData.stream]);
 
 
   const fetchSubjectsByStream = async () => {
     try {
-      const stream = formData.stream;
-
       const res = await axios.get(
-        `http://localhost:5000/dropdown/subjects/${stream}`
+        `http://localhost:5000/dropdown/subjects/${formData.stream}`
       );
 
       const data = res.data;
 
-      const getSubjects = (type) =>
-        data
-          .filter((item) => item.SubType === type)
-          .map((item) => item.Subject);
+      // group by SubType
+      const grouped = data.reduce((acc, item) => {
+        if (!acc[item.SubType]) acc[item.SubType] = [];
+        acc[item.SubType].push(item.Subject);
+        return acc;
+      }, {});
 
-      // dropdown subjects
-      setMinor1Subjects(getSubjects("Minor1"));
-      setAec2Subjects(getSubjects("AEC2"));
+      setSubjectsByType(grouped);
+      setAvailableTypes(Object.keys(grouped));
 
-      // auto fixed subjects
-      setFormData((prev) => ({
-        ...prev,
-        major_subject: getSubjects("Major")[0] || "",
-        minor2: getSubjects("Minor2")[0] || "",
-        aec1: getSubjects("AEC1")[0] || "",
-        mdc1: getSubjects("MDC1")[0] || "",
-        mdc2: getSubjects("MDC2")[0] || "",
-        mdc3: getSubjects("MDC3")[0] || "",
-        vac1: getSubjects("VAC1")[0] || "",
-        vac2: getSubjects("VAC2")[0] || "",
-        vac3: getSubjects("VAC3")[0] || ""
-      }));
-
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -515,168 +509,106 @@ export default function ProfessorPage() {
 
             </div>
 
-            {/* SUBJECT + STREAM SECTION */}
-            {/* SUBJECT + STREAM SECTION */}
+            {/* SUBJECT & STREAM SECTION */}
             <div style={styles.section}>
+
               <h2 style={styles.sectionTitle}>
                 Subject & Stream Details
               </h2>
 
-              {/* ROW 1 */}
-              <div style={styles.grid3}>
+              <div style={styles.subjectGrid}>
 
                 {/* STREAM */}
-                <select
-                  name="stream"
-                  value={formData.stream}
-                  onChange={handleChange}
-                  style={styles.input}
-                >
-                  <option value="">Select Stream</option>
+                <div>
+                  <label style={styles.fieldLabel}>
+                    Stream
+                  </label>
 
-                  {streams.map((s) => (
-                    <option
-                      key={s.StrId}
-                      value={s.StrName}
-                    >
-                      {s.StrName}
+                  <select
+                    name="stream"
+                    value={formData.stream}
+                    onChange={handleChange}
+                    style={styles.input}
+                  >
+                    <option value="">
+                      Select Stream
                     </option>
-                  ))}
-                </select>
 
-                {/* MAJOR AUTO */}
-                <input
-                  type="text"
-                  name="major_subject"
-                  value={formData.major_subject}
-                  readOnly
-                  placeholder="Major Subject Auto"
-                  style={styles.input}
-                />
+                    {streams.map((s) => (
+                      <option
+                        key={s.StrId}
+                        value={s.StrName}
+                      >
+                        {s.StrName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                {/* MINOR1 DROPDOWN */}
-                <select
-                  name="minor1"
-                  value={formData.minor1}
-                  onChange={handleChange}
-                  style={styles.input}
-                >
-                  <option value="">Select Minor 1</option>
+                {/* SUBJECT TYPE */}
+                <div>
+                  <label style={styles.fieldLabel}>
+                    Subject Type
+                  </label>
 
-                  {minor1Subjects.map((m, i) => (
-                    <option key={i} value={m}>
-                      {m}
+                  <select
+                    name="subject_type"
+                    value={formData.subject_type || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        subject_type: e.target.value,
+                        subject_name: ""
+                      })
+                    }
+                    style={styles.input}
+                  >
+                    <option value="">
+                      Select Type
                     </option>
-                  ))}
-                </select>
-              </div>
 
-              {/* ROW 2 */}
-              <div style={{ ...styles.grid3, marginTop: "15px" }}>
+                    {availableTypes.map((type, index) => (
+                      <option
+                        key={index}
+                        value={type}
+                      >
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                {/* MINOR2 AUTO */}
-                <input
-                  type="text"
-                  name="minor2"
-                  value={formData.minor2}
-                  readOnly
-                  placeholder="Minor 2 Auto"
-                  style={styles.input}
-                />
+                {/* SUBJECT */}
+                <div>
+                  <label style={styles.fieldLabel}>
+                    Subject
+                  </label>
 
-                {/* AEC1 AUTO */}
-                <input
-                  type="text"
-                  name="aec1"
-                  value={formData.aec1}
-                  readOnly
-                  placeholder="AEC1 Auto"
-                  style={styles.input}
-                />
-
-                <select
-                  name="aec2"
-                  value={formData.aec2}
-                  onChange={handleChange}
-                  style={styles.input}
-                >
-                  <option value="">Select AEC2</option>
-
-                  {aec2Subjects.map((a, i) => (
-                    <option key={i} value={a}>
-                      {a}
+                  <select
+                    name="subject_name"
+                    value={formData.subject_name || ""}
+                    onChange={handleChange}
+                    style={styles.input}
+                  >
+                    <option value="">
+                      Select Subject
                     </option>
-                  ))}
-                </select>
+
+                    {(subjectsByType[
+                      formData.subject_type
+                    ] || []).map((sub, i) => (
+                      <option
+                        key={i}
+                        value={sub}
+                      >
+                        {sub}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
               </div>
 
-              {/* ROW 3 */}
-              <div style={{ ...styles.grid3, marginTop: "15px" }}>
-
-                {/* MDC1 AUTO */}
-                <input
-                  type="text"
-                  name="mdc1"
-                  value={formData.mdc1}
-                  readOnly
-                  placeholder="MDC1 Auto"
-                  style={styles.input}
-                />
-
-                {/* MDC2 AUTO */}
-                <input
-                  type="text"
-                  name="mdc2"
-                  value={formData.mdc2}
-                  readOnly
-                  placeholder="MDC2 Auto"
-                  style={styles.input}
-                />
-
-                {/* MDC3 AUTO */}
-                <input
-                  type="text"
-                  name="mdc3"
-                  value={formData.mdc3}
-                  readOnly
-                  placeholder="MDC3 Auto"
-                  style={styles.input}
-                />
-              </div>
-
-              {/* ROW 4 */}
-              <div style={{ ...styles.grid3, marginTop: "15px" }}>
-
-                {/* VAC1 AUTO */}
-                <input
-                  type="text"
-                  name="vac1"
-                  value={formData.vac1}
-                  readOnly
-                  placeholder="VAC1 Auto"
-                  style={styles.input}
-                />
-
-                {/* VAC2 AUTO */}
-                <input
-                  type="text"
-                  name="vac2"
-                  value={formData.vac2}
-                  readOnly
-                  placeholder="VAC2 Auto"
-                  style={styles.input}
-                />
-
-                {/* VAC3 AUTO */}
-                <input
-                  type="text"
-                  name="vac3"
-                  value={formData.vac3}
-                  readOnly
-                  placeholder="VAC3 Auto"
-                  style={styles.input}
-                />
-              </div>
             </div>
 
             {/* BANK DETAILS */}
@@ -863,6 +795,9 @@ export default function ProfessorPage() {
                   <th style={styles.th}>Photo</th>
                   <th style={styles.th}>Name</th>
                   <th style={styles.th}>Designation</th>
+                  <th style={styles.th}>Stream</th>
+                  <th style={styles.th}>Subject Type</th>
+                  <th style={styles.th}>Subject</th>
                   <th style={styles.th}>Mobile</th>
                   <th style={styles.th}>Actions</th>
                 </tr>
@@ -887,6 +822,9 @@ export default function ProfessorPage() {
 
                     <td style={styles.td}>{p.name}</td>
                     <td style={styles.td}>{p.designation}</td>
+                    <td style={styles.td}>{p.stream}</td>
+                    <td style={styles.td}>{p.subject_type}</td>
+                    <td style={styles.td}>{p.subject_name}</td>
                     <td style={styles.td}>{p.mobile}</td>
 
                     <td style={styles.td}>
@@ -962,6 +900,16 @@ export default function ProfessorPage() {
               <div style={styles.infoCard}>
                 <span>Stream</span>
                 <strong>{selectedProfessor.stream}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>Subject Type</span>
+                <strong>{selectedProfessor.subject_type}</strong>
+              </div>
+
+              <div style={styles.infoCard}>
+                <span>Subject</span>
+                <strong>{selectedProfessor.subject_name}</strong>
               </div>
 
               <div style={styles.infoCard}>
@@ -1642,6 +1590,39 @@ const styles = {
     cursor: "pointer",
     fontWeight: "600",
     fontSize: "14px"
-  }
+  },
+
+  subjectGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: "15px",
+    marginTop: "10px"
+  },
+  section: {
+    background: "#f8fafc",
+    padding: "25px",
+    borderRadius: "15px",
+    marginBottom: "20px",
+    width: "100%",
+    boxSizing: "border-box"
+  },
+
+  fieldLabel: {
+    display: "block",
+    marginBottom: "8px",
+    fontSize: "14px",
+    fontWeight: "600",
+    color: "#1e293b"
+  },
+
+  input: {
+    width: "100%",
+    padding: "14px 16px",
+    borderRadius: "10px",
+    border: "1px solid #d1d5db",
+    fontSize: "15px",
+    background: "white",
+    boxSizing: "border-box"
+  },
 
 };

@@ -25,16 +25,22 @@ router.post("/assign-paper", (req, res) => {
     exam_type,
     credit_point,
     start_roll,
-    end_roll
+    end_roll,
+    subject_type,
+    subject_name,
+    professor_name,
   } = req.body;
 
   const sql = `
 INSERT INTO paper_assignments (
   professor_id,
+  professor_name,
   academic_year,
   year,
   semester,
   stream,
+  subject_type,
+  subject_name,
   major_subject,
   minor1,
   minor2,
@@ -51,17 +57,20 @@ INSERT INTO paper_assignments (
   start_roll,
   end_roll
 )
-VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 `;
 
   db.query(
     sql,
     [
       professor_id,
+      professor_name,
       academic_year,
       year,
       semester,
       stream,
+      subject_type,
+      subject_name,
       major_subject,
       minor1,
       minor2,
@@ -123,6 +132,9 @@ router.put("/update/:id", (req, res) => {
     year,
     semester,
     stream,
+    subject_type,
+    subject_name,
+    professor_name,
     major_subject,
     minor1,
     minor2,
@@ -148,6 +160,9 @@ SET
  year=?,
  semester=?,
  stream=?,
+ professor_name=?,
+subject_type=?,
+subject_name=?,
  major_subject=?,
  minor1=?,
  minor2=?,
@@ -174,6 +189,8 @@ WHERE id=?
       year,
       semester,
       stream,
+      subject_type,
+      subject_name,
       major_subject,
       minor1,
       minor2,
