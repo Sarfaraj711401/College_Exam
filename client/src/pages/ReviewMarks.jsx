@@ -124,15 +124,19 @@ export default function ReviewMarks() {
     index
   ) => {
     try {
-      await axios.post(
-        "http://localhost:5000/marks/save",
-        {
-          assignment_id: paper.id,
-          roll_no: student.roll_no,
-          marks: student.marks,
-          remarks: student.remarks
-        }
-      );
+      await axios.post("http://localhost:5000/marks/save", {
+        assignment_id: paper.id,
+        roll_no: student.roll_no,
+        marks: student.marks,
+        remarks: student.remarks,
+
+        professor_name: paper.professor_name,
+        academic_year: paper.academic_year,
+        year: paper.year,
+        semester: paper.semester,
+        subject_type: paper.subject_type,
+        subject_name: paper.subject_name
+      });
 
       const updated = [...students];
       updated[index].saved = true;
@@ -188,15 +192,19 @@ export default function ReviewMarks() {
 
         if (!student.saved) {
 
-          await axios.post(
-            "http://localhost:5000/marks/save",
-            {
-              assignment_id: paper.id,
-              roll_no: student.roll_no,
-              marks: student.marks,
-              remarks: student.remarks
-            }
-          );
+          await axios.post("http://localhost:5000/marks/save", {
+            assignment_id: paper.id,
+            roll_no: student.roll_no,
+            marks: student.marks,
+            remarks: student.remarks,
+
+            professor_name: paper.professor_name,
+            academic_year: paper.academic_year,
+            year: paper.year,
+            semester: paper.semester,
+            subject_type: paper.subject_type,
+            subject_name: paper.subject_name
+          });
 
         }
 
@@ -263,17 +271,96 @@ export default function ReviewMarks() {
         </button>
       </div>
 
+      {/* Welcome Header */}
+      <div style={styles.welcomeBox}>
+
+        <div>
+          <h1 style={styles.welcomeTitle}>
+            Welcome, {paper.professor_name || "Professor"} 👋
+          </h1>
+
+          <p style={styles.welcomeSub}>
+            You are now reviewing marks for your assigned examination paper.
+          </p>
+
+          <div style={styles.metaRow}>
+            <span style={styles.metaItem}>
+              🎓 {paper.subject_name}
+            </span>
+
+            <span style={styles.metaItem}>
+              📘 {paper.semester} • {paper.year}
+            </span>
+
+            <span style={styles.metaItem}>
+              🏫 {paper.academic_year}
+            </span>
+          </div>
+        </div>
+
+        <div style={styles.welcomeBadge}>
+          <div style={styles.badgeTitle}>
+            Evaluation Panel
+          </div>
+          <div style={styles.badgeText}>
+            Secure & Controlled
+          </div>
+        </div>
+
+      </div>
+
       {/* Paper Info */}
+      {/* Paper Info Table */}
       <div style={styles.paperInfo}>
-        <h2>{paper.subject}</h2>
-        <p>Academic Year: {paper.academic_year}</p>
-        <p>Year: {paper.year}</p>
-        <p>Semester: {paper.semester}</p>
-        <p>Exam Type: {paper.exam_type}</p>
-        <p>
-          Roll Range: {paper.start_roll} -{" "}
-          {paper.end_roll}
-        </p>
+
+        <div style={styles.tableHeaderBox}>
+          <h2 style={styles.tableTitle}>
+            Assigned Paper Details
+          </h2>
+
+          <span style={styles.badge}>
+            {paper.exam_type}
+          </span>
+        </div>
+
+        <table style={styles.infoTable}>
+          <tbody>
+
+            <tr>
+              <td style={styles.tdLabel}>Academic Year</td>
+              <td style={styles.tdValue}>{paper.academic_year}</td>
+            </tr>
+
+            <tr>
+              <td style={styles.tdLabel}>Year</td>
+              <td style={styles.tdValue}>{paper.year}</td>
+            </tr>
+
+            <tr>
+              <td style={styles.tdLabel}>Semester</td>
+              <td style={styles.tdValue}>{paper.semester}</td>
+            </tr>
+
+            <tr>
+              <td style={styles.tdLabel}>Subject Type</td>
+              <td style={styles.tdValue}>{paper.subject_type}</td>
+            </tr>
+
+            <tr>
+              <td style={styles.tdLabel}>Subject</td>
+              <td style={styles.tdValue}>{paper.subject_name}</td>
+            </tr>
+
+            <tr>
+              <td style={styles.tdLabel}>Serial No Range</td>
+              <td style={styles.tdValue}>
+                {paper.start_roll} - {paper.end_roll}
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
       </div>
 
       {/* Marks Table */}
@@ -283,7 +370,7 @@ export default function ReviewMarks() {
           <thead>
             <tr style={styles.tableHeader}>
               <th style={styles.th}>
-                Roll No
+                Serial No
               </th>
               <th style={styles.th}>
                 Marks
@@ -563,5 +650,126 @@ const styles = {
     borderRadius: "8px",
     fontWeight: "700",
     border: "1px solid #bfdbfe"
+  },
+  paperInfo: {
+    background: "#ffffff",
+    borderRadius: "16px",
+    padding: "25px",
+    marginBottom: "25px",
+    border: "1px solid #e5e7eb",
+    boxShadow: "0 8px 24px rgba(37,99,235,0.08)"
+  },
+
+  tableHeaderBox: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "15px",
+    paddingBottom: "12px",
+    borderBottom: "2px solid #e0e7ff"
+  },
+
+  tableTitle: {
+    margin: 0,
+    fontSize: "20px",
+    fontWeight: "800",
+    color: "#0f172a"
+  },
+
+  badge: {
+    background: "linear-gradient(135deg,#1e3a8a,#2563eb)",
+    color: "#fff",
+    padding: "6px 14px",
+    borderRadius: "20px",
+    fontSize: "12px",
+    fontWeight: "700",
+    letterSpacing: "0.5px"
+  },
+
+  infoTable: {
+    width: "100%",
+    borderCollapse: "collapse",
+    overflow: "hidden",
+    borderRadius: "12px"
+  },
+
+  tdLabel: {
+    background: "#f1f5f9",
+    color: "#1e3a8a",
+    fontWeight: "700",
+    padding: "12px 15px",
+    width: "40%",
+    borderBottom: "1px solid #e5e7eb",
+    fontSize: "14px"
+  },
+
+  tdValue: {
+    background: "#ffffff",
+    color: "#111827",
+    fontWeight: "600",
+    padding: "12px 15px",
+    borderBottom: "1px solid #e5e7eb",
+    fontSize: "14px"
+  },
+
+  welcomeBox: {
+    background: "linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb)",
+    color: "#fff",
+    padding: "28px",
+    borderRadius: "18px",
+    marginBottom: "25px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: "20px",
+    boxShadow: "0 10px 30px rgba(37,99,235,0.25)"
+  },
+
+  welcomeTitle: {
+    margin: 0,
+    fontSize: "26px",
+    fontWeight: "800"
+  },
+
+  welcomeSub: {
+    marginTop: "6px",
+    fontSize: "14px",
+    color: "#dbeafe"
+  },
+
+  metaRow: {
+    marginTop: "12px",
+    display: "flex",
+    gap: "10px",
+    flexWrap: "wrap"
+  },
+
+  metaItem: {
+    background: "rgba(255,255,255,0.15)",
+    padding: "6px 12px",
+    borderRadius: "20px",
+    fontSize: "12px",
+    fontWeight: "600",
+    backdropFilter: "blur(6px)"
+  },
+
+  welcomeBadge: {
+    textAlign: "right",
+    background: "rgba(255,255,255,0.12)",
+    padding: "15px 18px",
+    borderRadius: "14px",
+    minWidth: "160px"
+  },
+
+  badgeTitle: {
+    fontSize: "14px",
+    fontWeight: "800"
+  },
+
+  badgeText: {
+    fontSize: "12px",
+    marginTop: "5px",
+    color: "#dbeafe"
   }
 };

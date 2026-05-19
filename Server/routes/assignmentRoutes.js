@@ -189,6 +189,7 @@ WHERE id=?
       year,
       semester,
       stream,
+      professor_name,   // ✅ এটা add করো
       subject_type,
       subject_name,
       major_subject,

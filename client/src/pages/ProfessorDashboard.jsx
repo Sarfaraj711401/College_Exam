@@ -125,8 +125,11 @@ export default function ProfessorDashboard() {
             </div>
 
             {/* Assigned Papers */}
+            {/* Assigned Papers */}
             <div style={styles.paperSection}>
-              <h2>Assigned Papers</h2>
+              <h2 style={{ marginBottom: "20px" }}>
+                Assigned Papers
+              </h2>
 
               {papers.length === 0 ? (
                 <div style={styles.emptyCard}>
@@ -135,39 +138,56 @@ export default function ProfessorDashboard() {
                   <p>Admin has not assigned any papers</p>
                 </div>
               ) : (
-                <div style={styles.paperList}>
+                <>
+                  {/* Table Header */}
+                  <div style={styles.tableHeader}>
+                    <div>Academic Year</div>
+                    <div>Year</div>
+                    <div>Semester</div>
+                    <div>Subject Type</div>
+                    <div>Subject</div>
+                    <div>Exam Type</div>
+                    <div>Roll Range</div>
+                    <div>Action</div>
+                  </div>
+
+                  {/* Table Rows */}
                   {papers.map((paper) => (
-                    <div key={paper.id} style={styles.paperListItem}>
+                    <div
+                      key={paper.id}
+                      style={styles.tableRow}
+                    >
+                      <div>{paper.academic_year}</div>
 
-                      <div style={styles.leftInfo}>
-                        <div style={styles.titleRow}>
-                          <FaBookOpen style={{ color: "#2563eb" }} />
-                          <h3 style={styles.paperTitle}>{paper.subject}</h3>
-                        </div>
+                      <div>{paper.year}</div>
 
-                        <div style={styles.metaRow}>
-                          <span>{paper.academic_year}</span>
-                          <span>• Sem {paper.semester}</span>
-                          <span>• {paper.exam_type}</span>
-                        </div>
+                      <div>{paper.semester}</div>
 
-                        <div style={styles.extraRow}>
-                          Year: {paper.year} | Roll: {paper.start_roll} - {paper.end_roll}
-                        </div>
+                      <div>{paper.subject_type}</div>
+
+                      <div>{paper.subject_name}</div>
+
+                      <div>{paper.exam_type}</div>
+
+                      <div>
+                        {paper.start_roll} - {paper.end_roll}
                       </div>
 
-                      <button
-                        style={styles.reviewBtn}
-                        onClick={() =>
-                          navigate("/review-marks", { state: { paper } })
-                        }
-                      >
-                        Start Review
-                      </button>
-
+                      <div>
+                        <button
+                          style={styles.reviewBtn}
+                          onClick={() =>
+                            navigate("/review-marks", {
+                              state: { paper }
+                            })
+                          }
+                        >
+                          Start Review
+                        </button>
+                      </div>
                     </div>
                   ))}
-                </div>
+                </>
               )}
             </div>
 
@@ -272,9 +292,11 @@ const styles = {
   },
 
   paperSection: {
-    background: "#ffffff",
-    padding: "26px",
-    borderRadius: "18px"
+    background: "#f8fbff",
+    padding: "25px",
+    borderRadius: "18px",
+    boxShadow: "0 4px 20px rgba(37,99,235,0.08)",
+    border: "1px solid #dbeafe"
   },
 
   paperGrid: {
@@ -368,13 +390,47 @@ const styles = {
   },
 
   reviewBtn: {
-    padding: "10px 16px",
+    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    color: "#fff",
     border: "none",
+    padding: "10px 18px",
     borderRadius: "10px",
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-    color: "white",
     cursor: "pointer",
-    fontWeight: "500",
+    fontWeight: "600",
+    transition: "0.3s",
     boxShadow: "0 4px 10px rgba(37,99,235,0.25)"
-  }
+  },
+
+  tableHeader: {
+    display: "grid",
+    gridTemplateColumns:
+      "1.2fr 1fr 1fr 1fr 1.5fr 1fr 1fr 1fr",
+    background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    color: "#ffffff",
+    padding: "16px",
+    borderRadius: "14px",
+    fontWeight: "700",
+    marginBottom: "14px",
+    gap: "10px",
+    alignItems: "center",
+    boxShadow: "0 4px 14px rgba(37,99,235,0.25)",
+    fontSize: "14px",
+  },
+
+  tableRow: {
+    display: "grid",
+    gridTemplateColumns:
+      "1.2fr 1fr 1fr 1fr 1.5fr 1fr 1fr 1fr",
+    background: "#ffffff",
+    padding: "16px",
+    borderRadius: "14px",
+    marginBottom: "12px",
+    gap: "10px",
+    alignItems: "center",
+    border: "1px solid #dbeafe",
+    boxShadow: "0 2px 12px rgba(37,99,235,0.08)",
+    transition: "0.3s ease",
+    color: "#1e293b",
+    fontWeight: "500",
+  },
 };

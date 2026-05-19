@@ -125,9 +125,9 @@ export default function AdminPanel() {
       academic_year: paper.academic_year || "",
       year: paper.year || "",
       semester: paper.semester || "",
-      stream: paper.stream || "",          // ✅ added
+      stream: paper.stream || "",
       exam_type: paper.exam_type || "",
-      credit_point: paper.credit_point || "", // ✅ added
+      credit_point: paper.credit_point || "",
       start_roll: paper.start_roll || "",
       end_roll: paper.end_roll || "",
       subject_type: paper.subject_type || "",
@@ -273,16 +273,23 @@ export default function AdminPanel() {
 
   const fetchDropdowns = async () => {
     try {
-      const [yearRes, semRes, examRes, academicRes, ruleRes, creditRes] =
-        await Promise.all([
-          axios.get("http://localhost:5000/dropdown/years"),
-          axios.get("http://localhost:5000/dropdown/semesters"),
-          axios.get("http://localhost:5000/dropdown/exam-types"),
-          axios.get("http://localhost:5000/dropdown/academic-years"),
-          axios.get("http://localhost:5000/dropdown/exam-type-rules"),
-          axios.get("http://localhost:5000/dropdown/credit-points"),
-          axios.get("http://localhost:5000/dropdown/streams")
-        ]);
+      const [
+        yearRes,
+        semRes,
+        examRes,
+        academicRes,
+        ruleRes,
+        creditRes,
+        streamRes
+      ] = await Promise.all([
+        axios.get("http://localhost:5000/dropdown/years"),
+        axios.get("http://localhost:5000/dropdown/semesters"),
+        axios.get("http://localhost:5000/dropdown/exam-types"),
+        axios.get("http://localhost:5000/dropdown/academic-years"),
+        axios.get("http://localhost:5000/dropdown/exam-type-rules"),
+        axios.get("http://localhost:5000/dropdown/credit-points"),
+        axios.get("http://localhost:5000/dropdown/streams")
+      ]);
 
       setYears(yearRes.data);
       setSemesters(semRes.data);
@@ -512,7 +519,7 @@ export default function AdminPanel() {
           </form>
         )}
 
-        {/* Assigned Papers */}
+
         {/* Assigned Papers */}
         <div style={{ marginTop: "40px" }}>
           <h2 style={{ marginBottom: "15px" }}>Assigned Papers</h2>
@@ -520,11 +527,14 @@ export default function AdminPanel() {
           <div style={styles.tableHeader}>
             <div>Stream</div>
             <div>Professor</div>
+            <div>Academic Year</div>
             <div>Year</div>
             <div>Sem</div>
             <div>Exam</div>
             <div>Roll</div>
-            <div>Subjects</div>
+            <div>Type</div>
+            <div>Subject</div>
+            <div>Credit Point</div>
             <div>Action</div>
           </div>
 
@@ -533,19 +543,14 @@ export default function AdminPanel() {
 
               <div>{paper.stream}</div>
               <div>{paper.professor_name}</div>
+              <div>{paper.academic_year}</div>
               <div>{paper.year}</div>
               <div>{paper.semester}</div>
               <div>{paper.exam_type}</div>
               <div>{paper.start_roll}-{paper.end_roll}</div>
-
-              <div style={{ fontSize: "12px", textAlign: "left" }}>
-                M:{paper.major_subject} |
-                m1:{paper.minor1} |
-                m2:{paper.minor2} |
-                A:{paper.aec1},{paper.aec2} |
-                M:{paper.mdc1},{paper.mdc2},{paper.mdc3} |
-                V:{paper.vac1},{paper.vac2},{paper.vac3}
-              </div>
+              <div>{paper.subject_type}</div>
+              <div>{paper.subject_name}</div>
+              <div>{paper.credit_point}</div>
 
               <div style={styles.actionCell}>
                 <button
@@ -809,48 +814,75 @@ const styles = {
     justifyContent: "center",
     gap: "6px"
   },
+  tableWrapper: {
+    marginTop: "20px",
+    borderRadius: "18px",
+    overflow: "hidden",
+    border: "1px solid #dbeafe",
+    boxShadow: "0 8px 25px rgba(37,99,235,0.08)",
+  },
+
   tableHeader: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 0.6fr 0.6fr 1fr 1fr 3fr 0.8fr",
-    background: "#111827",
-    color: "white",
-    padding: "12px",
+    gridTemplateColumns:
+      "1fr 1.4fr 1.2fr 0.7fr 0.8fr 1fr 1fr 1fr 1.6fr 0.8fr 0.9fr",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#fff",
+    padding: "16px 14px",
     fontSize: "13px",
-    fontWeight: "600",
-    borderRadius: "10px 10px 0 0",
+    fontWeight: "700",
+    alignItems: "center",
+    textAlign: "center",
+    letterSpacing: "0.3px",
   },
 
   tableRow: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 0.6fr 0.6fr 1fr 1fr 3fr 0.8fr",
-    padding: "10px",
+    gridTemplateColumns:
+      "1fr 1.4fr 1.2fr 0.7fr 0.8fr 1fr 1fr 1fr 1.6fr 0.8fr 0.9fr",
+    padding: "15px 14px",
+    alignItems: "center",
+    textAlign: "center",
+    background: "#ffffff",
     borderBottom: "1px solid #e5e7eb",
     fontSize: "13px",
-    alignItems: "center",
-    background: "#fff",
+    color: "#374151",
   },
 
   actionCell: {
     display: "flex",
-    gap: "6px",
     justifyContent: "center",
+    alignItems: "center",
+    gap: "10px",
   },
 
   smallEditBtn: {
-    background: "#22c55e",
-    color: "white",
+    background: "#2563eb",
+    color: "#fff",
     border: "none",
-    padding: "6px 8px",
-    borderRadius: "6px",
+    width: "36px",
+    height: "36px",
+    borderRadius: "10px",
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "0.3s",
+    boxShadow: "0 4px 10px rgba(37,99,235,0.25)",
   },
 
   smallDeleteBtn: {
     background: "#ef4444",
-    color: "white",
+    color: "#fff",
     border: "none",
-    padding: "6px 8px",
-    borderRadius: "6px",
+    width: "36px",
+    height: "36px",
+    borderRadius: "10px",
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "0.3s",
+    boxShadow: "0 4px 10px rgba(239,68,68,0.25)",
   },
 };

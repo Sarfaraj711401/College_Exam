@@ -10,7 +10,15 @@ router.post("/save", (req, res) => {
     assignment_id,
     roll_no,
     marks,
-    remarks
+    remarks,
+
+    professor_name,
+    academic_year,
+    year,
+    semester,
+    subject_type,
+    subject_name
+
   } = req.body;
 
   /* FIND GRADE */
@@ -44,7 +52,7 @@ router.post("/save", (req, res) => {
 
           if (err) return res.send(err);
 
-          /* UPDATE */
+          /* UPDATE ONLY marks, remarks, grade */
           if (result.length > 0) {
 
             const updateSql = `
@@ -78,8 +86,21 @@ router.post("/save", (req, res) => {
 
             const insertSql = `
               INSERT INTO marks_entry
-              (assignment_id, roll_no, marks, remarks, grade)
-              VALUES (?,?,?,?,?)
+              (
+                assignment_id,
+                roll_no,
+                marks,
+                remarks,
+                grade,
+
+                professor_name,
+                academic_year,
+                year,
+                semester,
+                subject_type,
+                subject_name
+              )
+              VALUES (?,?,?,?,?,?,?,?,?,?,?)
             `;
 
             db.query(
@@ -89,7 +110,14 @@ router.post("/save", (req, res) => {
                 roll_no,
                 marks,
                 remarks,
-                grade
+                grade,
+
+                professor_name,
+                academic_year,
+                year,
+                semester,
+                subject_type,
+                subject_name
               ],
               (err) => {
 
