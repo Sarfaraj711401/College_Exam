@@ -350,32 +350,33 @@ export default function AdminDashboard() {
 const styles = {
 
   wrapper: {
-    display: "flex"
+    display: "flex",
+    background: "#f1f5f9"
   },
 
   container: {
     marginLeft: "270px",
     width: "calc(100% - 270px)",
     minHeight: "100vh",
-    padding: "35px",
+    padding: "30px",
     fontFamily: "'Poppins', sans-serif",
-    background: "#f8fafc",
+    background: "linear-gradient(to bottom, #f8fafc, #eef2ff)",
     color: "#0f172a"
   },
 
   /* TOP BAR */
   topBar: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
-    marginBottom: "25px"
+    marginBottom: "20px"
   },
 
   logoutBtn: {
-    background: "linear-gradient(135deg,#1d4ed8,#2563eb)",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
     border: "none",
     color: "white",
-    padding: "13px 22px",
+    padding: "12px 20px",
     borderRadius: "14px",
     cursor: "pointer",
     display: "flex",
@@ -383,32 +384,33 @@ const styles = {
     gap: "10px",
     fontSize: "14px",
     fontWeight: "600",
-    boxShadow: "0 6px 18px rgba(37,99,235,0.25)"
+    boxShadow: "0 10px 25px rgba(37,99,235,0.25)",
+    transition: "0.3s"
   },
 
-  /* HERO */
   heroSection: {
-    background: "#ffffff",
+    background: "linear-gradient(135deg,#ffffff,#f8fafc)",
     border: "1px solid #e5e7eb",
-    borderRadius: "20px",
-    padding: "40px",
+    borderRadius: "22px",
+    padding: "35px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    boxShadow: "0 10px 25px rgba(15,23,42,0.06)"
+    boxShadow: "0 12px 30px rgba(15,23,42,0.06)"
   },
 
   welcomeText: {
     fontSize: "15px",
     color: "#64748b",
-    marginBottom: "10px"
+    marginBottom: "8px"
   },
 
   mainTitle: {
-    fontSize: "36px",
-    fontWeight: "700",
-    marginBottom: "14px",
-    color: "#0f172a"
+    fontSize: "34px",
+    fontWeight: "800",
+    marginBottom: "10px",
+    color: "#0f172a",
+    letterSpacing: "0.3px"
   },
 
   subText: {
@@ -419,55 +421,57 @@ const styles = {
   },
 
   heroBadge: {
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-    padding: "14px 22px",
-    borderRadius: "14px",
+    background: "linear-gradient(135deg,#2563eb,#60a5fa)",
+    padding: "12px 20px",
+    borderRadius: "16px",
     display: "flex",
     alignItems: "center",
     gap: "10px",
-    fontWeight: "600",
+    fontWeight: "700",
     color: "white",
-    boxShadow: "0 8px 20px rgba(37,99,235,0.25)"
+    boxShadow: "0 10px 25px rgba(37,99,235,0.25)"
   },
 
   statsGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))",
-    gap: "25px",
-    marginTop: "30px"
+    gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))",
+    gap: "22px",
+    marginTop: "25px"
   },
 
   statCard: {
-    background: "#ffffff",
+    background: "white",
     border: "1px solid #e5e7eb",
-    padding: "25px",
+    padding: "22px",
     borderRadius: "18px",
     display: "flex",
     alignItems: "center",
-    gap: "20px",
-    boxShadow: "0 6px 18px rgba(15,23,42,0.05)"
+    gap: "18px",
+    boxShadow: "0 8px 20px rgba(15,23,42,0.05)",
+    transition: "0.3s"
   },
 
   iconBox: {
-    width: "70px",
-    height: "70px",
-    borderRadius: "18px",
+    width: "65px",
+    height: "65px",
+    borderRadius: "16px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: "28px",
-    color: "white"
+    fontSize: "26px",
+    color: "white",
+    boxShadow: "0 8px 18px rgba(37,99,235,0.25)"
   },
 
   cardTitle: {
-    fontSize: "14px",
+    fontSize: "13px",
     color: "#64748b",
-    marginBottom: "6px"
+    marginBottom: "5px"
   },
 
   cardValue: {
-    fontSize: "32px",
-    fontWeight: "700",
+    fontSize: "30px",
+    fontWeight: "800",
     marginBottom: "4px",
     color: "#0f172a"
   },
@@ -478,19 +482,19 @@ const styles = {
   },
 
   recentSection: {
-    marginTop: "35px",
-    background: "#ffffff",
+    marginTop: "30px",
+    background: "white",
     border: "1px solid #e5e7eb",
     borderRadius: "20px",
-    padding: "25px",
-    boxShadow: "0 6px 20px rgba(15,23,42,0.05)"
+    padding: "22px",
+    boxShadow: "0 8px 20px rgba(15,23,42,0.05)"
   },
 
   sectionHeader: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "25px"
+    marginBottom: "20px"
   },
 
   sectionTitleBox: {
@@ -500,13 +504,13 @@ const styles = {
   },
 
   sectionTitle: {
-    fontSize: "22px",
-    fontWeight: "700",
+    fontSize: "20px",
+    fontWeight: "800",
     color: "#0f172a"
   },
 
   liveBadge: {
-    background: "#2563eb",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
     padding: "6px 14px",
     borderRadius: "20px",
     fontSize: "12px",
@@ -514,112 +518,26 @@ const styles = {
     color: "white"
   },
 
-  paperGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
-    gap: "20px"
-  },
-
-  paperCard: {
-    background: "#ffffff",
-    border: "1px solid #e5e7eb",
-    borderRadius: "18px",
-    padding: "20px",
-    transition: "0.3s",
-    boxShadow: "0 4px 14px rgba(15,23,42,0.06)"
-  },
-
-  paperTop: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    marginBottom: "18px"
-  },
-
-  subjectIcon: {
-    width: "50px",
-    height: "50px",
-    borderRadius: "14px",
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: "20px",
-    color: "white"
-  },
-
-  subjectName: {
-    fontSize: "18px",
-    fontWeight: "700",
-    color: "#0f172a"
-  },
-
-  professorName: {
-    fontSize: "13px",
-    color: "#64748b"
-  },
-
-  paperBody: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px"
-  },
-
-  infoRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    background: "#f8fafc",
-    padding: "10px 12px",
-    borderRadius: "10px",
-    fontSize: "13px",
-    border: "1px solid #e5e7eb",
-    color: "#0f172a"
-  },
-
-  examBadge: {
-    background: "#2563eb",
-    padding: "4px 10px",
-    borderRadius: "20px",
-    fontSize: "11px",
-    fontWeight: "700",
-    color: "white"
-  },
-
-  cardFooter: {
-    marginTop: "15px",
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-    fontSize: "12px",
-    color: "#94a3b8"
-  },
-
-  emptyCard: {
-    height: "200px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "10px",
-    color: "#64748b"
-  },
-
   table: {
     width: "100%",
-    borderCollapse: "collapse"
+    borderCollapse: "collapse",
+    overflow: "hidden",
+    borderRadius: "12px"
   },
 
   th: {
-    background: "#2563eb",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
     color: "white",
     padding: "14px",
-    textAlign: "left"
+    textAlign: "left",
+    fontSize: "13px"
   },
 
   td: {
     padding: "14px",
-    borderBottom: "1px solid #e5e7eb"
+    borderBottom: "1px solid #e5e7eb",
+    fontSize: "13px",
+    color: "#0f172a"
   },
 
   viewBtn: {
@@ -628,16 +546,38 @@ const styles = {
     border: "none",
     padding: "8px 14px",
     borderRadius: "8px",
-    cursor: "pointer"
+    cursor: "pointer",
+    fontWeight: "600",
+    transition: "0.3s"
   },
 
+  examBadge: {
+    background: "linear-gradient(135deg,#2563eb,#60a5fa)",
+    padding: "4px 10px",
+    borderRadius: "20px",
+    fontSize: "11px",
+    fontWeight: "700",
+    color: "white"
+  },
+
+  emptyCard: {
+    height: "180px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "10px",
+    color: "#64748b"
+  },
+
+  /* MODAL */
   modalOverlay: {
     position: "fixed",
     top: 0,
     left: 0,
     width: "100%",
     height: "100%",
-    background: "rgba(15, 23, 42, 0.45)",
+    background: "rgba(15, 23, 42, 0.5)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -645,18 +585,18 @@ const styles = {
   },
 
   modalBox: {
-    width: "600px",
-    maxWidth: "90%",
+    width: "580px",
+    maxWidth: "92%",
     background: "#ffffff",
     borderRadius: "20px",
     overflow: "hidden",
-    boxShadow: "0 20px 50px rgba(37,99,235,0.25)"
+    boxShadow: "0 25px 60px rgba(37,99,235,0.25)"
   },
 
   modalHeader: {
-    background: "linear-gradient(135deg,#1d4ed8,#2563eb)",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
     color: "white",
-    padding: "20px 25px",
+    padding: "18px 22px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center"
@@ -664,55 +604,55 @@ const styles = {
 
   modalTitle: {
     margin: 0,
-    fontSize: "22px",
-    fontWeight: "700"
+    fontSize: "20px",
+    fontWeight: "800"
   },
 
   modalCloseIcon: {
     background: "rgba(255,255,255,0.2)",
     border: "none",
     color: "white",
-    width: "35px",
-    height: "35px",
+    width: "32px",
+    height: "32px",
     borderRadius: "50%",
-    cursor: "pointer",
-    fontSize: "16px"
+    cursor: "pointer"
   },
 
   modalContent: {
-    padding: "25px"
+    padding: "22px"
   },
 
   detailRow: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "14px 18px",
-    marginBottom: "12px",
+    padding: "12px 14px",
+    marginBottom: "10px",
     background: "#f8fafc",
-    borderRadius: "12px",
-    border: "1px solid #dbeafe"
+    borderRadius: "10px",
+    border: "1px solid #e5e7eb",
+    fontSize: "13px"
   },
 
   modalExamBadge: {
     background: "#2563eb",
     color: "white",
-    padding: "6px 12px",
-    borderRadius: "20px",
-    fontSize: "12px"
+    padding: "5px 10px",
+    borderRadius: "18px",
+    fontSize: "11px"
   },
 
   modalFooter: {
-    padding: "20px",
+    padding: "16px",
     textAlign: "right",
     borderTop: "1px solid #e5e7eb"
   },
 
   closeBtn: {
-    background: "#2563eb",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
     color: "white",
     border: "none",
-    padding: "10px 22px",
+    padding: "9px 20px",
     borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "600"

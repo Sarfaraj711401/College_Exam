@@ -1,19 +1,42 @@
 import React, { useEffect, useState } from "react";
 import homeBg from "../assets/HomeBg.jpg.jpeg";
-import { Link } from "react-router-dom";
+import axios from "axios";
+
+import {
+  useNavigate
+} from "react-router-dom";
+
 import {
   FaUserShield,
   FaChalkboardTeacher,
-  FaClipboardCheck,
   FaGraduationCap,
   FaArrowRight,
-  FaUniversity,
   FaBookOpen,
   FaUsers,
-  FaChartLine
+  FaChartLine,
+  FaEye,
+  FaEyeSlash,
+  FaEnvelope,
+  FaLock
 } from "react-icons/fa";
 
 export default function Home() {
+
+  const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] =
+    useState(false);
+
+  const [email, setEmail] = useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [role, setRole] =
+    useState("SuperAdmin");
+
+  const [roles, setRoles] = useState([]);
+
   const [stats, setStats] = useState({
     professors: 0,
     papers: 0,
@@ -24,53 +47,155 @@ export default function Home() {
     useState(0);
 
   const rotatingTexts = [
-    "Calcutta Instute Of Technology"
+    "Calcutta Institute Of Technology"
   ];
 
+  /* =========================
+     FETCH LOGIN ROLES
+  ========================= */
+
   useEffect(() => {
+
+    axios
+      .get("http://localhost:5000/dropdown/login-roles")
+      .then((res) => {
+
+        setRoles(res.data);
+
+      })
+      .catch((err) => {
+
+        console.log(err);
+
+      });
+
+  }, []);
+
+  /* =========================
+     LOGIN
+  ========================= */
+
+  const handleLogin = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      // PROFESSOR LOGIN
+      if (role === "Professor") {
+
+        const res = await axios.post(
+          "http://localhost:5000/professor/login",
+          {
+            email,
+            password,
+            role
+          }
+        );
+
+        localStorage.setItem(
+          "professor",
+          JSON.stringify(res.data)
+        );
+
+        navigate("/professor-dashboard");
+
+      }
+
+      // ADMIN / SUPERADMIN LOGIN
+      else {
+
+        const res = await axios.post(
+          "http://localhost:5000/admin/login",
+          {
+            email,
+            password,
+            role
+          }
+        );
+
+        localStorage.setItem(
+          "admin",
+          JSON.stringify(res.data)
+        );
+
+        navigate("/admin");
+
+      }
+
+    } catch (err) {
+
+      alert("Invalid Login Credentials");
+
+    }
+
+  };
+
+  /* =========================
+     TEXT ROTATION
+  ========================= */
+
+  useEffect(() => {
+
     const interval = setInterval(() => {
+
       setCurrentText((prev) =>
         prev === rotatingTexts.length - 1
           ? 0
           : prev + 1
       );
+
     }, 2500);
 
     return () => clearInterval(interval);
+
   }, []);
 
+  /* =========================
+     STATS ANIMATION
+  ========================= */
+
   useEffect(() => {
+
     const animateValue = (
       key,
       endValue,
       duration
     ) => {
+
       let start = 0;
 
       const increment =
         endValue / (duration / 16);
 
       const timer = setInterval(() => {
+
         start += increment;
 
         if (start >= endValue) {
+
           start = endValue;
           clearInterval(timer);
+
         }
 
         setStats((prev) => ({
           ...prev,
           [key]: Math.floor(start)
         }));
+
       }, 16);
+
     };
 
     animateValue("professors", 500, 2000);
     animateValue("papers", 1200, 2200);
     animateValue("evaluations", 10000, 2600);
+
   }, []);
 
   return (
+
     <div style={styles.container}>
 
       {/* BACKGROUND */}
@@ -82,11 +207,13 @@ export default function Home() {
       <nav style={styles.navbar}>
 
         <div style={styles.logo}>
+
           <div style={styles.logoIcon}>
             <FaGraduationCap />
           </div>
 
           <div>
+
             <h2 style={styles.logoText}>
               Smart Examination Evalution System
             </h2>
@@ -94,26 +221,44 @@ export default function Home() {
             <p style={styles.logoSub}>
               Digital & Smart ExamFlow
             </p>
+
           </div>
+
         </div>
 
         <div style={styles.navButtons}>
 
-          <Link
-            to="/admin-login"
+          <button
+            onClick={() => {
+
+              document
+                .getElementById("login-section")
+                ?.scrollIntoView({
+                  behavior: "smooth"
+                });
+
+            }}
             style={styles.adminBtn}
           >
             <FaUserShield />
             Admin
-          </Link>
+          </button>
 
-          <Link
-            to="/professor-login"
+          <button
+            onClick={() => {
+
+              document
+                .getElementById("login-section")
+                ?.scrollIntoView({
+                  behavior: "smooth"
+                });
+
+            }}
             style={styles.profBtn}
           >
             <FaChalkboardTeacher />
             Professor
-          </Link>
+          </button>
 
         </div>
 
@@ -126,8 +271,11 @@ export default function Home() {
         <div style={styles.leftSection}>
 
           <div style={styles.badge}>
+
             <span style={styles.liveDot}></span>
+
             Live Smart Portal
+
           </div>
 
           <h1 style={styles.heroTitle}>
@@ -138,102 +286,151 @@ export default function Home() {
             Welcome to Calcutta Institute of Technology (CIT) – where innovation meets excellence, shaping future engineers and leaders through world-class education, cutting-edge research, and a dynamic learning environment.
           </p>
 
-          <div style={styles.heroButtons}>
-
-            <Link
-              to="/admin-login"
-              style={styles.primaryBtn}
-            >
-              Get Started
-              <FaArrowRight />
-            </Link>
-
-            <Link
-              to="/professor-login"
-              style={styles.secondaryBtn}
-            >
-              Open Portal
-            </Link>
-
-          </div>
-
-          {/* STATS */}
-          <div style={styles.statsGrid}>
-
-            <div style={styles.statCard}>
-              <FaUsers style={styles.statIcon} />
-
-              <h2>
-                {stats.professors}+
-              </h2>
-
-              <p>Professors</p>
-            </div>
-
-            <div style={styles.statCard}>
-              <FaBookOpen style={styles.statIcon} />
-
-              <h2>
-                {stats.papers}+
-              </h2>
-
-              <p>Assigned Papers</p>
-            </div>
-
-            <div style={styles.statCard}>
-              <FaChartLine style={styles.statIcon} />
-
-              <h2>
-                {stats.evaluations}+
-              </h2>
-
-              <p>Evaluations</p>
-            </div>
-
-          </div>
-
         </div>
 
-        {/* RIGHT */}
-        <div style={styles.rightSection}>
+        {/* RIGHT LOGIN PANEL */}
+        <div
+          id="login-section"
+          style={styles.rightSection}
+        >
 
-          <div style={styles.mainCard}>
+          <div style={styles.loginCard}>
 
-            <div style={styles.topGlow}></div>
-
-            <div style={styles.cardIcon}>
-              <FaUniversity />
-            </div>
-
-            <h2 style={styles.cardTitle}>
-              Product Features
+            <h2 style={styles.loginTitle}>
+              {role} Login
             </h2>
 
-            <p style={styles.cardText}>
-              Fully digital modern examination
-              workflow with premium UI and
-              secure management system.
+            <p style={styles.loginSub}>
+              Secure access to dashboard
             </p>
 
-            <div style={styles.cardMiniGrid}>
+            <form onSubmit={handleLogin}>
 
-              <div style={styles.miniCard}>
-                <FaClipboardCheck />
+              {/* ROLE DROPDOWN */}
 
-                <span>
-                  Smart Evaluation
-                </span>
+              <div style={styles.inputWrapper}>
+
+                <label style={styles.inputLabel}>
+                  Select Role
+                </label>
+
+                <div style={styles.inputGroup}>
+
+                  <select
+                    value={role}
+                    onChange={(e) =>
+                      setRole(e.target.value)
+                    }
+                    style={styles.input}
+                  >
+
+                    {
+                      roles.map((item, index) => (
+
+                        <option
+                          key={index}
+                          value={item.role}
+                          style={{ color: "black" }}
+                        >
+                          {item.role}
+                        </option>
+
+                      ))
+                    }
+
+                  </select>
+
+                </div>
+
               </div>
 
-              <div style={styles.miniCard}>
-                <FaUserShield />
+              {/* EMAIL */}
 
-                <span>
-                  Secure Access
-                </span>
+              <div style={styles.inputWrapper}>
+
+                <label style={styles.inputLabel}>
+                  Email
+                </label>
+
+                <div style={styles.inputGroup}>
+
+                  <FaEnvelope style={styles.inputIcon} />
+
+                  <input
+                    type="email"
+                    placeholder="Enter Email"
+                    value={email}
+                    onChange={(e) =>
+                      setEmail(e.target.value)
+                    }
+                    required
+                    style={styles.input}
+                  />
+
+                </div>
+
               </div>
 
-            </div>
+              {/* PASSWORD */}
+
+              <div style={styles.inputWrapper}>
+
+                <label style={styles.inputLabel}>
+                  Password
+                </label>
+
+                <div style={styles.inputGroup}>
+
+                  <FaLock style={styles.inputIcon} />
+
+                  <input
+                    type={
+                      showPassword
+                        ? "text"
+                        : "password"
+                    }
+                    placeholder="Enter Password"
+                    value={password}
+                    onChange={(e) =>
+                      setPassword(e.target.value)
+                    }
+                    required
+                    style={styles.input}
+                  />
+
+                  <div
+                    onClick={() =>
+                      setShowPassword(!showPassword)
+                    }
+                    style={styles.eyeBtn}
+                  >
+
+                    {
+                      showPassword
+                        ? <FaEyeSlash />
+                        : <FaEye />
+                    }
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* LOGIN BUTTON */}
+
+              <button
+                type="submit"
+                style={styles.loginBtn}
+              >
+
+                Login
+
+                <FaArrowRight />
+
+              </button>
+
+            </form>
 
           </div>
 
@@ -246,10 +443,10 @@ export default function Home() {
 }
 
 const styles = {
+
   container: {
     minHeight: "100vh",
-    backgroundImage:
-      `linear-gradient(rgba(2,6,23,0.75), rgba(15,23,42,0.75)), url(${homeBg})`,
+    backgroundImage: `url(${homeBg})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
@@ -259,317 +456,255 @@ const styles = {
     color: "white"
   },
 
+  /* LIGHT OVERLAY ONLY (keeps image CLEAR) */
+  bgOverlay: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "linear-gradient(120deg, rgba(10,20,40,0.35), rgba(10,20,40,0.25))",
+    zIndex: 1
+  },
+
   bg1: {
     position: "absolute",
-    width: "350px",
-    height: "350px",
+    width: "280px",
+    height: "280px",
     borderRadius: "50%",
-    background: "#7c3aed",
-    top: "-120px",
-    left: "-100px",
-    opacity: 0.4,
-    filter: "blur(120px)"
+    background: "#2563eb",
+    top: "-90px",
+    left: "-70px",
+    opacity: 0.25,
+    filter: "blur(100px)"
   },
 
   bg2: {
     position: "absolute",
-    width: "350px",
-    height: "350px",
+    width: "280px",
+    height: "280px",
     borderRadius: "50%",
-    background: "#2563eb",
-    bottom: "-120px",
-    right: "-100px",
-    opacity: 0.4,
-    filter: "blur(120px)"
+    background: "#60a5fa",
+    bottom: "-100px",
+    right: "-70px",
+    opacity: 0.25,
+    filter: "blur(100px)"
   },
 
   bg3: {
     position: "absolute",
-    width: "250px",
-    height: "250px",
+    width: "200px",
+    height: "200px",
     borderRadius: "50%",
-    background: "#06b6d4",
-    top: "40%",
-    left: "45%",
-    opacity: 0.2,
-    filter: "blur(100px)"
+    background: "#ffffff",
+    top: "45%",
+    left: "48%",
+    opacity: 0.06,
+    filter: "blur(90px)"
   },
 
-  /* NAVBAR */
   navbar: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "24px 60px",
+    padding: "14px 50px",
     position: "relative",
-    zIndex: 2
+    zIndex: 3
   },
 
   logo: {
     display: "flex",
     alignItems: "center",
-    gap: "15px"
+    gap: "12px"
   },
 
   logoIcon: {
-    width: "55px",
-    height: "55px",
-    borderRadius: "18px",
-    background:
-      "linear-gradient(135deg,#7c3aed,#2563eb)",
+    width: "52px",
+    height: "52px",
+    borderRadius: "16px",
+    background: "linear-gradient(135deg,#2563eb,#60a5fa)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: "24px",
-    boxShadow:
-      "0 10px 30px rgba(99,102,241,0.45)"
+    fontSize: "22px",
+    boxShadow: "0 10px 25px rgba(37,99,235,0.35)"
   },
 
   logoText: {
     margin: 0,
-    fontSize: "26px",
-    fontWeight: "700"
+    fontSize: "22px",
+    fontWeight: "800"
   },
 
   logoSub: {
     margin: 0,
-    color: "#94a3b8",
-    fontSize: "12px"
+    fontSize: "11px",
+    color: "#cfe8ff"
   },
 
   navButtons: {
     display: "flex",
-    gap: "15px"
+    gap: "12px"
   },
 
   adminBtn: {
-    textDecoration: "none",
-    background:
-      "rgba(255,255,255,0.08)",
-    border:
-      "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.18)",
+    background: "rgba(255,255,255,0.10)",
     color: "white",
-    padding: "12px 20px",
-    borderRadius: "16px",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    backdropFilter: "blur(15px)",
-    fontWeight: "600"
+    padding: "10px 18px",
+    borderRadius: "14px",
+    fontWeight: "600",
+    cursor: "pointer",
+    backdropFilter: "blur(12px)"
   },
 
   profBtn: {
-    textDecoration: "none",
-    background:
-      "linear-gradient(135deg,#7c3aed,#2563eb)",
+    border: "none",
+    background: "linear-gradient(135deg,#2563eb,#60a5fa)",
     color: "white",
-    padding: "12px 22px",
-    borderRadius: "16px",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    fontWeight: "600",
-    boxShadow:
-      "0 10px 25px rgba(99,102,241,0.4)"
+    padding: "10px 18px",
+    borderRadius: "14px",
+    fontWeight: "700",
+    cursor: "pointer",
+    boxShadow: "0 10px 20px rgba(37,99,235,0.35)"
   },
 
-  /* HERO */
   heroSection: {
-    minHeight: "calc(100vh - 100px)",
+    minHeight: "calc(100vh - 80px)",
     display: "grid",
-    gridTemplateColumns: "1.1fr 0.9fr",
+    gridTemplateColumns: "1.3fr 0.7fr",
     alignItems: "center",
-    gap: "50px",
-    padding: "20px 60px 60px",
+    gap: "35px",
+    padding: "0px 50px 20px",
     position: "relative",
     zIndex: 2
   },
 
   leftSection: {
-    maxWidth: "700px"
+    maxWidth: "650px"
   },
 
   badge: {
     display: "inline-flex",
     alignItems: "center",
-    gap: "10px",
-    background:
-      "rgba(255,255,255,0.08)",
-    border:
-      "1px solid rgba(255,255,255,0.1)",
-    padding: "10px 18px",
+    gap: "8px",
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.15)",
+    padding: "8px 14px",
     borderRadius: "30px",
-    color: "#cbd5e1",
-    fontSize: "14px",
-    marginBottom: "30px",
-    backdropFilter: "blur(15px)"
+    fontSize: "12px",
+    marginBottom: "18px",
+    backdropFilter: "blur(12px)"
   },
 
   liveDot: {
-    width: "10px",
-    height: "10px",
+    width: "8px",
+    height: "8px",
     borderRadius: "50%",
     background: "#22c55e"
   },
 
   heroTitle: {
-    fontSize: "68px",
-    lineHeight: "80px",
-    fontWeight: "800",
-    marginBottom: "25px",
-    background:
-      "linear-gradient(135deg,#ffffff,#c4b5fd,#93c5fd)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent"
+    fontSize: "56px",
+    lineHeight: "68px",
+    fontWeight: "900",
+    marginBottom: "16px",
+    color: "#fff",
+    textShadow: "0 10px 25px rgba(0,0,0,0.25)"
   },
 
   heroText: {
-    color: "#cbd5e1",
-    fontSize: "18px",
-    lineHeight: "34px",
-    maxWidth: "620px"
+    fontSize: "15px",
+    lineHeight: "28px",
+    color: "#e2e8f0",
+    maxWidth: "580px"
   },
 
-  heroButtons: {
-    display: "flex",
-    gap: "18px",
-    marginTop: "35px"
-  },
-
-  primaryBtn: {
-    textDecoration: "none",
-    background:
-      "linear-gradient(135deg,#7c3aed,#2563eb)",
-    color: "white",
-    padding: "16px 28px",
-    borderRadius: "18px",
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    fontWeight: "700",
-    boxShadow:
-      "0 15px 35px rgba(99,102,241,0.4)"
-  },
-
-  secondaryBtn: {
-    textDecoration: "none",
-    background:
-      "rgba(255,255,255,0.08)",
-    border:
-      "1px solid rgba(255,255,255,0.1)",
-    color: "white",
-    padding: "16px 28px",
-    borderRadius: "18px",
-    backdropFilter: "blur(15px)",
-    fontWeight: "600"
-  },
-
-  statsGrid: {
-    display: "grid",
-    gridTemplateColumns:
-      "repeat(3,minmax(150px,1fr))",
-    gap: "20px",
-    marginTop: "50px"
-  },
-
-  statCard: {
-    background:
-      "rgba(255,255,255,0.07)",
-    border:
-      "1px solid rgba(255,255,255,0.08)",
-    borderRadius: "24px",
-    padding: "24px",
-    backdropFilter: "blur(18px)",
-    boxShadow:
-      "0 10px 30px rgba(0,0,0,0.25)"
-  },
-
-  statIcon: {
-    fontSize: "26px",
-    color: "#a5b4fc",
-    marginBottom: "18px"
-  },
-
-  /* RIGHT */
   rightSection: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
-  },
-
-  mainCard: {
-    width: "430px",
-    padding: "40px",
-    borderRadius: "32px",
-    background:
-      "rgba(255,255,255,0.08)",
-    border:
-      "1px solid rgba(255,255,255,0.1)",
-    backdropFilter: "blur(25px)",
-    boxShadow:
-      "0 20px 60px rgba(0,0,0,0.45)",
-    position: "relative",
-    overflow: "hidden"
-  },
-
-  topGlow: {
-    position: "absolute",
-    width: "220px",
-    height: "220px",
-    borderRadius: "50%",
-    background:
-      "linear-gradient(135deg,#7c3aed,#2563eb)",
-    top: "-100px",
-    right: "-100px",
-    opacity: 0.35,
-    filter: "blur(60px)"
-  },
-
-  cardIcon: {
-    width: "90px",
-    height: "90px",
-    borderRadius: "28px",
-    background:
-      "linear-gradient(135deg,#7c3aed,#2563eb)",
-    display: "flex",
-    justifyContent: "center",
     alignItems: "center",
-    fontSize: "34px",
-    marginBottom: "30px",
-    boxShadow:
-      "0 15px 35px rgba(99,102,241,0.45)"
+    zIndex: 3
   },
 
-  cardTitle: {
-    fontSize: "32px",
-    fontWeight: "700",
+  /* 🔥 IMPROVED LOGIN CARD (more premium, centered feel) */
+  loginCard: {
+    width: "100%",
+    maxWidth: "380px",
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.18)",
+    borderRadius: "26px",
+    padding: "28px",
+    backdropFilter: "blur(22px)",
+    boxShadow: "0 25px 60px rgba(0,0,0,0.35)"
+  },
+
+  loginTitle: {
+    fontSize: "28px",
+    fontWeight: "900",
+    marginBottom: "6px"
+  },
+
+  loginSub: {
+    fontSize: "13px",
+    color: "#cfe8ff",
     marginBottom: "20px"
   },
 
-  cardText: {
-    color: "#cbd5e1",
-    lineHeight: "30px",
-    fontSize: "16px"
+  inputWrapper: {
+    marginBottom: "14px"
   },
 
-  cardMiniGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "18px",
-    marginTop: "35px"
+  inputLabel: {
+    fontSize: "13px",
+    marginBottom: "8px",
+    display: "block",
+    color: "#dbeafe"
   },
 
-  miniCard: {
-    background:
-      "rgba(255,255,255,0.06)",
-    border:
-      "1px solid rgba(255,255,255,0.08)",
-    borderRadius: "20px",
-    padding: "22px",
+  inputGroup: {
+    height: "48px",
     display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-    fontSize: "20px",
-    color: "#a5b4fc"
+    alignItems: "center",
+    padding: "0 14px",
+    borderRadius: "14px",
+    background: "rgba(255,255,255,0.10)",
+    border: "1px solid rgba(255,255,255,0.15)",
+    backdropFilter: "blur(12px)"
+  },
+
+  input: {
+    flex: 1,
+    border: "none",
+    outline: "none",
+    background: "transparent",
+    color: "white",
+    fontSize: "14px"
+  },
+
+  inputIcon: {
+    marginRight: "10px",
+    color: "#cfe8ff"
+  },
+
+  eyeBtn: {
+    cursor: "pointer",
+    color: "#cfe8ff"
+  },
+
+  loginBtn: {
+    width: "100%",
+    height: "48px",
+    marginTop: "10px",
+    borderRadius: "14px",
+    border: "none",
+    background: "linear-gradient(135deg,#2563eb,#60a5fa)",
+    color: "white",
+    fontWeight: "800",
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "10px",
+    boxShadow: "0 15px 30px rgba(37,99,235,0.35)"
   }
+
 };

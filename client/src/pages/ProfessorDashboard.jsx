@@ -37,7 +37,7 @@ export default function ProfessorDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem("professor");
-    navigate("/professor-login");
+    navigate("/");
   };
 
   if (!prof) {

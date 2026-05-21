@@ -1025,669 +1025,459 @@ export default function ProfessorPage() {
 
 const styles = {
   wrapper: {
-    display: "flex"
+    display: "flex",
+    background: "#eef4ff",
+    minHeight: "100vh",
+    fontFamily: "'Inter', sans-serif"
   },
 
   container: {
     marginLeft: "270px",
     width: "calc(100% - 270px)",
-    minHeight: "100vh",
-    background:
-      "linear-gradient(135deg,#0f172a,#1e293b,#334155)",
-    padding: "0px"
+    padding: "18px",
+    background: "linear-gradient(135deg,#eef4ff,#f8fbff)"
   },
 
   mainCard: {
-    background: "white",
-    padding: "30px",
-    borderRadius: "20px"
-  },
-
-  backBtn: {
-    background: "#111827",
-    color: "white",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer"
+    background: "#ffffff",
+    borderRadius: "22px",
+    padding: "20px",
+    boxShadow: "0 10px 30px rgba(37,99,235,0.08)",
+    border: "1px solid #dbeafe"
   },
 
   header: {
-    textAlign: "center",
-    margin: "20px 0"
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "12px",
+    marginBottom: "22px"
   },
 
   title: {
-    color: "#1e3a8a"
+    fontSize: "30px",
+    fontWeight: "800",
+    letterSpacing: "0.5px",
+    background: "linear-gradient(135deg,#1d4ed8,#2563eb,#60a5fa)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    margin: 0
   },
 
   section: {
-    background: "#f8fafc",
-    padding: "20px",
-    borderRadius: "15px",
-    marginBottom: "20px"
+    background: "linear-gradient(180deg,#ffffff,#f8fbff)",
+    border: "1px solid #dbeafe",
+    borderRadius: "18px",
+    padding: "18px",
+    marginBottom: "18px",
+    boxShadow: "0 5px 16px rgba(37,99,235,0.05)"
   },
 
   sectionTitle: {
-    color: "#2563eb",
-    marginBottom: "15px"
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "15px"
-  },
-
-  input: {
-    padding: "12px",
-    borderRadius: "10px",
-    border: "1px solid #ddd"
-  },
-
-  previewBtn: {
-    width: "100%",
-    background: "#2563eb",
-    color: "white",
-    padding: "14px",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer"
-  },
-
-  tableSection: {
-    marginTop: "40px",
-    background: "#f8fafc",
-    padding: "20px",
-    borderRadius: "15px",
-    overflowX: "auto"
-  },
-
-  tableTitle: {
-    color: "#2563eb",
-    marginBottom: "20px",
-    textAlign: "center",
-    fontSize: "24px",
-    fontWeight: "bold"
-  },
-
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    background: "white",
-    borderRadius: "12px",
-    overflow: "hidden"
-  },
-
-  th: {
-    background: "#2563eb",
-    color: "white",
-    padding: "14px",
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: "15px"
-  },
-
-  td: {
-    padding: "14px",
-    textAlign: "center",
-    borderBottom: "1px solid #ddd",
-    color: "#111827"
-  },
-
-  tableRow: {
-    textAlign: "center"
-  },
-
-  photo: {
-    width: "50px",
-    height: "50px",
-    borderRadius: "50%",
-    objectFit: "cover"
-  },
-
-  actionBox: {
-    display: "flex",
-    gap: "10px",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-
-  editBtn: {
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "8px 14px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  },
-
-  deleteBtn: {
-    background: "#ef4444",
-    color: "white",
-    border: "none",
-    padding: "8px 14px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  },
-
-  modalOverlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.6)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-
-  previewModal: {
-    background: "linear-gradient(145deg,#ffffff,#f1f5f9)",
-    width: "700px",
-    maxHeight: "92vh",
-    overflowY: "auto",
-    borderRadius: "30px",
-    padding: "35px",
-    boxShadow: "0 20px 60px rgba(37,99,235,0.25)",
-    border: "1px solid rgba(255,255,255,0.4)",
-    backdropFilter: "blur(10px)",
-    position: "relative"
-  },
-
-  previewTitle: {
-    textAlign: "center",
-    fontSize: "32px",
+    color: "#1d4ed8",
+    fontSize: "18px",
     fontWeight: "800",
-    background: "linear-gradient(90deg,#2563eb,#7c3aed)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    marginBottom: "30px",
-    letterSpacing: "0.5px"
-  },
-
-  previewPhotoBox: {
-    display: "flex",
-    justifyContent: "center",
-    marginBottom: "30px",
-    position: "relative"
-  },
-
-  previewPhoto: {
-    width: "140px",
-    height: "140px",
-    borderRadius: "50%",
-    objectFit: "cover",
-    border: "6px solid white",
-    boxShadow: "0 10px 35px rgba(37,99,235,0.35)"
-  },
-
-  previewDetails: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "18px",
-    marginTop: "10px"
-  },
-
-  previewRow: {
-    background: "rgba(255,255,255,0.8)",
-    padding: "16px 18px",
-    borderRadius: "18px",
-    border: "1px solid #dbeafe",
-    boxShadow: "0 4px 15px rgba(0,0,0,0.05)",
-    transition: "0.3s"
-  },
-
-  label: {
-    display: "block",
-    fontSize: "13px",
-    fontWeight: "700",
-    color: "#64748b",
-    marginBottom: "8px",
-    textTransform: "uppercase",
-    letterSpacing: "1px"
-  },
-
-  value: {
-    color: "#0f172a",
-    fontWeight: "700",
-    fontSize: "16px",
-    wordBreak: "break-word"
-  },
-
-  previewProfileBtn: {
-    background: "#10b981",
-    color: "white",
-    border: "none",
-    padding: "8px 14px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  },
-
-  cancelBtn: {
-    flex: 1,
-    background: "linear-gradient(135deg,#ef4444,#dc2626)",
-    color: "white",
-    border: "none",
-    padding: "15px",
-    borderRadius: "16px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "700",
-    boxShadow: "0 8px 20px rgba(239,68,68,0.35)",
-    transition: "0.3s"
-  },
-
-  confirmBtn: {
-    flex: 1,
-    background: "linear-gradient(135deg,#2563eb,#7c3aed)",
-    color: "white",
-    border: "none",
-    padding: "15px",
-    borderRadius: "16px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "700",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "10px",
-    boxShadow: "0 8px 25px rgba(37,99,235,0.35)",
-    transition: "0.3s"
-  },
-
-  modalOverlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(15,23,42,0.75)",
-    backdropFilter: "blur(8px)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999
-  },
-  photoUploadBox: {
-    background: "#f8fafc",
-    padding: "20px",
-    borderRadius: "15px",
-    marginBottom: "20px",
-    border: "1px solid #e2e8f0"
-  },
-
-  photoTitle: {
-    color: "#2563eb",
-    marginBottom: "15px",
-    fontSize: "20px",
-    fontWeight: "bold",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px"
-  },
-
-  photoBox: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    gap: "12px"
-  },
-
-  uploadPreview: {
-    width: "100px",
-    height: "100px",
-    objectFit: "cover",
-    borderRadius: "10px",
-    border: "2px solid #2563eb",
-    boxShadow: "0 4px 12px rgba(37,99,235,0.2)",
-    background: "#fff"
-  },
-
-  photoPlaceholder: {
-    width: "100px",
-    height: "100px",
-    borderRadius: "10px",
-    background: "#e2e8f0",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#475569",
-    fontWeight: "600",
-    fontSize: "12px",
-    border: "2px dashed #94a3b8",
-    textAlign: "center"
-  },
-
-  fileInput: {
-    padding: "8px",
-    border: "1px solid #d1d5db",
-    borderRadius: "8px",
-    cursor: "pointer",
-    background: "white",
-    width: "220px",
-    fontSize: "13px"
-  },
-  photoPreviewWrapper: {
-    display: "flex",
-    alignItems: "center",
-    gap: "20px"
-  },
-
-  photoActionButtons: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: "10px",
-    marginTop: "15px",
-    width: "100%"
-  },
-
-  viewBtn: {
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "8px 14px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  },
-
-  changeBtn: {
-    background: "#7c3aed",
-    color: "white",
-    border: "none",
-    padding: "8px 14px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  },
-
-  removeBtn: {
-    background: "#ef4444",
-    color: "white",
-    border: "none",
-    padding: "8px 14px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  },
-
-  imageModalOverlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.8)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000
-  },
-
-  imageModal: {
-    background: "white",
-    padding: "20px",
-    borderRadius: "15px",
-    position: "relative"
-  },
-
-  fullImage: {
-    width: "400px",
-    maxWidth: "90vw",
-    borderRadius: "10px"
-  },
-
-  closeBtn: {
-    position: "absolute",
-    top: "-10px",
-    right: "-10px",
-    background: "#ef4444",
-    color: "white",
-    border: "none",
-    width: "35px",
-    height: "35px",
-    borderRadius: "50%",
-    cursor: "pointer"
-  },
-
-  formButtonBox: {
-    display: "flex",
-    justifyContent: "center",   // center align
-    alignItems: "center",
-    gap: "12px",
-    marginTop: "20px",
-    flexWrap: "wrap"
-  },
-
-  resetBtn: {
-    background: "#f59e0b",
-    color: "white",
-    border: "none",
-    padding: "10px 22px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "600",
-    fontSize: "14px",
-    minWidth: "110px"
-  },
-
-  cancelFormBtn: {
-    background: "#ef4444",
-    color: "white",
-    border: "none",
-    padding: "10px 22px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "600",
-    fontSize: "14px",
-    minWidth: "110px"
-  },
-
-  submitFormBtn: {
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "10px 22px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: "600",
-    fontSize: "14px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "6px",
-    minWidth: "110px"
-  },
-
-  loginGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr 1fr",
-    gap: "15px"
-  },
-
-  grid2: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "15px",
-    marginBottom: "15px"
-  },
-
-  grid3: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
-    gap: "15px"
-  },
-
-  modalOverlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(15,23,42,0.75)",
-    backdropFilter: "blur(8px)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999
-  },
-
-  previewModal: {
-    width: "620px",
-    maxWidth: "90%",
-    background: "#ffffff",
-    borderRadius: "20px",
-    boxShadow: "0 20px 50px rgba(37,99,235,0.25)",
-    overflow: "hidden"
-  },
-
-  /* top blue section */
-  previewTopSection: {
-    background: "linear-gradient(135deg,#1d4ed8,#2563eb,#3b82f6)",
-    padding: "20px",
-    textAlign: "center",
-    position: "relative",
-    color: "white"
-  },
-
-  previewCloseBtn: {
-    position: "absolute",
-    top: "15px",
-    right: "15px",
-    width: "35px",
-    height: "35px",
-    borderRadius: "50%",
-    border: "none",
-    background: "rgba(255,255,255,0.2)",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "14px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-
-  previewPhoto: {
-    width: "90px",
-    height: "90px",
-    borderRadius: "50%",
-    objectFit: "cover",
-    border: "4px solid white",
-    boxShadow: "0 6px 18px rgba(0,0,0,0.2)"
-  },
-
-  previewName: {
-    marginTop: "10px",
-    fontSize: "22px",
-    fontWeight: "700"
-  },
-
-  previewDesignation: {
-    fontSize: "14px",
-    opacity: "0.9",
-    marginTop: "4px"
-  },
-
-  profIdBadge: {
-    margin: "12px auto 0",
-    background: "white",
-    color: "#2563eb",
-    width: "fit-content",
-    padding: "6px 16px",
-    borderRadius: "20px",
-    fontWeight: "700",
-    fontSize: "13px"
-  },
-
-  /* details section */
-  previewDetailsGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "12px",
-    padding: "20px"
-  },
-
-  infoCard: {
-    background: "#f8fafc",
-    padding: "12px",
-    borderRadius: "12px",
-    border: "1px solid #dbeafe",
-    display: "flex",
-    flexDirection: "column",
-    gap: "5px"
-  },
-
-  /* label inside card */
-  infoLabel: {
-    fontSize: "12px",
-    color: "#64748b",
-    fontWeight: "600"
-  },
-
-  /* value inside card */
-  infoValue: {
-    fontSize: "14px",
-    fontWeight: "700",
-    color: "#0f172a"
-  },
-
-  /* footer */
-  previewFooter: {
-    padding: "15px",
-    textAlign: "center",
-    borderTop: "1px solid #e5e7eb"
-  },
-
-  closeProfileBtn: {
-    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
-    color: "white",
-    border: "none",
-    padding: "10px 25px",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontWeight: "600",
-    fontSize: "14px"
-  },
-
-  subjectGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
-    gap: "15px",
-    marginTop: "10px"
-  },
-  section: {
-    background: "#f8fafc",
-    padding: "25px",
-    borderRadius: "15px",
-    marginBottom: "20px",
-    width: "100%",
-    boxSizing: "border-box"
+    marginBottom: "16px",
+    paddingBottom: "8px",
+    borderBottom: "2px solid #bfdbfe",
+    letterSpacing: "0.3px"
   },
 
   fieldLabel: {
     display: "block",
-    marginBottom: "8px",
-    fontSize: "14px",
-    fontWeight: "600",
-    color: "#1e293b"
+    marginBottom: "7px",
+    fontSize: "13px",
+    fontWeight: "700",
+    color: "#1e3a8a"
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3,1fr)",
+    gap: "14px"
+  },
+
+  grid2: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2,1fr)",
+    gap: "14px",
+    marginBottom: "14px"
+  },
+
+  loginGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(4,1fr)",
+    gap: "14px"
+  },
+
+  subjectGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3,1fr)",
+    gap: "14px"
   },
 
   input: {
     width: "100%",
-    padding: "14px 16px",
+    height: "42px",
+    padding: "0 14px",
+    borderRadius: "12px",
+    border: "1px solid #cbd5e1",
+    background: "#ffffff",
+    fontSize: "13px",
+    fontWeight: "500",
+    color: "#0f172a",
+    outline: "none",
+    transition: "0.3s",
+    boxSizing: "border-box",
+    boxShadow: "0 2px 6px rgba(37,99,235,0.04)"
+  },
+
+  photoUploadBox: {
+    border: "2px dashed #93c5fd",
+    background: "linear-gradient(180deg,#ffffff,#eff6ff)",
+    borderRadius: "18px",
+    padding: "18px",
+    marginBottom: "18px"
+  },
+
+  photoTitle: {
+    color: "#1d4ed8",
+    fontSize: "18px",
+    fontWeight: "800",
+    marginBottom: "14px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px"
+  },
+
+  photoPlaceholder: {
+    width: "95px",
+    height: "95px",
+    borderRadius: "14px",
+    background: "#e2e8f0",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#64748b",
+    fontSize: "12px",
+    fontWeight: "700",
+    border: "2px dashed #94a3b8"
+  },
+
+  photoPreviewWrapper: {
+    display: "flex",
+    alignItems: "center",
+    gap: "18px"
+  },
+
+  uploadPreview: {
+    width: "95px",
+    height: "95px",
+    borderRadius: "14px",
+    objectFit: "cover",
+    border: "3px solid #fff",
+    boxShadow: "0 5px 18px rgba(37,99,235,0.15)"
+  },
+
+  photoActionButtons: {
+    display: "flex",
+    gap: "8px",
+    flexWrap: "wrap"
+  },
+
+  viewBtn: {
+    background: "linear-gradient(135deg,#0ea5e9,#38bdf8)",
+    color: "#fff",
+    border: "none",
+    padding: "8px 14px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: "700",
+    boxShadow: "0 3px 10px rgba(14,165,233,0.25)"
+  },
+
+  changeBtn: {
+    background: "linear-gradient(135deg,#4f46e5,#6366f1)",
+    color: "#fff",
+    border: "none",
+    padding: "8px 14px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: "700",
+    boxShadow: "0 3px 10px rgba(79,70,229,0.2)"
+  },
+
+  removeBtn: {
+    background: "linear-gradient(135deg,#ef4444,#f87171)",
+    color: "#fff",
+    border: "none",
+    padding: "8px 14px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: "700",
+    boxShadow: "0 3px 10px rgba(239,68,68,0.2)"
+  },
+
+  formButtonBox: {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "10px",
+    marginTop: "18px"
+  },
+
+  submitFormBtn: {
+    background: "linear-gradient(135deg,#2563eb,#1d4ed8,#3b82f6)",
+    color: "#fff",
+    border: "none",
+    padding: "10px 22px",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: "700",
+    fontSize: "13px",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    boxShadow: "0 6px 18px rgba(37,99,235,0.25)"
+  },
+
+  cancelFormBtn: {
+    background: "linear-gradient(135deg,#ef4444,#dc2626)",
+    color: "#fff",
+    border: "none",
+    padding: "10px 22px",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: "700",
+    fontSize: "13px",
+    boxShadow: "0 6px 18px rgba(239,68,68,0.18)"
+  },
+
+  resetBtn: {
+    background: "linear-gradient(135deg,#f59e0b,#fbbf24)",
+    color: "#fff",
+    border: "none",
+    padding: "10px 22px",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: "700",
+    fontSize: "13px",
+    boxShadow: "0 6px 18px rgba(245,158,11,0.2)"
+  },
+
+  tableSection: {
+    marginTop: "22px",
+    background: "linear-gradient(180deg,#ffffff,#f8fbff)",
+    borderRadius: "18px",
+    padding: "16px",
+    border: "1px solid #dbeafe",
+    overflowX: "auto",
+    boxShadow: "0 6px 18px rgba(37,99,235,0.05)"
+  },
+
+  tableTitle: {
+    textAlign: "center",
+    fontSize: "21px",
+    fontWeight: "800",
+    marginBottom: "14px",
+    background: "linear-gradient(135deg,#2563eb,#60a5fa)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent"
+  },
+
+  table: {
+    width: "100%",
+    borderCollapse: "separate",
+    borderSpacing: "0 6px"
+  },
+
+  th: {
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#fff",
+    padding: "10px",
+    fontSize: "12px",
+    fontWeight: "800",
+    textAlign: "center"
+  },
+
+  td: {
+    background: "#ffffff",
+    padding: "9px",
+    fontSize: "12px",
+    textAlign: "center",
+    color: "#334155",
+    fontWeight: "600",
+    borderTop: "1px solid #dbeafe",
+    borderBottom: "1px solid #dbeafe"
+  },
+
+  tableRow: {
+    height: "54px"
+  },
+
+  photo: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    border: "2px solid #dbeafe"
+  },
+
+  actionBox: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "6px",
+    flexWrap: "wrap"
+  },
+
+  previewProfileBtn: {
+    background: "linear-gradient(135deg,#0ea5e9,#38bdf8)",
+    color: "#fff",
+    border: "none",
+    padding: "6px 10px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "11px",
+    fontWeight: "700"
+  },
+
+  editBtn: {
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#fff",
+    border: "none",
+    padding: "6px 10px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "11px",
+    fontWeight: "700"
+  },
+
+  deleteBtn: {
+    background: "linear-gradient(135deg,#ef4444,#f87171)",
+    color: "#fff",
+    border: "none",
+    padding: "6px 10px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "11px",
+    fontWeight: "700"
+  },
+
+  modalOverlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(15,23,42,0.7)",
+    backdropFilter: "blur(5px)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999
+  },
+
+  previewModal: {
+    width: "560px",
+    maxWidth: "90%",
+    background: "#fff",
+    borderRadius: "20px",
+    overflow: "hidden",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.2)"
+  },
+
+  previewTopSection: {
+    background: "linear-gradient(135deg,#1d4ed8,#2563eb,#60a5fa)",
+    padding: "20px",
+    textAlign: "center",
+    color: "#fff",
+    position: "relative"
+  },
+
+  previewCloseBtn: {
+    position: "absolute",
+    top: "12px",
+    right: "12px",
+    width: "30px",
+    height: "30px",
+    borderRadius: "50%",
+    border: "none",
+    background: "rgba(255,255,255,0.2)",
+    color: "#fff",
+    cursor: "pointer",
+    fontSize: "12px"
+  },
+
+  previewPhoto: {
+    width: "80px",
+    height: "80px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    border: "4px solid #fff"
+  },
+
+  previewName: {
+    marginTop: "10px",
+    fontSize: "20px",
+    fontWeight: "800",
+    letterSpacing: "0.3px"
+  },
+
+  previewDesignation: {
+    fontSize: "13px",
+    opacity: "0.95",
+    fontWeight: "500"
+  },
+
+  profIdBadge: {
+    margin: "10px auto 0",
+    width: "fit-content",
+    background: "#fff",
+    color: "#2563eb",
+    padding: "5px 14px",
+    borderRadius: "20px",
+    fontWeight: "700",
+    fontSize: "12px"
+  },
+
+  previewDetailsGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "10px",
+    padding: "16px"
+  },
+
+  infoCard: {
+    background: "linear-gradient(180deg,#ffffff,#eff6ff)",
+    border: "1px solid #dbeafe",
+    borderRadius: "12px",
+    padding: "10px 12px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+    boxShadow: "0 2px 8px rgba(37,99,235,0.04)"
+  },
+
+  previewFooter: {
+    padding: "14px",
+    textAlign: "center",
+    borderTop: "1px solid #e2e8f0"
+  },
+
+  closeProfileBtn: {
+    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
+    color: "#fff",
+    border: "none",
+    padding: "9px 18px",
     borderRadius: "10px",
-    border: "1px solid #d1d5db",
-    fontSize: "15px",
-    background: "white",
-    boxSizing: "border-box"
+    cursor: "pointer",
+    fontWeight: "700",
+    fontSize: "13px"
   },
 
   imageModalOverlay: {
     position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
+    inset: 0,
     background: "rgba(0,0,0,0.8)",
     display: "flex",
     justifyContent: "center",
@@ -1698,16 +1488,13 @@ const styles = {
   imageModal: {
     position: "relative",
     background: "#fff",
-    padding: "15px",
-    borderRadius: "15px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+    padding: "12px",
+    borderRadius: "16px"
   },
 
   fullImage: {
-    width: "450px",
+    width: "380px",
     maxWidth: "90vw",
-    maxHeight: "85vh",
-    objectFit: "cover",
     borderRadius: "12px"
   },
 
@@ -1715,17 +1502,13 @@ const styles = {
     position: "absolute",
     top: "-10px",
     right: "-10px",
-    width: "35px",
-    height: "35px",
+    width: "32px",
+    height: "32px",
     borderRadius: "50%",
     border: "none",
     background: "#ef4444",
     color: "#fff",
     cursor: "pointer",
-    fontSize: "15px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-
+    fontSize: "12px"
+  }
 };

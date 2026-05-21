@@ -165,6 +165,22 @@ router.get("/subjects/:stream", (req, res) => {
   );
 });
 
+/* =========================
+   LOGIN ROLES
+========================= */
+
+router.get("/login-roles", (req, res) => {
+
+  const roles = [
+    { role: "SuperAdmin" },
+    { role: "Admin" },
+    { role: "Professor" }
+  ];
+
+  res.json(roles);
+
+});
+
 
 
 module.exports = router;

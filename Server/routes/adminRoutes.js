@@ -3,18 +3,39 @@ const router = express.Router();
 const db = require("../config/db");
 
 
-// ADMIN LOGIN
+// ADMIN LOGIN FROM DATABASE
 router.post("/login", (req, res) => {
-  const { email, password } = req.body;
 
-  if (
-    email === "admin@gmail.com" &&
-    password === "admin123"
-  ) {
-    res.send("Login Success");
-  } else {
-    res.status(401).send("Invalid Credentials");
-  }
+  const { email, password, role } = req.body;
+
+  const sql = `
+    SELECT * FROM users
+    WHERE email=? AND password=? AND role=?
+  `;
+
+  db.query(
+    sql,
+    [email, password, role],
+    (err, result) => {
+
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+
+      if (result.length > 0) {
+
+        res.json(result[0]);
+
+      } else {
+
+        res.status(401).send("Invalid Credentials");
+
+      }
+
+    }
+  );
+
 });
 
 const multer = require("multer");

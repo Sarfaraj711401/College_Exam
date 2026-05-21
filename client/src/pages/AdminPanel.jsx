@@ -531,7 +531,7 @@ export default function AdminPanel() {
             <div>Year</div>
             <div>Sem</div>
             <div>Exam</div>
-            <div>Roll</div>
+            <div>Serial No</div>
             <div>Type</div>
             <div>Subject</div>
             <div>Credit Point</div>
@@ -579,310 +579,159 @@ export default function AdminPanel() {
 
 /* STYLES */
 const styles = {
+  /* GLOBAL LAYOUT */
   container: {
-    marginLeft: "270px",
-    width: "calc(100% - 270px)",
+    marginLeft: "260px",
+    width: "calc(100% - 260px)",
     minHeight: "100vh",
-    padding: "0px",
-    fontFamily: "'Poppins', sans-serif",
-    background: "#f1f5f9",
-    boxSizing: "border-box"
+    padding: "18px",
+    boxSizing: "border-box",
+    overflowX: "hidden",
+    fontFamily: "'Inter', 'Poppins', sans-serif",
+    background: "linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%)",
   },
 
   mainCard: {
-    maxWidth: "1200px",
+    maxWidth: "1100px",
+    width: "100%",
     margin: "auto",
-    padding: "40px",
-    borderRadius: "20px",
+    padding: "24px",
+    borderRadius: "16px",
     background: "#ffffff",
-    boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
-    border: "1px solid #e5e7eb",
-    color: "#111827"
+    boxShadow: "0 12px 35px rgba(30, 64, 175, 0.10)",
+    border: "1px solid #e0e7ff",
+    boxSizing: "border-box",
+    overflowX: "hidden",
   },
 
-  backBtn: {
-    background: "#ffffff",
-    border: "1px solid #e5e7eb",
-    padding: "10px 18px",
-    borderRadius: "12px",
-    color: "#374151",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    marginBottom: "25px",
-    transition: "0.3s"
-  },
-
+  /* TITLE */
   title: {
     textAlign: "center",
-    fontSize: "32px",
-    fontWeight: "700",
-    marginBottom: "30px",
-    color: "#111827",
-    letterSpacing: "0.5px"
+    fontSize: "24px",
+    fontWeight: "800",
+    marginBottom: "18px",
+    color: "#1e3a8a",
+    letterSpacing: "0.4px",
   },
 
+  /* INPUTS */
   input: {
-    width: "95%",
-    padding: "14px",
-    borderRadius: "12px",
-    border: "1px solid #d1d5db",
+    width: "100%",
+    padding: "9px 11px",
+    borderRadius: "10px",
+    border: "1px solid #dbeafe",
     outline: "none",
-    background: "#ffffff",
-    color: "#111827",
-    fontSize: "14px",
-    transition: "all 0.25s ease",
-    boxSizing: "border-box"
+    background: "#f9fafb",
+    color: "#1e293b",
+    fontSize: "13px",
+    transition: "0.2s",
+    boxSizing: "border-box",
   },
 
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
-    gap: "22px",
-    marginTop: "20px"
+    gap: "12px",
+    marginTop: "14px",
   },
 
+  /* PROFESSOR CARD */
   profCard: {
     display: "flex",
     alignItems: "center",
-    gap: "18px",
-    background: "#f8fafc",
-    padding: "22px",
-    borderRadius: "16px",
-    marginBottom: "25px",
-    border: "1px solid #e5e7eb",
-    transition: "0.3s"
+    gap: "12px",
+    background: "linear-gradient(135deg, #eff6ff, #ffffff)",
+    padding: "14px",
+    borderRadius: "12px",
+    marginBottom: "16px",
+    border: "1px solid #dbeafe",
   },
 
+  /* ROLL INFO BOX */
   rollBox: {
-    background: "#f8fafc",
-    padding: "18px",
-    borderRadius: "14px",
-    marginTop: "20px",
-    marginBottom: "20px",
+    background: "#eff6ff",
+    padding: "10px 12px",
+    borderRadius: "10px",
+    marginTop: "12px",
+    marginBottom: "12px",
     display: "flex",
     justifyContent: "space-between",
     flexWrap: "wrap",
-    border: "1px solid #e5e7eb",
-    fontSize: "14px",
-
-    /* 👇 FIX */
-    minHeight: "90px",
-    maxHeight: "90px",
-    overflow: "hidden",
+    border: "1px solid #dbeafe",
+    fontSize: "13px",
+    color: "#1e3a8a",
+    boxSizing: "border-box",
   },
 
+  /* BUTTON */
   assignBtn: {
     width: "100%",
-    padding: "15px",
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    padding: "11px",
+    background: "linear-gradient(135deg,#1d4ed8,#3b82f6)",
     border: "none",
-    borderRadius: "12px",
+    borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "700",
     color: "white",
-    marginTop: "10px",
-    boxShadow: "0 6px 20px rgba(37,99,235,0.3)",
-    transition: "0.3s"
-  },
-
-  assignedSection: {
-    marginTop: "45px",
-    background: "#ffffff",
-    padding: "30px",
-    borderRadius: "18px",
-    border: "1px solid #e5e7eb"
-  },
-
-  assignedTitle: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    fontSize: "24px",
-    fontWeight: "700",
-    marginBottom: "25px",
-    color: "#111827"
-  },
-
-  paperGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
-    gap: "22px"
-  },
-
-  paperCard: {
-    padding: "22px",
-    borderRadius: "16px",
-    background: "#ffffff",
-    border: "1px solid #e5e7eb",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-    transition: "0.3s"
-  },
-
-  paperHeader: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    marginBottom: "14px"
-  },
-
-  paperTitle: {
-    fontSize: "18px",
-    fontWeight: "700",
-    color: "#111827"
-  },
-
-  paperDetails: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px"
-  },
-
-  detailRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    fontSize: "14px",
-    color: "#4b5563"
-  },
-
-  examBadge: {
     marginTop: "12px",
-    padding: "6px 12px",
-    borderRadius: "20px",
-    background: "#dbeafe",
-    color: "#1d4ed8",
-    display: "inline-block",
-    fontSize: "12px",
-    fontWeight: "600"
+    boxShadow: "0 8px 18px rgba(59,130,246,0.25)",
+    transition: "0.2s",
   },
 
-  updateBtn: {
-    width: "100%",
-    marginTop: "14px",
-    padding: "11px",
-    background: "#22c55e",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontWeight: "600",
-    color: "white",
-    transition: "0.3s"
-  },
-
-  deleteBtn: {
-    width: "100%",
-    marginTop: "8px",
-    padding: "11px",
-    background: "#ef4444",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontWeight: "600",
-    color: "white",
-    transition: "0.3s"
-  },
-
-  emptyState: {
-    textAlign: "center",
-    padding: "30px",
-    color: "#6b7280"
-  },
-  paperTable: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px"
-  },
-
-
-
-  colSubject: {
-    display: "flex",
-    alignItems: "center",
-    fontWeight: "700",
-    color: "#1e3a8a"
-  },
-
-  col: {
-    textAlign: "center",
-    fontWeight: "500",
-    color: "#374151"
-  },
-
-  colActions: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "6px"
-  },
-  tableWrapper: {
-    marginTop: "20px",
-    borderRadius: "18px",
-    overflow: "hidden",
-    border: "1px solid #dbeafe",
-    boxShadow: "0 8px 25px rgba(37,99,235,0.08)",
-  },
-
+  /* TABLE HEADER */
   tableHeader: {
     display: "grid",
     gridTemplateColumns:
-      "1fr 1.4fr 1.2fr 0.7fr 0.8fr 1fr 1fr 1fr 1.6fr 0.8fr 0.9fr",
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+      "0.9fr 1.2fr 1fr 0.6fr 0.7fr 0.9fr 1fr 0.9fr 1.2fr 0.7fr 0.8fr",
+    background: "linear-gradient(135deg,#1d4ed8,#3b82f6)",
     color: "#fff",
-    padding: "16px 14px",
-    fontSize: "13px",
+    padding: "11px 10px",
+    fontSize: "12px",
     fontWeight: "700",
-    alignItems: "center",
+    borderRadius: "10px",
     textAlign: "center",
-    letterSpacing: "0.3px",
+    boxSizing: "border-box",
   },
 
+  /* TABLE ROW */
   tableRow: {
     display: "grid",
     gridTemplateColumns:
-      "1fr 1.4fr 1.2fr 0.7fr 0.8fr 1fr 1fr 1fr 1.6fr 0.8fr 0.9fr",
-    padding: "15px 14px",
+      "0.9fr 1.2fr 1fr 0.6fr 0.7fr 0.9fr 1fr 0.9fr 1.2fr 0.7fr 0.8fr",
+    padding: "11px 10px",
     alignItems: "center",
     textAlign: "center",
     background: "#ffffff",
     borderBottom: "1px solid #e5e7eb",
-    fontSize: "13px",
-    color: "#374151",
+    fontSize: "12.5px",
+    color: "#334155",
+    boxSizing: "border-box",
   },
 
+  /* ACTION BUTTONS */
   actionCell: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    gap: "10px",
+    gap: "6px",
   },
 
   smallEditBtn: {
     background: "#2563eb",
     color: "#fff",
     border: "none",
-    width: "36px",
-    height: "36px",
-    borderRadius: "10px",
+    width: "30px",
+    height: "30px",
+    borderRadius: "8px",
     cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "0.3s",
-    boxShadow: "0 4px 10px rgba(37,99,235,0.25)",
   },
 
   smallDeleteBtn: {
     background: "#ef4444",
     color: "#fff",
     border: "none",
-    width: "36px",
-    height: "36px",
-    borderRadius: "10px",
+    width: "30px",
+    height: "30px",
+    borderRadius: "8px",
     cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "0.3s",
-    boxShadow: "0 4px 10px rgba(239,68,68,0.25)",
   },
 };
