@@ -45,7 +45,7 @@ export default function ProfessorList() {
     setEditForm({
       name: professor.name,
       designation: professor.designation,
-      subject: professor.subject,
+      subject: professor.subject_name,
       email: professor.email,
       mobile: professor.mobile,
       experience: professor.experience,
@@ -96,12 +96,25 @@ export default function ProfessorList() {
     }
   };
 
-  const filteredProfessors = professors.filter(
-    (p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.designation.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProfessors = professors.filter((p) => {
+    const search = searchTerm.toLowerCase();
+
+    return (
+      (p.name || "").toLowerCase().includes(search) ||
+      (p.designation || "").toLowerCase().includes(search) ||
+      (p.stream || "").toLowerCase().includes(search) ||
+      (p.subject_type || "").toLowerCase().includes(search) ||
+      (p.subject_name || "").toLowerCase().includes(search) ||
+      (p.email || "").toLowerCase().includes(search) ||
+      (p.mobile || "").toLowerCase().includes(search) ||
+      (p.experience || "").toString().toLowerCase().includes(search) ||
+      (p.bank_name || "").toLowerCase().includes(search) ||
+      (p.branch_name || "").toLowerCase().includes(search) ||
+      (p.ifsc_code || "").toLowerCase().includes(search) ||
+      (p.account_number || "").toString().toLowerCase().includes(search) ||
+      (p.account_holder_name || "").toLowerCase().includes(search)
+    );
+  });
 
   return (
     <div style={styles.container}>
@@ -113,13 +126,13 @@ export default function ProfessorList() {
 
         <input
           type="text"
-          placeholder="Search professor..."
+          placeholder="Search by name, subject, mobile, email...."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={styles.searchInput}
         />
 
-        
+
         {/* VIEW MODAL */}
         {selectedProfessor && (
           <div style={styles.viewOverlay}>
@@ -158,6 +171,16 @@ export default function ProfessorList() {
                 <div style={styles.viewInfoCard}>
                   <span>Stream</span>
                   <strong>{selectedProfessor.stream}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Subject Type</span>
+                  <strong>{selectedProfessor.subject_type}</strong>
+                </div>
+
+                <div style={styles.viewInfoCard}>
+                  <span>Subject</span>
+                  <strong>{selectedProfessor.subject_name}</strong>
                 </div>
 
                 <div style={styles.viewInfoCard}>
@@ -228,6 +251,8 @@ export default function ProfessorList() {
                 <th style={styles.th}>Photo</th>
                 <th style={styles.th}>Name</th>
                 <th style={styles.th}>Designation</th>
+                <th style={styles.th}>Stream</th>
+                <th style={styles.th}>Subject Type</th>
                 <th style={styles.th}>Subject</th>
                 <th style={styles.th}>Mobile</th>
                 <th style={styles.th}>Action</th>
@@ -238,17 +263,17 @@ export default function ProfessorList() {
               {filteredProfessors.map((p) => (
                 <tr key={p.id} style={styles.tr}>
                   <td>
-                    <td>
-                      <img
-                        src={`http://localhost:5000/uploads/${p.photo}`}
-                        alt=""
-                        style={styles.photo}
-                      />
-                    </td>
+                    <img
+                      src={`http://localhost:5000/uploads/${p.photo}`}
+                      alt=""
+                      style={styles.photo}
+                    />
                   </td>
                   <td>{p.name}</td>
                   <td>{p.designation}</td>
-                  <td>{p.subject}</td>
+                  <td>{p.stream}</td>
+                  <td>{p.subject_type}</td>
+                  <td>{p.subject_name}</td>
                   <td>{p.mobile}</td>
 
                   <td>
@@ -480,7 +505,7 @@ const styles = {
     cursor: "pointer"
   },
 
-  /* ================= VIEW MODAL ================= */
+  /* ================= VIEW MODAL (NO SCROLL, FIT ALL DEVICES) ================= */
 
   viewOverlay: {
     position: "fixed",
@@ -490,21 +515,24 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 999
+    zIndex: 999,
+    padding: "10px"
   },
 
   viewModal: {
-    width: "520px",
-    maxWidth: "95%",
+    width: "95%",
+    maxWidth: "500px",
     background: "#fff",
-    borderRadius: "16px",
+    borderRadius: "14px",
     overflow: "hidden",
-    boxShadow: "0 20px 50px rgba(0,0,0,0.2)"
+    boxShadow: "0 20px 50px rgba(0,0,0,0.2)",
+    display: "flex",
+    flexDirection: "column",
   },
 
   viewTopSection: {
     background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-    padding: "18px",
+    padding: "12px",
     textAlign: "center",
     color: "#fff",
     position: "relative"
@@ -512,71 +540,66 @@ const styles = {
 
   viewCloseBtn: {
     position: "absolute",
-    top: "10px",
-    right: "10px",
+    top: "8px",
+    right: "8px",
     background: "rgba(255,255,255,0.2)",
     border: "none",
     color: "#fff",
-    width: "30px",
-    height: "30px",
+    width: "28px",
+    height: "28px",
     borderRadius: "50%",
     cursor: "pointer"
   },
 
   viewPhoto: {
-    width: "70px",
-    height: "70px",
+    width: "55px",
+    height: "55px",
     borderRadius: "50%",
     border: "3px solid #fff",
     objectFit: "cover"
   },
 
   viewName: {
-    fontSize: "18px",
+    fontSize: "15px",
     fontWeight: "800",
-    marginTop: "8px"
+    marginTop: "4px"
   },
 
   viewDesignation: {
-    fontSize: "12px",
+    fontSize: "11px",
     opacity: "0.9"
   },
 
   profIdBadge: {
-    marginTop: "8px",
+    marginTop: "6px",
     background: "#fff",
     color: "#2563eb",
-    padding: "4px 12px",
+    padding: "3px 10px",
     borderRadius: "20px",
-    fontSize: "12px",
+    fontSize: "11px",
     fontWeight: "700",
     display: "inline-block"
   },
 
   viewDetailsGrid: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "10px",
-    padding: "15px"
+    gridTemplateColumns: window.innerWidth < 600 ? "1fr" : "1fr 1fr",
+    gap: "6px",
+    padding: "10px"
   },
 
   viewInfoCard: {
     background: "#f8fbff",
     border: "1px solid #dbeafe",
-    padding: "10px",
-    borderRadius: "10px",
+    padding: "6px",
+    borderRadius: "8px",
     display: "flex",
     flexDirection: "column",
-    gap: "4px"
-  },
-
-  viewInfoCardSpan: {
-    fontSize: "10px",
-    color: "#64748b"
+    gap: "2px"
   },
 
   viewFooter: {
-    padding: "12px",
+    padding: "10px",
     textAlign: "center",
     borderTop: "1px solid #e5e7eb"
   },
@@ -585,11 +608,11 @@ const styles = {
     background: "#2563eb",
     color: "#fff",
     border: "none",
-    padding: "8px 18px",
-    borderRadius: "8px",
+    padding: "7px 14px",
+    borderRadius: "7px",
     cursor: "pointer",
     fontWeight: "600",
-    fontSize: "13px"
+    fontSize: "12px"
   },
 
   /* ================= EDIT MODAL ================= */
@@ -674,5 +697,4 @@ const styles = {
     cursor: "pointer",
     fontWeight: "700"
   }
-
 };

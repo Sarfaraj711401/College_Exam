@@ -181,7 +181,7 @@ export default function AdminDashboard() {
 
         </div>
 
-        
+
         {/* RECENT PAPERS */}
         <div style={styles.recentSection}>
 
@@ -215,8 +215,12 @@ export default function AdminDashboard() {
                     <th style={styles.th}>Stream</th>
                     <th style={styles.th}>Professor</th>
                     <th style={styles.th}>Academic Year</th>
+                    <th style={styles.th}>Year</th>
+                    <th style={styles.th}>Subject Type</th>
+                    <th style={styles.th}>Subject</th>
                     <th style={styles.th}>Semester</th>
                     <th style={styles.th}>Exam Type</th>
+                    <th style={styles.th}>Serial No</th>
                     <th style={styles.th}>Action</th>
                   </tr>
                 </thead>
@@ -238,6 +242,18 @@ export default function AdminDashboard() {
                       </td>
 
                       <td style={styles.td}>
+                        {paper.year}
+                      </td>
+
+                      <td style={styles.td}>
+                        {paper.subject_type}
+                      </td>
+
+                      <td style={styles.td}>
+                        {paper.subject_name}
+                      </td>
+
+                      <td style={styles.td}>
                         {paper.semester}
                       </td>
 
@@ -245,6 +261,10 @@ export default function AdminDashboard() {
                         <span style={styles.examBadge}>
                           {paper.exam_type}
                         </span>
+                      </td>
+
+                      <td style={styles.td}>
+                        {paper.start_roll} - {paper.end_roll}
                       </td>
 
                       <td style={styles.td}>
@@ -270,72 +290,131 @@ export default function AdminDashboard() {
           <div style={styles.modalOverlay}>
             <div style={styles.modalBox}>
 
-              {/* Header */}
+              {/* HEADER */}
               <div style={styles.modalHeader}>
-                <h2 style={styles.modalTitle}>
-                  Assigned Paper Details
-                </h2>
 
-                <button
-                  style={styles.modalCloseIcon}
-                  onClick={() => setSelectedPaper(null)}
-                >
-                  ✕
-                </button>
+                <div>
+                  <p style={styles.modalMiniText}>
+                    ExamatrixLive
+                  </p>
+
+                  <h2 style={styles.modalTitle}>
+                    Assigned Paper Details
+                  </h2>
+                </div>
+
               </div>
 
-              {/* Body */}
+              {/* CONTENT */}
               <div style={styles.modalContent}>
 
-                <div style={styles.detailRow}>
-                  <span>Subject</span>
-                  <strong>{selectedPaper.subject}</strong>
-                </div>
+                {/* TOP CARD */}
+                <div style={styles.topSubjectCard}>
 
-                <div style={styles.detailRow}>
-                  <span>Professor</span>
-                  <strong>{selectedPaper.professor_name}</strong>
-                </div>
+                  <div style={styles.subjectIcon}>
+                    <FaBookOpen />
+                  </div>
 
-                <div style={styles.detailRow}>
-                  <span>Academic Year</span>
-                  <strong>{selectedPaper.academic_year}</strong>
-                </div>
+                  <div style={{ flex: 1 }}>
 
-                <div style={styles.detailRow}>
-                  <span>Year</span>
-                  <strong>{selectedPaper.year}</strong>
-                </div>
+                    <h2 style={styles.subjectName}>
+                      {selectedPaper.subject_name}
+                    </h2>
 
-                <div style={styles.detailRow}>
-                  <span>Semester</span>
-                  <strong>{selectedPaper.semester}</strong>
-                </div>
+                    <p style={styles.subjectType}>
+                      {selectedPaper.subject_type}
+                    </p>
 
-                <div style={styles.detailRow}>
-                  <span>Exam Type</span>
-                  <strong style={styles.modalExamBadge}>
+                  </div>
+
+                  <div style={styles.examBadge}>
                     {selectedPaper.exam_type}
-                  </strong>
+                  </div>
+
                 </div>
 
-                <div style={styles.detailRow}>
-                  <span>Roll Range</span>
-                  <strong>
-                    {selectedPaper.start_roll} - {selectedPaper.end_roll}
-                  </strong>
+                {/* DETAILS GRID */}
+                <div style={styles.detailsGrid}>
+
+                  <div style={styles.detailCard}>
+                    <span style={styles.detailLabel}>
+                      Stream
+                    </span>
+
+                    <strong style={styles.detailValue}>
+                      {selectedPaper.stream}
+                    </strong>
+                  </div>
+
+                  <div style={styles.detailCard}>
+                    <span style={styles.detailLabel}>
+                      Professor
+                    </span>
+
+                    <strong style={styles.detailValue}>
+                      {selectedPaper.professor_name}
+                    </strong>
+                  </div>
+
+                  <div style={styles.detailCard}>
+                    <span style={styles.detailLabel}>
+                      Academic Year
+                    </span>
+
+                    <strong style={styles.detailValue}>
+                      {selectedPaper.academic_year}
+                    </strong>
+                  </div>
+
+                  <div style={styles.detailCard}>
+                    <span style={styles.detailLabel}>
+                      Semester
+                    </span>
+
+                    <strong style={styles.detailValue}>
+                      {selectedPaper.semester}
+                    </strong>
+                  </div>
+
+                  <div style={styles.detailCard}>
+                    <span style={styles.detailLabel}>
+                      Year
+                    </span>
+
+                    <strong style={styles.detailValue}>
+                      {selectedPaper.year}
+                    </strong>
+                  </div>
+
+                  <div
+                    style={{
+                      ...styles.detailCard,
+                      gridColumn: "1 / -1"
+                    }}
+                  >
+                    <span style={styles.detailLabel}>
+                      Serial Number
+                    </span>
+
+                    <strong style={styles.detailValue}>
+                      {selectedPaper.start_roll} - {selectedPaper.end_roll}
+                    </strong>
+                  </div>
+
                 </div>
 
               </div>
 
-              {/* Footer */}
+              {/* FOOTER */}
               <div style={styles.modalFooter}>
+
                 <button
                   style={styles.closeBtn}
                   onClick={() => setSelectedPaper(null)}
                 >
-                  Close
+                  Close Details
                 </button>
+
               </div>
 
             </div>
@@ -570,91 +649,165 @@ const styles = {
     color: "#64748b"
   },
 
-  /* MODAL */
+  /* ================= MODAL ================= */
+
   modalOverlay: {
     position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(15, 23, 42, 0.5)",
+    inset: 0,
+    background: "rgba(2,6,23,0.75)",
+    backdropFilter: "blur(12px)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1000
+    zIndex: 9999,
+    padding: "16px"
   },
 
   modalBox: {
-    width: "580px",
+    width: "520px",
     maxWidth: "92%",
-    background: "#ffffff",
-    borderRadius: "20px",
+    background: "linear-gradient(145deg,#ffffff,#f8fbff)",
+    borderRadius: "22px",
     overflow: "hidden",
-    boxShadow: "0 25px 60px rgba(37,99,235,0.25)"
+    border: "1px solid #e2e8f0",
+    boxShadow: "0 20px 50px rgba(15,23,42,0.25)"
   },
 
   modalHeader: {
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-    color: "white",
-    padding: "18px 22px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
+    padding: "18px 20px",
+    background: "linear-gradient(135deg,#1d4ed8,#2563eb,#60a5fa)",
+    position: "relative"
+  },
+
+  modalMiniText: {
+    margin: 0,
+    fontSize: "10px",
+    fontWeight: "700",
+    letterSpacing: "1.5px",
+    color: "rgba(255,255,255,0.75)",
+    textTransform: "uppercase",
+    marginBottom: "6px"
   },
 
   modalTitle: {
     margin: 0,
-    fontSize: "20px",
-    fontWeight: "800"
+    fontSize: "24px",
+    fontWeight: "900",
+    color: "#fff",
+    lineHeight: "30px"
   },
 
   modalCloseIcon: {
-    background: "rgba(255,255,255,0.2)",
-    border: "none",
-    color: "white",
-    width: "32px",
-    height: "32px",
-    borderRadius: "50%",
+    position: "absolute",
+    top: "14px",
+    right: "14px",
+    width: "40px",
+    height: "40px",
+    borderRadius: "12px",
+    border: "1px solid rgba(255,255,255,0.2)",
+    background: "rgba(255,255,255,0.15)",
+    color: "#fff",
+    fontSize: "14px",
     cursor: "pointer"
   },
 
   modalContent: {
-    padding: "22px"
+    padding: "18px"
   },
 
-  detailRow: {
+  topSubjectCard: {
     display: "flex",
-    justifyContent: "space-between",
     alignItems: "center",
-    padding: "12px 14px",
-    marginBottom: "10px",
-    background: "#f8fafc",
-    borderRadius: "10px",
-    border: "1px solid #e5e7eb",
-    fontSize: "13px"
+    gap: "12px",
+    padding: "16px",
+    borderRadius: "18px",
+    background: "#eff6ff",
+    border: "1px solid #dbeafe",
+    marginBottom: "16px"
   },
 
-  modalExamBadge: {
-    background: "#2563eb",
-    color: "white",
-    padding: "5px 10px",
-    borderRadius: "18px",
-    fontSize: "11px"
+  subjectIcon: {
+    width: "60px",
+    height: "60px",
+    borderRadius: "16px",
+    background: "linear-gradient(135deg,#2563eb,#60a5fa)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#fff",
+    fontSize: "22px"
+  },
+
+  subjectName: {
+    margin: 0,
+    fontSize: "20px",
+    fontWeight: "900",
+    color: "#0f172a"
+  },
+
+  subjectType: {
+    margin: 0,
+    fontSize: "13px",
+    color: "#64748b",
+    fontWeight: "600"
+  },
+
+  examBadge: {
+    marginLeft: "auto",
+    padding: "6px 12px",
+    borderRadius: "20px",
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#fff",
+    fontSize: "10px",
+    fontWeight: "800"
+  },
+
+  detailsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
+    gap: "12px"
+  },
+
+  detailCard: {
+    padding: "14px",
+    borderRadius: "16px",
+    background: "#fff",
+    border: "1px solid #e2e8f0",
+    boxShadow: "0 6px 15px rgba(0,0,0,0.04)"
+  },
+
+  detailLabel: {
+    fontSize: "10px",
+    fontWeight: "800",
+    color: "#64748b",
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+    marginBottom: "6px",
+    display: "block"
+  },
+
+  detailValue: {
+    fontSize: "16px",
+    fontWeight: "800",
+    color: "#0f172a"
   },
 
   modalFooter: {
-    padding: "16px",
-    textAlign: "right",
-    borderTop: "1px solid #e5e7eb"
+    padding: "14px 18px",
+    display: "flex",
+    justifyContent: "flex-end",
+    background: "#f8fafc",
+    borderTop: "1px solid #e2e8f0"
   },
 
   closeBtn: {
-    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
-    color: "white",
+    padding: "10px 18px",
+    borderRadius: "12px",
     border: "none",
-    padding: "9px 20px",
-    borderRadius: "10px",
-    cursor: "pointer",
-    fontWeight: "600"
+    background: "linear-gradient(135deg,#2563eb,#3b82f6)",
+    color: "#fff",
+    fontWeight: "800",
+    fontSize: "13px",
+    cursor: "pointer"
   }
 };
