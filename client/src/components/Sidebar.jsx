@@ -19,6 +19,10 @@ import {
 export default function Sidebar() {
 
   const location = useLocation();
+  const admin = JSON.parse(localStorage.getItem("admin"));
+  const professor = JSON.parse(localStorage.getItem("professor"));
+
+  const isProfessor = !!professor;
 
   const [openMenus, setOpenMenus] = useState({
     records: false,
@@ -103,22 +107,26 @@ export default function Sidebar() {
 
         {/* DASHBOARD */}
         <NavLink
-          to="/admin"
+          to={isProfessor ? "/professor-dashboard" : "/admin"}
           style={styles.link}
-          onMouseEnter={() => setHoveredMenu("dashboard")}
+          onMouseEnter={() => setHoveredMenu("mainDashboard")}
           onMouseLeave={() => setHoveredMenu(null)}
         >
           {({ isActive }) => (
-            <div style={styles.menuItem(isActive, hoveredMenu === "dashboard")}>
+            <div style={styles.menuItem(isActive, hoveredMenu === "mainDashboard")}>
               <div style={styles.menuItemLeft}>
                 <FaTachometerAlt
                   style={styles.menuIcon(
                     isActive,
-                    hoveredMenu === "dashboard"
+                    hoveredMenu === "mainDashboard"
                   )}
                 />
 
-                <span style={styles.menuText}>Admin Dashboard</span>
+                <span style={styles.menuText}>
+                  {isProfessor
+                    ? "Professor Dashboard"
+                    : "Admin Dashboard"}
+                </span>
               </div>
             </div>
           )}
@@ -195,518 +203,523 @@ export default function Sidebar() {
           </NavLink> */}
         </div>
 
-        {/* 2. Subject Management */}
-        <div
-          style={styles.menuItem(false, hoveredMenu === "subjects")}
-          onClick={() => toggleMenu("subjects")}
-          onMouseEnter={() => setHoveredMenu("subjects")}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <div style={styles.menuItemLeft}>
-            <FaBook
-              style={styles.menuIcon(false, hoveredMenu === "subjects")}
-            />
 
-            <span style={styles.menuText}>Subject Management</span>
-          </div>
+        {!isProfessor && (
+          <>
 
-          <FaChevronRight
-            style={styles.chevron(
-              openMenus.subjects,
-              hoveredMenu === "subjects"
-            )}
-          />
-        </div>
+            {/* 2. Subject Management */}
+            <div
+              style={styles.menuItem(false, hoveredMenu === "subjects")}
+              onClick={() => toggleMenu("subjects")}
+              onMouseEnter={() => setHoveredMenu("subjects")}
+              onMouseLeave={() => setHoveredMenu(null)}
+            >
+              <div style={styles.menuItemLeft}>
+                <FaBook
+                  style={styles.menuIcon(false, hoveredMenu === "subjects")}
+                />
 
-        <div style={styles.subMenuContainer(openMenus.subjects)}>
-          <NavLink to="/subjects/view" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "subView"
-                )}
-                onMouseEnter={() => setHoveredSubMenu("subView")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "subView"
-                  )}
-                ></div>
-
-                Subjects Info
+                <span style={styles.menuText}>Subject Management</span>
               </div>
-            )}
-          </NavLink>
-        </div>
 
-        {/* 3. Faculty Management */}
-        <div
-          style={styles.menuItem(false, hoveredMenu === "faculty")}
-          onClick={() => toggleMenu("faculty")}
-          onMouseEnter={() => setHoveredMenu("faculty")}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <div style={styles.menuItemLeft}>
-            <FaUserTie
-              style={styles.menuIcon(false, hoveredMenu === "faculty")}
-            />
-
-            <span style={styles.menuText}>Faculty Management</span>
-          </div>
-
-          <FaChevronRight
-            style={styles.chevron(
-              openMenus.faculty,
-              hoveredMenu === "faculty"
-            )}
-          />
-        </div>
-
-        <div style={styles.subMenuContainer(openMenus.faculty)}>
-
-          <NavLink to="/professors" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "addProf"
+              <FaChevronRight
+                style={styles.chevron(
+                  openMenus.subjects,
+                  hoveredMenu === "subjects"
                 )}
-                onMouseEnter={() => setHoveredSubMenu("addProf")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "addProf"
-                  )}
-                ></div>
+              />
+            </div>
 
-                Professor Information
-              </div>
-            )}
-          </NavLink>
+            <div style={styles.subMenuContainer(openMenus.subjects)}>
+              <NavLink to="/subjects/view" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "subView"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("subView")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "subView"
+                      )}
+                    ></div>
 
-          <NavLink to="/professor-list" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "viewProf"
+                    Subjects Info
+                  </div>
                 )}
-                onMouseEnter={() => setHoveredSubMenu("viewProf")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "viewProf"
-                  )}
-                ></div>
+              </NavLink>
+            </div>
 
-                View Professors
+            {/* 3. Faculty Management */}
+            <div
+              style={styles.menuItem(false, hoveredMenu === "faculty")}
+              onClick={() => toggleMenu("faculty")}
+              onMouseEnter={() => setHoveredMenu("faculty")}
+              onMouseLeave={() => setHoveredMenu(null)}
+            >
+              <div style={styles.menuItemLeft}>
+                <FaUserTie
+                  style={styles.menuIcon(false, hoveredMenu === "faculty")}
+                />
+
+                <span style={styles.menuText}>Faculty Management</span>
               </div>
-            )}
-          </NavLink>
 
-          <NavLink to="/assign-paper" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "assignPaper"
+              <FaChevronRight
+                style={styles.chevron(
+                  openMenus.faculty,
+                  hoveredMenu === "faculty"
                 )}
-                onMouseEnter={() => setHoveredSubMenu("assignPaper")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "assignPaper"
-                  )}
-                ></div>
+              />
+            </div>
 
-                Paper Assign
-              </div>
-            )}
-          </NavLink>
-        </div>
+            <div style={styles.subMenuContainer(openMenus.faculty)}>
 
-        {/* 4. Examination Management */}
-        <div
-          style={styles.menuItem(false, hoveredMenu === "examination")}
-          onClick={() => toggleMenu("examination")}
-          onMouseEnter={() => setHoveredMenu("examination")}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <div style={styles.menuItemLeft}>
-            <FaClipboardList
-              style={styles.menuIcon(false, hoveredMenu === "examination")}
-            />
+              <NavLink to="/professors" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "addProf"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("addProf")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "addProf"
+                      )}
+                    ></div>
 
-            <span style={styles.menuText}>Examination Management</span>
-          </div>
-
-          <FaChevronRight
-            style={styles.chevron(
-              openMenus.examination,
-              hoveredMenu === "examination"
-            )}
-          />
-        </div>
-
-        <div style={styles.subMenuContainer(openMenus.examination)}>
-
-          <NavLink to="/examination-module" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "examMod"
+                    Professor Information
+                  </div>
                 )}
-                onMouseEnter={() => setHoveredSubMenu("examMod")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "examMod"
-                  )}
-                ></div>
+              </NavLink>
 
-                Examination Module
-              </div>
-            )}
-          </NavLink>
+              <NavLink to="/professor-list" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "viewProf"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("viewProf")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "viewProf"
+                      )}
+                    ></div>
 
-          <NavLink to="/controller-exams" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "controllerEx"
+                    View Professors
+                  </div>
                 )}
-                onMouseEnter={() => setHoveredSubMenu("controllerEx")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "controllerEx"
-                  )}
-                ></div>
+              </NavLink>
 
-                Controller of Exams
-              </div>
-            )}
-          </NavLink>
+              <NavLink to="/assign-paper" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "assignPaper"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("assignPaper")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "assignPaper"
+                      )}
+                    ></div>
 
-          <NavLink to="/head-examiner" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "headEx"
+                    Paper Assign
+                  </div>
                 )}
-                onMouseEnter={() => setHoveredSubMenu("headEx")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "headEx"
-                  )}
-                ></div>
+              </NavLink>
+            </div>
 
-                Head Examiner
+            {/* 4. Examination Management */}
+            <div
+              style={styles.menuItem(false, hoveredMenu === "examination")}
+              onClick={() => toggleMenu("examination")}
+              onMouseEnter={() => setHoveredMenu("examination")}
+              onMouseLeave={() => setHoveredMenu(null)}
+            >
+              <div style={styles.menuItemLeft}>
+                <FaClipboardList
+                  style={styles.menuIcon(false, hoveredMenu === "examination")}
+                />
+
+                <span style={styles.menuText}>Examination Management</span>
               </div>
-            )}
-          </NavLink>
-        </div>
 
-        {/* 5. Marks Entry Module */}
-        <div
-          style={styles.menuItem(false, hoveredMenu === "marksEntry")}
-          onClick={() => toggleMenu("marksEntry")}
-          onMouseEnter={() => setHoveredMenu("marksEntry")}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <div style={styles.menuItemLeft}>
-            <FaFileAlt
-              style={styles.menuIcon(false, hoveredMenu === "marksEntry")}
-            />
-
-            <span style={styles.menuText}>Marks Entry Module</span>
-          </div>
-
-          <FaChevronRight
-            style={styles.chevron(
-              openMenus.marksEntry,
-              hoveredMenu === "marksEntry"
-            )}
-          />
-        </div>
-
-        <div style={styles.subMenuContainer(openMenus.marksEntry)}>
-          <NavLink to="/marks-entry/direct" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "directEntry"
+              <FaChevronRight
+                style={styles.chevron(
+                  openMenus.examination,
+                  hoveredMenu === "examination"
                 )}
-                onMouseEnter={() => setHoveredSubMenu("directEntry")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "directEntry"
-                  )}
-                ></div>
+              />
+            </div>
 
-                Enter Marks
-              </div>
-            )}
-          </NavLink>
-        </div>
+            <div style={styles.subMenuContainer(openMenus.examination)}>
 
-        {/* 6. Verification Module */}
-        <div
-          style={styles.menuItem(false, hoveredMenu === "verification")}
-          onClick={() => toggleMenu("verification")}
-          onMouseEnter={() => setHoveredMenu("verification")}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <div style={styles.menuItemLeft}>
-            <FaClipboardCheck
-              style={styles.menuIcon(false, hoveredMenu === "verification")}
-            />
+              <NavLink to="/examination-module" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "examMod"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("examMod")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "examMod"
+                      )}
+                    ></div>
 
-            <span style={styles.menuText}>Verification Module</span>
-          </div>
-
-          <FaChevronRight
-            style={styles.chevron(
-              openMenus.verification,
-              hoveredMenu === "verification"
-            )}
-          />
-        </div>
-
-        <div style={styles.subMenuContainer(openMenus.verification)}>
-
-          <NavLink to="/examiner-module" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "examinerMod"
+                    Examination Module
+                  </div>
                 )}
-                onMouseEnter={() => setHoveredSubMenu("examinerMod")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "examinerMod"
-                  )}
-                ></div>
+              </NavLink>
 
-                Examiner Module
-              </div>
-            )}
-          </NavLink>
+              <NavLink to="/controller-exams" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "controllerEx"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("controllerEx")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "controllerEx"
+                      )}
+                    ></div>
 
-          <NavLink to="/review-applications" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "reviewApp"
+                    Controller of Exams
+                  </div>
                 )}
-                onMouseEnter={() => setHoveredSubMenu("reviewApp")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "reviewApp"
-                  )}
-                ></div>
+              </NavLink>
 
-                Review Applications
-              </div>
-            )}
-          </NavLink>
-        </div>
+              <NavLink to="/head-examiner" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "headEx"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("headEx")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "headEx"
+                      )}
+                    ></div>
 
-        {/* 7. Grade Calculation Module */}
-        <div
-          style={styles.menuItem(false, hoveredMenu === "gradeCalc")}
-          onClick={() => toggleMenu("gradeCalc")}
-          onMouseEnter={() => setHoveredMenu("gradeCalc")}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <div style={styles.menuItemLeft}>
-            <FaCalculator
-              style={styles.menuIcon(false, hoveredMenu === "gradeCalc")}
-            />
-
-            <span style={styles.menuText}>Grade Calculation</span>
-          </div>
-
-          <FaChevronRight
-            style={styles.chevron(
-              openMenus.gradeCalc,
-              hoveredMenu === "gradeCalc"
-            )}
-          />
-        </div>
-
-        <div style={styles.subMenuContainer(openMenus.gradeCalc)}>
-          <NavLink to="/grade-module" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "gradeMod"
+                    Head Examiner
+                  </div>
                 )}
-                onMouseEnter={() => setHoveredSubMenu("gradeMod")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "gradeMod"
-                  )}
-                ></div>
+              </NavLink>
+            </div>
 
-                Grade Rules Configuration
+            {/* 5. Marks Entry Module */}
+            <div
+              style={styles.menuItem(false, hoveredMenu === "marksEntry")}
+              onClick={() => toggleMenu("marksEntry")}
+              onMouseEnter={() => setHoveredMenu("marksEntry")}
+              onMouseLeave={() => setHoveredMenu(null)}
+            >
+              <div style={styles.menuItemLeft}>
+                <FaFileAlt
+                  style={styles.menuIcon(false, hoveredMenu === "marksEntry")}
+                />
+
+                <span style={styles.menuText}>Marks Entry Module</span>
               </div>
-            )}
-          </NavLink>
-        </div>
 
-        {/* 8. Result Processing */}
-        <div
-          style={styles.menuItem(false, hoveredMenu === "results")}
-          onClick={() => toggleMenu("results")}
-          onMouseEnter={() => setHoveredMenu("results")}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <div style={styles.menuItemLeft}>
-            <FaPoll
-              style={styles.menuIcon(false, hoveredMenu === "results")}
-            />
-
-            <span style={styles.menuText}>Result Processing</span>
-          </div>
-
-          <FaChevronRight
-            style={styles.chevron(
-              openMenus.results,
-              hoveredMenu === "results"
-            )}
-          />
-        </div>
-
-        <div style={styles.subMenuContainer(openMenus.results)}>
-
-          <NavLink to="/result-processing" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "resProc"
+              <FaChevronRight
+                style={styles.chevron(
+                  openMenus.marksEntry,
+                  hoveredMenu === "marksEntry"
                 )}
-                onMouseEnter={() => setHoveredSubMenu("resProc")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "resProc"
-                  )}
-                ></div>
+              />
+            </div>
 
-                Run Processing
-              </div>
-            )}
-          </NavLink>
+            <div style={styles.subMenuContainer(openMenus.marksEntry)}>
+              <NavLink to="/marks-entry/direct" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "directEntry"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("directEntry")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "directEntry"
+                      )}
+                    ></div>
 
-          <NavLink to="/analytics" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "analytics"
+                    Enter Marks
+                  </div>
                 )}
-                onMouseEnter={() => setHoveredSubMenu("analytics")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "analytics"
-                  )}
-                ></div>
+              </NavLink>
+            </div>
 
-                Performance Analytics
+            {/* 6. Verification Module */}
+            <div
+              style={styles.menuItem(false, hoveredMenu === "verification")}
+              onClick={() => toggleMenu("verification")}
+              onMouseEnter={() => setHoveredMenu("verification")}
+              onMouseLeave={() => setHoveredMenu(null)}
+            >
+              <div style={styles.menuItemLeft}>
+                <FaClipboardCheck
+                  style={styles.menuIcon(false, hoveredMenu === "verification")}
+                />
+
+                <span style={styles.menuText}>Verification Module</span>
               </div>
-            )}
-          </NavLink>
-        </div>
 
-        {/* 9. Report & Mark Sheet */}
-        <div
-          style={styles.menuItem(false, hoveredMenu === "reports")}
-          onClick={() => toggleMenu("reports")}
-          onMouseEnter={() => setHoveredMenu("reports")}
-          onMouseLeave={() => setHoveredMenu(null)}
-        >
-          <div style={styles.menuItemLeft}>
-            <FaChartPie
-              style={styles.menuIcon(false, hoveredMenu === "reports")}
-            />
-
-            <span style={styles.menuText}>Report & Mark Sheet</span>
-          </div>
-
-          <FaChevronRight
-            style={styles.chevron(
-              openMenus.reports,
-              hoveredMenu === "reports"
-            )}
-          />
-        </div>
-
-        <div style={styles.subMenuContainer(openMenus.reports)}>
-          <NavLink to="/report-card" style={styles.link}>
-            {({ isActive }) => (
-              <div
-                style={styles.subMenuItem(
-                  isActive,
-                  hoveredSubMenu === "repCard"
+              <FaChevronRight
+                style={styles.chevron(
+                  openMenus.verification,
+                  hoveredMenu === "verification"
                 )}
-                onMouseEnter={() => setHoveredSubMenu("repCard")}
-                onMouseLeave={() => setHoveredSubMenu(null)}
-              >
-                <div
-                  style={styles.subMenuDot(
-                    isActive,
-                    hoveredSubMenu === "repCard"
-                  )}
-                ></div>
+              />
+            </div>
 
-                Generation Engine
+            <div style={styles.subMenuContainer(openMenus.verification)}>
+
+              <NavLink to="/examiner-module" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "examinerMod"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("examinerMod")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "examinerMod"
+                      )}
+                    ></div>
+
+                    Examiner Module
+                  </div>
+                )}
+              </NavLink>
+
+              <NavLink to="/review-applications" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "reviewApp"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("reviewApp")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "reviewApp"
+                      )}
+                    ></div>
+
+                    Review Applications
+                  </div>
+                )}
+              </NavLink>
+            </div>
+
+            {/* 7. Grade Calculation Module */}
+            <div
+              style={styles.menuItem(false, hoveredMenu === "gradeCalc")}
+              onClick={() => toggleMenu("gradeCalc")}
+              onMouseEnter={() => setHoveredMenu("gradeCalc")}
+              onMouseLeave={() => setHoveredMenu(null)}
+            >
+              <div style={styles.menuItemLeft}>
+                <FaCalculator
+                  style={styles.menuIcon(false, hoveredMenu === "gradeCalc")}
+                />
+
+                <span style={styles.menuText}>Grade Calculation</span>
               </div>
-            )}
-          </NavLink>
-        </div>
 
+              <FaChevronRight
+                style={styles.chevron(
+                  openMenus.gradeCalc,
+                  hoveredMenu === "gradeCalc"
+                )}
+              />
+            </div>
+
+            <div style={styles.subMenuContainer(openMenus.gradeCalc)}>
+              <NavLink to="/grade-module" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "gradeMod"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("gradeMod")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "gradeMod"
+                      )}
+                    ></div>
+
+                    Grade Rules Configuration
+                  </div>
+                )}
+              </NavLink>
+            </div>
+
+            {/* 8. Result Processing */}
+            <div
+              style={styles.menuItem(false, hoveredMenu === "results")}
+              onClick={() => toggleMenu("results")}
+              onMouseEnter={() => setHoveredMenu("results")}
+              onMouseLeave={() => setHoveredMenu(null)}
+            >
+              <div style={styles.menuItemLeft}>
+                <FaPoll
+                  style={styles.menuIcon(false, hoveredMenu === "results")}
+                />
+
+                <span style={styles.menuText}>Result Processing</span>
+              </div>
+
+              <FaChevronRight
+                style={styles.chevron(
+                  openMenus.results,
+                  hoveredMenu === "results"
+                )}
+              />
+            </div>
+
+            <div style={styles.subMenuContainer(openMenus.results)}>
+
+              <NavLink to="/result-processing" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "resProc"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("resProc")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "resProc"
+                      )}
+                    ></div>
+
+                    Run Processing
+                  </div>
+                )}
+              </NavLink>
+
+              <NavLink to="/analytics" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "analytics"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("analytics")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "analytics"
+                      )}
+                    ></div>
+
+                    Performance Analytics
+                  </div>
+                )}
+              </NavLink>
+            </div>
+
+            {/* 9. Report & Mark Sheet */}
+            <div
+              style={styles.menuItem(false, hoveredMenu === "reports")}
+              onClick={() => toggleMenu("reports")}
+              onMouseEnter={() => setHoveredMenu("reports")}
+              onMouseLeave={() => setHoveredMenu(null)}
+            >
+              <div style={styles.menuItemLeft}>
+                <FaChartPie
+                  style={styles.menuIcon(false, hoveredMenu === "reports")}
+                />
+
+                <span style={styles.menuText}>Report & Mark Sheet</span>
+              </div>
+
+              <FaChevronRight
+                style={styles.chevron(
+                  openMenus.reports,
+                  hoveredMenu === "reports"
+                )}
+              />
+            </div>
+
+            <div style={styles.subMenuContainer(openMenus.reports)}>
+              <NavLink to="/report-card" style={styles.link}>
+                {({ isActive }) => (
+                  <div
+                    style={styles.subMenuItem(
+                      isActive,
+                      hoveredSubMenu === "repCard"
+                    )}
+                    onMouseEnter={() => setHoveredSubMenu("repCard")}
+                    onMouseLeave={() => setHoveredSubMenu(null)}
+                  >
+                    <div
+                      style={styles.subMenuDot(
+                        isActive,
+                        hoveredSubMenu === "repCard"
+                      )}
+                    ></div>
+
+                    Generation Engine
+                  </div>
+                )}
+              </NavLink>
+            </div>
+          </>
+        )}
       </div>
     </aside>
   );
@@ -758,7 +771,7 @@ const styles = {
   brandText: {
     fontSize: "22px",
     fontWeight: "800", // Sharp, heavy styling for primary brand
-    fontStyle: "normal", 
+    fontStyle: "normal",
     color: "#1e293b",
     letterSpacing: "-0.5px",
     lineHeight: "1"
@@ -791,15 +804,15 @@ const styles = {
   menuItem: (isActive, isHovered) => ({
     margin: "2px 18px",
     padding: "14px 18px",
-    backgroundColor: isActive 
-      ? "rgba(37, 99, 235, 0.08)" 
-      : isHovered 
-        ? "rgba(37, 99, 235, 0.04)" 
+    backgroundColor: isActive
+      ? "rgba(37, 99, 235, 0.08)"
+      : isHovered
+        ? "rgba(37, 99, 235, 0.04)"
         : "transparent",
-    color: isActive 
-      ? "#1d4ed8" 
-      : isHovered 
-        ? "#2563eb" 
+    color: isActive
+      ? "#1d4ed8"
+      : isHovered
+        ? "#2563eb"
         : "#475569",
     borderRadius: "12px",
     fontWeight: isActive ? "700" : isHovered ? "600" : "500", // Dynamic styling based on view states
@@ -810,10 +823,10 @@ const styles = {
     cursor: "pointer",
     transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
     transform: (isActive || isHovered) ? "translateX(4px)" : "none",
-    border: isActive 
-      ? "1px solid rgba(37, 99, 235, 0.1)" 
-      : isHovered 
-        ? "1px solid rgba(37, 99, 235, 0.05)" 
+    border: isActive
+      ? "1px solid rgba(37, 99, 235, 0.1)"
+      : isHovered
+        ? "1px solid rgba(37, 99, 235, 0.05)"
         : "1px solid transparent"
   }),
   menuItemLeft: {

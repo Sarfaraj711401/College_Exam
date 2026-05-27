@@ -146,7 +146,60 @@ export default function ProfessorPage() {
   };
 
   const handleSubmit = async () => {
+
+    // ❌ এসব field required না
+    const optionalFields = [
+      "stream",
+      "subject_type",
+      "subject_name",
+      "major_subject",
+      "minor1",
+      "minor2",
+      "aec1",
+      "aec2",
+      "mdc1",
+      "mdc2",
+      "mdc3",
+      "vac1",
+      "vac2",
+      "vac3"
+    ];
+
+    // ✅ CHECK REQUIRED FIELDS
+    for (let key in formData) {
+
+      // optional field skip
+      if (optionalFields.includes(key)) {
+        continue;
+      }
+
+      // photo check
+      if (key === "photo") {
+        if (!formData.photo) {
+          alert("Please upload professor photo ❌");
+          return;
+        }
+      }
+
+      // empty check
+      else if (
+        formData[key] === "" ||
+        formData[key] === null ||
+        formData[key] === undefined
+      ) {
+        alert("All required fields must be filled ❌");
+        return;
+      }
+    }
+
+    // ✅ PASSWORD CHECK
+    if (formData.password !== formData.confirmPassword) {
+      alert("Password mismatch ❌");
+      return;
+    }
+
     try {
+
       const form = new FormData();
 
       form.append("name", `${formData.first_name} ${formData.last_name}`);
@@ -163,28 +216,34 @@ export default function ProfessorPage() {
       form.append("account_number", formData.account_number);
       form.append("account_holder_name", formData.account_holder_name);
       form.append("bank_address", formData.bank_address);
+
       form.append("stream", formData.stream);
       form.append("major_subject", formData.major_subject);
       form.append("minor1", formData.minor1);
       form.append("minor2", formData.minor2);
+
       form.append("aec1", formData.aec1);
       form.append("aec2", formData.aec2);
+
       form.append("mdc1", formData.mdc1);
       form.append("mdc2", formData.mdc2);
       form.append("mdc3", formData.mdc3);
+
       form.append("vac1", formData.vac1);
       form.append("vac2", formData.vac2);
       form.append("vac3", formData.vac3);
+
       form.append("subject_type", formData.subject_type);
       form.append("subject_name", formData.subject_name);
 
-      // 👉 PHOTO (IMPORTANT)
+      // PHOTO
       if (formData.photo) {
         form.append("photo", formData.photo);
       }
 
-      // 👉 EDIT MODE
+      // UPDATE
       if (editId) {
+
         await axios.put(
           `http://localhost:5000/admin/update-professor/${editId}`,
           form
@@ -193,8 +252,9 @@ export default function ProfessorPage() {
         alert("Professor Updated Successfully ✅");
       }
 
-      // 👉 ADD MODE
+      // ADD
       else {
+
         await axios.post(
           "http://localhost:5000/admin/add-professor",
           form
@@ -203,10 +263,8 @@ export default function ProfessorPage() {
         alert("Professor Added Successfully ✅");
       }
 
-      // 👉 Refresh list
       fetchProfessors();
 
-      // 👉 Reset form
       setFormData({
         first_name: "",
         last_name: "",
@@ -215,23 +273,45 @@ export default function ProfessorPage() {
         email: "",
         password: "",
         confirmPassword: "",
+
         mobile: "",
         experience: "",
+
         photo: "",
+
         bank_name: "",
         branch_name: "",
         ifsc_code: "",
         account_number: "",
         account_holder_name: "",
         bank_address: "",
+
+        stream: "",
+        major_subject: "",
+        minor1: "",
+        minor2: "",
+
+        aec1: "",
+        aec2: "",
+
+        mdc1: "",
+        mdc2: "",
+        mdc3: "",
+
+        vac1: "",
+        vac2: "",
+        vac3: "",
+
         subject_type: "",
-        subject_name: "",
+        subject_name: ""
       });
 
       setEditId(null);
 
     } catch (err) {
+
       console.log("Submit Error:", err);
+
       alert("Something went wrong ❌");
     }
   };

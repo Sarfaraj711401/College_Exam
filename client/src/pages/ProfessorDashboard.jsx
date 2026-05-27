@@ -36,7 +36,15 @@ export default function ProfessorDashboard() {
   }, [navigate, prof]);
 
   const handleLogout = () => {
+
+    const confirmLogout = window.confirm(
+      "Are you sure you want to logout?"
+    );
+
+    if (!confirmLogout) return;
+
     localStorage.removeItem("professor");
+
     navigate("/");
   };
 
