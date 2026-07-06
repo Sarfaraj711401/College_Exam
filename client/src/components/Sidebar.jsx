@@ -231,7 +231,7 @@ export default function Sidebar() {
             </div>
 
             <div style={styles.subMenuContainer(openMenus.subjects)}>
-              <NavLink to="/subjects/view" style={styles.link}>
+              <NavLink to="#" style={styles.link}>
                 {({ isActive }) => (
                   <div
                     style={styles.subMenuItem(
@@ -371,7 +371,7 @@ export default function Sidebar() {
 
             <div style={styles.subMenuContainer(openMenus.examination)}>
 
-              <NavLink to="/examination-module" style={styles.link}>
+              <NavLink to="#" style={styles.link}>
                 {({ isActive }) => (
                   <div
                     style={styles.subMenuItem(
@@ -393,7 +393,7 @@ export default function Sidebar() {
                 )}
               </NavLink>
 
-              <NavLink to="/controller-exams" style={styles.link}>
+              <NavLink to="#" style={styles.link}>
                 {({ isActive }) => (
                   <div
                     style={styles.subMenuItem(
@@ -462,7 +462,7 @@ export default function Sidebar() {
             </div>
 
             <div style={styles.subMenuContainer(openMenus.marksEntry)}>
-              <NavLink to="/marks-entry/direct" style={styles.link}>
+              <NavLink to="#" style={styles.link}>
                 {({ isActive }) => (
                   <div
                     style={styles.subMenuItem(
@@ -510,7 +510,7 @@ export default function Sidebar() {
 
             <div style={styles.subMenuContainer(openMenus.verification)}>
 
-              <NavLink to="/examiner-module" style={styles.link}>
+              <NavLink to="#" style={styles.link}>
                 {({ isActive }) => (
                   <div
                     style={styles.subMenuItem(
@@ -579,7 +579,7 @@ export default function Sidebar() {
             </div>
 
             <div style={styles.subMenuContainer(openMenus.gradeCalc)}>
-              <NavLink to="/grade-module" style={styles.link}>
+              <NavLink to="#" style={styles.link}>
                 {({ isActive }) => (
                   <div
                     style={styles.subMenuItem(
