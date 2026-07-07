@@ -203,7 +203,6 @@ export default function Sidebar() {
           </NavLink> */}
         </div>
 
-
         {!isProfessor && (
           <>
 
