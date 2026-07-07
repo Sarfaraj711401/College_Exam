@@ -131,6 +131,7 @@ export default function Sidebar() {
             </div>
           )}
         </NavLink>
+        
 
         <div style={styles.divider}></div>
 
