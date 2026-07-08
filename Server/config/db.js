@@ -31,7 +31,7 @@ db.getConnection((err, connection) => {
         console.error('❌ Database connection failed: ' + err.message);
     } else {
         // ✅ FIXED: The backticks (`) are correctly wrapped around the entire message!
-        console.log(`✅ Connected to database: ${process.env.DB_NAME || 'mathemat_ngo'} (Cloud SSL: ${isCloudDB ? 'ON' : 'OFF'})`);
+        console.log(`✅ Connected to database: ${process.env.DB_NAME || ''} (Cloud SSL: ${isCloudDB ? 'ON' : 'OFF'})`);
         connection.release();
     }
 });
